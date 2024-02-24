@@ -1,0 +1,31 @@
+$text-color: rgba(255, 255, 255, 0.5);
+$text-color-hover: rgba(255, 255, 255, 1);
+$text-color-active: rgba(255, 255, 255, 1);
+
+#titleEnding {
+    color: #26A69A;
+}
+
+nav {
+    border-bottom: 1px solid rgba(158, 158, 158, 0.3);
+}
+.nav-link {
+    color: $text-color;
+    &:last-child {
+        color: 'red' !important;
+    }
+}
+.active {
+    color: $text-color-active !important;
+}
+.navbar-nav {
+    gap: 1em;
+}
+.nav-item {
+    border: 1px solid rgba(158, 158, 158, 0.3);
+    border-radius: 1em;
+    padding: 0.2em; 
+    &:hover {
+        border: 1px solid rgba(158, 158, 158, 0.6)
+    }
+}
