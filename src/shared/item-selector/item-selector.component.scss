@@ -1,0 +1,7 @@
+.item-box {
+    height: 7.5em;
+    border-radius: 1em;
+    &:hover {
+        cursor: pointer;
+    }
+}
