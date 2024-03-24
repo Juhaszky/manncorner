@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { Item } from './entities/item.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HttpService } from '@nestjs/axios';
-import { map, Observable } from 'rxjs';
 
 @Injectable()
 export class ItemsService {
