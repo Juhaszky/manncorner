@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" [style.color]="'white'" routerLink="/home">
+      Mann<span id="titleEnding">Corner</span></a
+    >
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      Y
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="w-100">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home" routerLinkActive="active"
+              >Home</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              routerLink="/dashboard"
+              routerLinkActive="active"
+              >My trades</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active">Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">+</a>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="!isLoggedIn">
+        <a href="">
+          <img src="../assets/images/sits_small.png" alt="Steam_Login" />
+        </a>
+      </div>
+      <div #else>
+        <app-user-data></app-user-data>
+      </div>
+    </div>
+  </div>
+</nav>

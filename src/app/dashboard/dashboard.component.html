@@ -1,0 +1,36 @@
+<div class="dashboard-container">
+  <div class="row p-3">
+    <div class="col-card col-sm-12 col-lg-5 mb-3">
+      <item-selector [mode]="'toTrade'"></item-selector>
+    </div>
+    <div class="col-sm-12 col-lg-2 mb-3">
+      <i class="material-icons">keyboard_arrow_right</i>
+    </div>
+    <div class="col-card col-sm-12 col-lg-5 mb-3">
+      <div class="inventory-box"></div>
+    </div>
+  </div>
+  <div class="row mx-3 my-2">
+    <div class="col-6">
+      <h2 [style.color]="'white'">Your backpack:</h2>
+    </div>
+    <div class="col-6">
+      <!-- <input
+        type="text"
+        placeholder="Pick one"
+        aria-label="Number"
+        matInput
+        [matAutocomplete]="auto"
+        (input)="filterItems($event)"
+      />
+      <mat-autocomplete #auto="matAutocomplete">
+        @for (item of (filteredItems | async); track item.name) {
+        <mat-option [value]="item">{{ item.name }}</mat-option>
+        }
+      </mat-autocomplete> -->
+    </div>
+    <div class="col col-card mb-3">
+      <item-selector [mode]="'inventory'"></item-selector>
+    </div>
+  </div>
+</div>

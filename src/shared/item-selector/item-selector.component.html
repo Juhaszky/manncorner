@@ -1,0 +1,22 @@
+<div
+  class="inventory-box d-flex flex-wrap flex-row align-items-center justify-content-sm-center"
+>
+  <div
+    class="item-box p-2 m-2"
+    *ngFor="let item of items; let idx = index"
+    #item
+    [style.border]="'1.5px solid #' + item.name_color"
+    [style.width]="'7.5em'"
+    matTooltip="{{ item.name }}"
+    (click)="onItemSelect(idx)"
+  >
+    <!-- <p [style.color]="'#' + item.name_color">{{ item.name }}</p> -->
+    <img
+      [src]="
+        'https://steamcommunity-a.akamaihd.net/economy/image/' + item.icon_url
+      "
+      alt=""
+      [style.width]="'100%'"
+    />
+  </div>
+</div>
