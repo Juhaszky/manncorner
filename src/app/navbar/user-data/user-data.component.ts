@@ -4,9 +4,7 @@ import { Observable, map } from 'rxjs';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { UserData } from '../../../shared/models/userdata.model';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { TradeUrlComponent } from '../trade-url/trade-url.component';
-
+import { MatDialog } from '@angular/material/dialog';
 export interface Response {
   response: Players;
 }
@@ -41,14 +39,5 @@ export class UserDataComponent implements OnInit {
         this.userData = data;
       });
   }
-  openTradeUrlDialog() {
-    const dialogRef = this.dialog.open(TradeUrlComponent, {
-      height: '25vh',
-      width: '50vw',
-    });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-    });
-  }
 }
