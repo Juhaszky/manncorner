@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ItemSelectorComponent } from './item-selector.component';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 
 describe('ItemSelectorComponent', () => {
   let component: ItemSelectorComponent;
@@ -8,7 +9,8 @@ describe('ItemSelectorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ItemSelectorComponent]
+      imports: [ItemSelectorComponent],
+      providers: [HttpClient, HttpHandler]
     })
     .compileComponents();
     
