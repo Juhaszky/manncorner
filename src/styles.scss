@@ -24,3 +24,26 @@ body { height: 100vh; margin: 0; font-family: Roboto, "Helvetica Neue", sans-ser
     background: #555;
     
   }
+  .mat-mdc-text-field-wrapper {
+    background-color: rgb(117, 117, 117) !important;
+    
+}
+.mat-mdc-form-field {
+  background-color: rgb(30, 30, 30, 0.9) !important;
+}
+
+.mat-mdc-option {
+  background-color: rgb(77, 77, 77) !important;
+  width: 100%;
+  justify-content: center;
+}
+.mdc-list-item__primary-text {
+  display: flex;
+  width: 75%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+}
+.mat-mdc-autocomplete-panel {
+  background-color: rgb(77, 77, 77) !important;
+}
