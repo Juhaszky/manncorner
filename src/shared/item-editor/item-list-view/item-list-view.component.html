@@ -1,0 +1,22 @@
+<div *ngIf="selectedItems.length > 0" class="selected-items-list">
+  <div
+    *ngFor="let item; let i = index; of: selectedItems"
+    class="list-item d-flex w-100 justify-content-between align-items-center p-3 mb-2"
+  >
+    <div class="row w-100">
+      <div class="col-6 m-auto">{{ item.name }}</div>
+      <div class="col-3 m-auto">
+        <img
+          src="{{ item.image_url }}"
+          alt="image of {{ item.name }}"
+          class="small-showcase-img"
+        />
+      </div>
+      <div class="col-3 m-auto text-end">
+        <button (click)="removeSelectedItem(i)" class="btn btn-danger btn-sm">
+          X
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

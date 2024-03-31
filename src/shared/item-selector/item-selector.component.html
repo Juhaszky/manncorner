@@ -1,22 +1,36 @@
 <div
-  class="inventory-box d-flex flex-wrap flex-row align-items-center justify-content-sm-center"
+  class="inventory-box d-flex flex-wrap flex-row position-relative"
+  [class.justify-content-center]="mode !== 'allItems'"
 >
   <div
+    *ngIf="mode === 'allItems'"
     class="item-box p-2 m-2"
+    [style.border]="'1.5px solid white'"
+    [style.width]="'7.5em'"
+    matTooltip="Add items..."
+    (click)="onOpenItemEditor()"
+  >
+    <img src="/assets/images/8333955.png" alt="" class="img-fluid" />
+  </div>
+  <div
     *ngFor="let item of items; let idx = index"
+    class="item-box p-2 m-2"
     #item
     [style.border]="'1.5px solid #' + item.name_color"
     [style.width]="'7.5em'"
     matTooltip="{{ item.name }}"
     (click)="onItemSelect(idx)"
   >
-    <!-- <p [style.color]="'#' + item.name_color">{{ item.name }}</p> -->
     <img
       [src]="
-        'https://steamcommunity-a.akamaihd.net/economy/image/' + item.icon_url
+        item.icon_url
+          ? 'https://steamcommunity-a.akamaihd.net/economy/image/' +
+            item.icon_url
+          : item.image_url
       "
       alt=""
       [style.width]="'100%'"
     />
   </div>
+  <mat-spinner *ngIf="loading" class="position-absolute top-100"></mat-spinner>
 </div>

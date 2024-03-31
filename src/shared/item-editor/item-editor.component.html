@@ -1,0 +1,40 @@
+<div class="item-editor p-3 overflow-auto">
+  <form class="example-form">
+    <mat-form-field class="w-100">
+      <mat-label>Item</mat-label>
+      <input
+        class="input-field w-100"
+        #input
+        type="text"
+        placeholder="Search item name.."
+        matInput
+        [formControl]="myControl"
+        [matAutocomplete]="auto"
+        (input)="filter()"
+        (focus)="filter()"
+      />
+      <mat-autocomplete requireSelection #auto="matAutocomplete">
+        @for (option of filteredOptions; track option) {
+        <mat-option
+          class="d-flex justify-content-between"
+          [value]="option"
+          (onSelectionChange)="onSelect($event)"
+          >{{ option.name }}
+          <img [src]="option.image_url" alt="" />
+        </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+  <mat-dialog-actions class="d-flex flex-row gap-2">
+    <button
+      class="btn btn-success"
+      color="green"
+      [mat-dialog-close]="selectedItems"
+    >
+      Ok
+    </button>
+    <button class="btn btn-secondary" (click)="onClose();">No Thanks</button>
+  </mat-dialog-actions>
+  <item-list-view [selectedItems]="selectedItems"></item-list-view>
+</div>
