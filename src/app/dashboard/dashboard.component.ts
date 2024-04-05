@@ -8,6 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ItemSelectorComponent } from '../../shared/item-selector/item-selector.component';
 import { ItemSelectorService } from '../../shared/item-selector.service';
+import { UserDataService } from '../../shared/user-data.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,7 +35,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   filteredItems!: Observable<any[]>;
   constructor(
     private _snackBar: MatSnackBar,
-    private itemSelectorService: ItemSelectorService
+    private itemSelectorService: ItemSelectorService,
+    private userDataService: UserDataService
   ) {}
 
   filterItems(event: any) {
@@ -77,6 +79,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         itemsFrom: itemIdsToTrade,
         itemsTo: itemIdsForTrade,
         postDate: new Date().toISOString(),
+        owner: this.userDataService.getUsername(),
       })
       .subscribe((res) => {
         console.log(res);

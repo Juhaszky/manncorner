@@ -5,6 +5,7 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { UserData } from '../../../shared/models/userdata.model';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
+import { UserDataService } from '../../../shared/user-data.service';
 export interface Response {
   response: Players;
 }
@@ -19,7 +20,11 @@ export interface Players {
   styleUrl: './user-data.component.scss',
 })
 export class UserDataComponent implements OnInit {
-  constructor(private http: HttpClient, public dialog: MatDialog) {}
+  constructor(
+    private http: HttpClient,
+    public dialog: MatDialog,
+    private userDataService: UserDataService
+  ) {}
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
   userData!: UserData;
   menus = ['tradeUrl', 'contact'];
@@ -37,7 +42,7 @@ export class UserDataComponent implements OnInit {
       .pipe(map((info: Response) => info.response.players[0]))
       .subscribe((data) => {
         this.userData = data;
+        this.userDataService.setUsername(data.personaname);
       });
   }
-
 }
