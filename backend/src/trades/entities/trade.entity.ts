@@ -22,4 +22,9 @@ export class Trade {
     length: 1000,
   })
   postDate: string;
+  @Column({
+    type: 'nvarchar',
+    length: 1000,
+  })
+  owner: string;
 }

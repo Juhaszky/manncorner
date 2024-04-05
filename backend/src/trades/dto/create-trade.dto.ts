@@ -8,4 +8,6 @@ export class CreateTradeDto {
   readonly itemsTo: string;
   @IsNotEmpty()
   readonly postDate: string;
+  @IsNotEmpty()
+  readonly owner: string;
 }
