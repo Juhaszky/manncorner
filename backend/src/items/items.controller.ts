@@ -34,6 +34,8 @@ export class ItemsController {
       item.image_url_large = itemData.image_url_large ?? '';
       item.craft_class = itemData.craft_class ?? '';
       item.craft_material_type = itemData.craft_material_type ?? '';
+      item.descriptions = itemData.descriptions ?? '';
+      item.market_name = itemData.market_name ?? '';
       if (item.image_url !== '') return this.itemsService.create(item);
     });
   }

@@ -20,4 +20,8 @@ export class Item {
   'craft_class': string;
   @Column()
   'craft_material_type': string;
+  @Column()
+  'descriptions': string;
+  @Column()
+  'market_name': string;
 }
