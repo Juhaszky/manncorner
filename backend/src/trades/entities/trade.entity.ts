@@ -7,24 +7,24 @@ export class Trade {
 
   @Column({
     type: 'nvarchar',
-    length: 1000,
+    length: 4000,
   })
   itemsFrom: string;
 
   @Column({
     type: 'nvarchar',
-    length: 1000,
+    length: 4000,
   })
   itemsTo: string;
 
   @Column({
     type: 'nvarchar',
-    length: 1000,
+    length: 4000,
   })
   postDate: string;
   @Column({
     type: 'nvarchar',
-    length: 1000,
+    length: 4000,
   })
   owner: string;
 }
