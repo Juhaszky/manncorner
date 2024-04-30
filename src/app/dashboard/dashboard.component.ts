@@ -68,11 +68,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const itemIdsToTrade = this.itemSelectorService
       .getItemsToTrade()
       .getValue()
-      .map((item: any) => item.name);
+      .map((item: any) => {
+        return {
+          name: item.name,
+          descriptions: item.descriptions[0],
+          tags: item.tags.find((item: any) => item.category === 'Quality'),
+          imageUrl: item.icon_url,
+        };
+      });
+    console.log(itemIdsToTrade);
     const itemIdsForTrade = this.itemSelectorService
       .getItemsForTrade()
       .getValue()
-      .map((item: any) => item.name);
+      .map((item: any) => {
+        console.log(item);
+        return {
+          name: item.name,
+          imageUrl: item.image_url,
+          descriptions: item.descriptions,
+        };
+      });
+    console.log(itemIdsForTrade);
 
     this.itemSelectorService
       .makeTrade({
