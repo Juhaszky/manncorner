@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
 import { Observable } from 'rxjs';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { StockItem } from '../models/stockItem.model';
 
 @Component({
   selector: 'item-selector',
@@ -25,6 +26,8 @@ export class ItemSelectorComponent implements OnInit {
   items: any[] = [];
   allItems: any[] = [];
   loading = false;
+  borderStyle: 'unusual' | 'strange' | 'vintage' | 'elite' | 'unique' =
+    'unique';
 
   constructor(
     private itemService: ItemSelectorService,
@@ -55,6 +58,7 @@ export class ItemSelectorComponent implements OnInit {
   }
 
   onItemSelect(idx: number) {
+    console.log(idx);
     switch (this.mode) {
       case 'allItems':
         this.itemService.removeItemFrom(idx);
@@ -72,12 +76,28 @@ export class ItemSelectorComponent implements OnInit {
       height: '75vh',
       width: '75vw',
     });
-    dialogRef.afterClosed().subscribe((selectedItems: any) => {
+    dialogRef.afterClosed().subscribe((selectedItems: StockItem[]) => {
       if (selectedItems) {
-        selectedItems.map((item: any) => (item.name_color = '7D6D00'));
+        console.log(selectedItems);
         const items = this.itemService.getItemsForTrade().getValue();
         this.itemService.getItemsForTrade().next([...items, ...selectedItems]);
       }
     });
+  }
+  getItemBorderStyle(item: any): string {
+    if (item?.market_name?.includes('Unusual')) {
+      return 'unusual';
+    } else if (item?.market_name?.includes('Strange')) {
+      return 'strange';
+    } else if (item?.market_name?.includes('Vintage')) {
+      return 'vintage';
+    } else if (
+      item?.descriptions &&
+      item?.descriptions[0].value?.includes('Elite')
+    ) {
+      return 'elite';
+    } else {
+      return 'unique';
+    }
   }
 }

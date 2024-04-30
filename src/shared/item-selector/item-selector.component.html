@@ -16,7 +16,8 @@
     *ngFor="let item of items; let idx = index"
     class="item-box p-2 m-2"
     #item
-    [style.border]="'1.5px solid #' + item.name_color"
+    [class]="getItemBorderStyle(item)"
+    
     [style.width]="'7.5em'"
     matTooltip="{{ item.name }}"
     (click)="onItemSelect(idx)"
