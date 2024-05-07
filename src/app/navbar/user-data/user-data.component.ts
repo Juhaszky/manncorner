@@ -1,5 +1,5 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { UserData } from '../../../shared/models/userdata.model';
@@ -20,29 +20,38 @@ export interface Players {
   styleUrl: './user-data.component.scss',
 })
 export class UserDataComponent implements OnInit {
-  constructor(
-    private http: HttpClient,
-    public dialog: MatDialog,
-    private userDataService: UserDataService
-  ) {}
+  http = inject(HttpClient);
+  userDataService = inject(UserDataService);
+  dialog = inject(MatDialog);
+
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
   userData!: UserData;
   menus = ['tradeUrl', 'contact'];
 
   ngOnInit(): void {
-    this.fetchUserData();
+    this.userDataService.userData$.subscribe((userData) => {
+      if (userData) {
+        this.userData = userData;
+      } else {
+        this.fetchUserData();
+      }
+    });
   }
   fetchUserSummary(): Observable<Response> {
     return this.http.get<Response>(
       'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=17F30AEE22C8E49C0F2CFD2BB6FE0398&steamids=76561198027857565'
     );
   }
+
   fetchUserData() {
+    if (this.userData !== undefined) {
+      return;
+    }
     this.fetchUserSummary()
       .pipe(map((info: Response) => info.response.players[0]))
       .subscribe((data) => {
-        this.userData = data;
         this.userDataService.setUsername(data.personaname);
+        this.userDataService.setUserData(data);
       });
   }
 }

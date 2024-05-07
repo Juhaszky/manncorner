@@ -14,4 +14,4 @@ export interface UserData {
     primaryclanid: string,
     timecreated: number,
     personastateflags: number
-  }
+}
