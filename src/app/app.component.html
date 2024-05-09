@@ -1,6 +1,16 @@
 <main>
-  <navbar></navbar>
-  <div class="container-fluid">
-    <router-outlet></router-outlet>
-  </div>
+  <mat-drawer-container
+    class="container-fluid h-screen w-screen"
+    [hasBackdrop]="true"
+  >
+    <mat-drawer class="h-screen" #drawer
+      ><app-mobile-nav></app-mobile-nav
+    ></mat-drawer>
+    <mat-drawer-content>
+      <div class="container-fluid h-screen w-full">
+        <navbar [drawer]="drawer"></navbar>
+        <router-outlet></router-outlet>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
 </main>

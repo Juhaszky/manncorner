@@ -9,15 +9,8 @@ $text-color-active: rgba(255, 255, 255, 1);
 nav {
     border-bottom: 1px solid rgba(158, 158, 158, 0.3);
 }
-.nav-link {
-    color: $text-color;
-    &:last-child {
-        color: 'red' !important;
-    }
-}
-.active {
-    color: $text-color-active !important;
-}
+
+
 .navbar-nav {
     gap: 1em;
 }

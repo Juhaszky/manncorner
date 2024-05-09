@@ -1,52 +1,76 @@
-<nav class="navbar navbar-expand-lg">
-  <div class="container-fluid">
-    <a class="navbar-brand" [style.color]="'white'" routerLink="/home">
-      Mann<span id="titleEnding">Corner</span></a
-    >
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      Y
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <div class="w-100">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/home" routerLinkActive="active"
-              >Home</a
-            >
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              routerLink="/dashboard"
-              routerLinkActive="active"
-              >My trades</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active">Search</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">+</a>
-          </li>
-        </ul>
-      </div>
-      <div *ngIf="!isLoggedIn">
-        <a href="">
-          <img src="../assets/images/sits_small.png" alt="Steam_Login" />
-        </a>
-      </div>
-      <div #else>
+<nav class="bg-white border-gray-200 py-2.5 dark:bg-gray-900">
+  <div
+    class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto"
+  >
+    <a routerLink="/home" class="flex items-center">
+      <span
+        class="self-center text-xl font-semibold dark:text-white whitespace-nowrap"
+      >
+        Mann<span id="titleEnding">corner</span>
+      </span>
+    </a>
+    <div class="flex items-center lg:order-2">
+      <ng-container class="lg:flex">
         <app-user-data></app-user-data>
+      </ng-container>
+      <div class="min-[1024px]:hidden">
+        <button
+          mat-raised-button
+          class="text-gray-700"
+          (click)="drawer.toggle()"
+        >
+          <mat-icon
+            aria-hidden="false"
+            aria-label="Example home icon"
+            fontIcon="menu"
+          ></mat-icon>
+        </button>
       </div>
+    </div>
+    <div
+      class="max-[1024px]:hidden items-center justify-between w-full lg:flex lg:w-auto lg:order-1"
+    >
+      <ul
+        class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0"
+      >
+        <li>
+          <a
+            routerLink="/home"
+            routerLinkActive="dark:text-white"
+            class="block py-2 pl-3 pr-4 dark:text-gray-400 dark:hover:text-white rounded lg:bg-transparent lg:p-0"
+            aria-current="page"
+          >
+            Home
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/dashboard"
+            routerLinkActive="dark:text-white"
+            class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+          >
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/contact"
+            routerLinkActive="dark:text-white"
+            class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+          >
+            Contact
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/addTrade"
+            routerLinkActive="dark:text-white"
+            class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+          >
+            Add trade +
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
