@@ -1,13 +1,13 @@
-<main>
+<main class="dark:bg-gray-800 min-h-screen">
   <mat-drawer-container
-    class="container-fluid h-screen w-screen"
+    class="container-fluid min-h-screen w-screen"
     [hasBackdrop]="true"
   >
     <mat-drawer class="h-screen" #drawer
       ><app-mobile-nav></app-mobile-nav
     ></mat-drawer>
     <mat-drawer-content>
-      <div class="container-fluid h-screen w-full">
+      <div class="container-fluid w-full dark:bg-gray-800">
         <navbar [drawer]="drawer"></navbar>
         <router-outlet></router-outlet>
       </div>
