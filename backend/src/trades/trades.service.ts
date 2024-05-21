@@ -17,11 +17,23 @@ export class TradesService {
   }
 
   findAll() {
-    return `This action returns all trades`;
+    return this.tradeRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} trade`;
+  async getTrades(pageNumber: number, pageSize: number): Promise<Trade[]> {
+    pageNumber = pageNumber && pageNumber > 0 ? pageNumber : 1;
+    pageSize = pageSize && pageSize > 0 ? pageSize : 10;
+    return this.tradeRepository.find({
+      order: {
+        postDate: 'DESC',
+      },
+      skip: (pageNumber - 1) * pageSize,
+      take: pageSize,
+    });
+  }
+
+  async getTotalRows(): Promise<number> {
+    return this.tradeRepository.count();
   }
 
   // update(id: number, updateTradeDto: UpdateTradeDto) {

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { TradesService } from './trades.service';
 import { CreateTradeDto } from './dto/create-trade.dto';
 import { Trade } from './entities/trade.entity';
@@ -19,14 +27,22 @@ export class TradesController {
     return this.tradesService.create(trade);
   }
 
+  // @Get()
+  // findAll() {
+  //   return this.tradesService.findAll();
+  // }
+
   @Get()
-  findAll() {
-    return this.tradesService.findAll();
+  async getTrades(
+    @Query('page') page: number = 1,
+    @Query('pageSize') pageSize: number = 10,
+  ) {
+    return this.tradesService.getTrades(page, pageSize);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tradesService.findOne(+id);
+  @Get('amount')
+  async getAmount() {
+    return this.tradesService.getTotalRows();
   }
 
   // @Patch(':id')

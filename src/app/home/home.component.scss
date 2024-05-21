@@ -12,24 +12,26 @@
 
 .elite {
     border: 1px solid #eb4b4b;
-    background-color: #3C352E;
 }
 .unusual {
     border: 1px solid #8650AC;
-    background-color: #3C352E;
 }
 .strange {
     border: 1px solid #CF6A32;
-    background-color: #3C352E;
 }
 .unique {
     border: 1px solid #7D6D00;
-    background-color: #3C352E;
 }
 .vintage {
     border: 1px solid #476291;
-    background-color: #3C352E;
 }
+.item-box {
+    border-radius: 1em;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
 
 
 @media only screen and (max-width: 600px) {
