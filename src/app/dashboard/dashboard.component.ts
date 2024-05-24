@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Observable, Subscription, map, of, take } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ItemSelectorComponent } from '../../shared/item-selector/item-selector.component';
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { UserDataService } from '../../shared/user-data.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,13 +22,13 @@ import { UserDataService } from '../../shared/user-data.service';
     MatListModule,
     MatAutocompleteModule,
     ItemSelectorComponent,
+    MatButtonModule,
   ],
   providers: [HttpClient],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit, OnDestroy {
-  private sub: Subscription | undefined;
+export class DashboardComponent implements OnInit {
   inventoryLength: number = 0;
   inventoryItems: any = null;
   itemsFromInventory: any = [];
@@ -56,9 +57,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // this.itemSelectorService.getInventoryItems().subscribe((items: any) => {
     //   this.inventoryItems = items;
     // })
-  }
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
   }
 
   openSnackBar(error: any) {
@@ -89,7 +87,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         };
       });
     console.log(itemIdsForTrade);
-
+    if (itemIdsToTrade.length === 0 && itemIdsForTrade.length === 0) 
+      return alert('You moust select one items each!');
     this.itemSelectorService
       .makeTrade({
         itemsFrom: itemIdsToTrade,
