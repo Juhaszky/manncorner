@@ -1,10 +1,10 @@
 <div
-  class="inventory-box d-flex flex-wrap flex-row position-relative"
-  [class.justify-content-center]="mode !== 'allItems'"
+  class="col-card inventory-box flex flex-wrap flex-row relative"
+  [class.justify-center]="mode !== 'allItems'"
 >
   <div
     *ngIf="mode === 'allItems'"
-    class="item-box p-2 m-2"
+    class="item-box"
     [style.border]="'1.5px solid white'"
     [style.width]="'7.5em'"
     matTooltip="Add items..."
@@ -17,7 +17,6 @@
     class="item-box p-2 m-2"
     #item
     [class]="getItemBorderStyle(item)"
-    
     [style.width]="'7.5em'"
     matTooltip="{{ item.name }}"
     (click)="onItemSelect(idx)"

@@ -63,3 +63,9 @@ md-sidenav.md-closed.md-locked-open-add-active {
   background-color: rgb(31 41 55) !important;
   color: rgb(184, 184, 184) !important;
 }
+.mat-success {
+  background-color: rgb(38, 166, 154, 1) !important;
+  &:hover{
+    background-color: rgb(38, 166, 154, 0.8) !important;
+  }
+}
