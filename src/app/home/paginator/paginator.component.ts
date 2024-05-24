@@ -32,7 +32,7 @@ export class PaginatorComponent implements OnInit {
 
   setPageIndex(event: any) {
     const { previousPageIndex, pageIndex } = event;
-    if (previousPageIndex) {
+    if (previousPageIndex >= 0) {
       if (previousPageIndex < pageIndex) {
         return pageIndex + 1;
       } else {
