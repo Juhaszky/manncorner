@@ -8,4 +8,5 @@ export interface StockItem extends Item {
     image_url_large: string;
     craft_class: string;
     craft_material_type: string;
+    lastIndex: Partial<number>;
 }
