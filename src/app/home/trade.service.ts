@@ -43,4 +43,7 @@ export class TradeService {
   getTrades(): Observable<any[]> {
     return this.trades$;
   }
+  postTrade(tradeData: any): Observable<any> {
+    return this.http.post('http://localhost:3000/trades', tradeData);
+  }
 }

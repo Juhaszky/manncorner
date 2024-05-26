@@ -5,7 +5,7 @@ import { ItemSelectorService } from '../item-selector.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
-import { Observable } from 'rxjs';
+import { first, map, Observable, take } from 'rxjs';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { StockItem } from '../models/stockItem.model';
 
@@ -35,12 +35,19 @@ export class ItemSelectorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let itemObservable: Observable<any>;
+    let itemObservable: Observable<any> = new Observable();
 
     switch (this.mode) {
       case 'inventory':
         this.loading = true;
-        itemObservable = this.itemService.fetchItems();
+        this.itemService.itemState$.pipe(first()).subscribe((state) => {
+          console.log(state);
+          if (state.inventoryItems.length !== 0) {
+            this.items = state.inventoryItems;
+          } else {
+            itemObservable = this.itemService.fetchItems();
+          }
+        })
         break;
       case 'allItems':
         this.loading = true;
@@ -51,18 +58,20 @@ export class ItemSelectorComponent implements OnInit {
         itemObservable = this.itemService.getItemsToTrade();
     }
 
-    itemObservable.subscribe((items: any) => {
-      this.loading = false;
-      this.items = items;
+    itemObservable.subscribe({
+      next: (items: any[]) => {
+        this.loading = false;
+        this.items = items;
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('Failed to load items:', err);
+      },
     });
   }
 
   onItemSelect(idx: number) {
-    console.log(idx);
     switch (this.mode) {
-      case 'allItems':
-        this.itemService.removeItemFrom(idx);
-        break;
       case 'inventory':
         this.itemService.moveItemToTrade(idx);
         break;
@@ -76,11 +85,18 @@ export class ItemSelectorComponent implements OnInit {
       height: '75vh',
       width: '75vw',
     });
+
     dialogRef.afterClosed().subscribe((selectedItems: StockItem[]) => {
       if (selectedItems) {
-        console.log(selectedItems);
-        const items = this.itemService.getItemsForTrade().getValue();
-        this.itemService.getItemsForTrade().next([...items, ...selectedItems]);
+        this.itemService.itemState$
+          .pipe(
+            first(),
+            map((state) => state.forTradeItems)
+          )
+          .subscribe((forTradeItems) => {
+            const updatedItems = [...forTradeItems, ...selectedItems];
+            this.itemService.updateState({ forTradeItems: updatedItems });
+          });
       }
     });
   }

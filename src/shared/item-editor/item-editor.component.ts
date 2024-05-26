@@ -14,6 +14,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { ItemListViewComponent } from './item-list-view/item-list-view.component';
 import { MatIconModule } from '@angular/material/icon';
+import { first, tap } from 'rxjs';
+import { ItemState } from '../models/itemState.model';
 
 @Component({
   selector: 'app-item-editor',
@@ -51,7 +53,10 @@ export class ItemEditorComponent implements OnInit {
   myControl = new FormControl('');
   options: any;
   ngOnInit(): void {
-    this.options = this.itemService.getAllItems().getValue();
+    this.itemService.itemState$
+      .pipe(first())
+      .subscribe((state) => (this.options = state.allItems));
+    //this.options = this.itemService.getAllItems().getValue();
     console.log(this.options);
     this.filteredOptions = this.options.slice();
   }

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, Subscription, combineLatest, first, map, of } from 'rxjs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -10,6 +10,7 @@ import { ItemSelectorComponent } from '../../shared/item-selector/item-selector.
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { UserDataService } from '../../shared/user-data.service';
 import { MatButtonModule } from '@angular/material/button';
+import { TradeService } from '../home/trade.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -36,6 +37,7 @@ export class DashboardComponent implements OnInit {
   filteredItems!: Observable<any[]>;
   constructor(
     private _snackBar: MatSnackBar,
+    private tradeService: TradeService,
     private itemSelectorService: ItemSelectorService,
     private userDataService: UserDataService
   ) {}
@@ -52,54 +54,56 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     const lastFetch = JSON.parse(localStorage.getItem('lastFetch') || '0');
     this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
-      this.itemSelectorService.getAllItems().next(items);
+      this.itemSelectorService.updateState({ allItems: items });
     });
-    // this.itemSelectorService.getInventoryItems().subscribe((items: any) => {
-    //   this.inventoryItems = items;
-    // })
   }
 
   openSnackBar(error: any) {
     this._snackBar.open(error, 'X');
   }
+
   makeTrade() {
-    const itemIdsToTrade = this.itemSelectorService
-      .getItemsToTrade()
-      .getValue()
-      .map((item: any) => {
-        return {
+    const itemsToTrade$ = this.itemSelectorService.getItemsToTrade().pipe(
+      first(),
+      map((items: any[]) => {
+        return items.map((item) => ({
           name: item.name,
           descriptions: item.descriptions[0],
-          tags: item.tags.find((item: any) => item.category === 'Quality'),
+          tags: item.tags.find((tag: any) => tag.category === 'Quality'),
           imageUrl: item.icon_url,
-        };
-      });
-    console.log(itemIdsToTrade);
-    const itemIdsForTrade = this.itemSelectorService
-      .getItemsForTrade()
-      .getValue()
-      .map((item: any) => {
-        console.log(item);
-        return {
+        }));
+      })
+    );
+
+    const itemsForTrade$ = this.itemSelectorService.getItemsForTrade().pipe(
+      first(),
+      map((items: any[]) => {
+        return items.map((item) => ({
           name: item.name,
           imageUrl: item.image_url,
           descriptions: item.descriptions,
-        };
-      });
-    console.log(itemIdsForTrade);
-    if (itemIdsToTrade.length === 0 && itemIdsForTrade.length === 0) 
-      return alert('You moust select one items each!');
-    this.itemSelectorService
-      .makeTrade({
-        itemsFrom: itemIdsToTrade,
-        itemsTo: itemIdsForTrade,
-        postDate: new Date().toISOString(),
-        owner: this.userDataService.getUsername(),
+        }));
       })
-      .subscribe((res) => {
-        console.log(res);
-      });
-    this.emptySelectedItems();
+    );
+
+    combineLatest([itemsToTrade$, itemsForTrade$]).subscribe(
+      ([itemIdsToTrade, itemIdsForTrade]) => {
+        if (itemIdsToTrade.length === 0 || itemIdsForTrade.length === 0) {
+          return alert('You must select one item from each category!');
+        }
+
+        this.tradeService
+          .postTrade({
+            itemsFrom: itemIdsToTrade,
+            itemsTo: itemIdsForTrade,
+            postDate: new Date().toISOString(),
+            owner: this.userDataService.getUsername(),
+          })
+          .subscribe();
+          
+        this.emptySelectedItems();
+      }
+    );
   }
   private emptySelectedItems() {
     this.itemSelectorService.emptyItemForTrade();
