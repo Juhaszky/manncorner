@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Observable, Subscription, combineLatest, first, map, of } from 'rxjs';
+import { Observable, combineLatest, first, map, of } from 'rxjs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -30,11 +30,8 @@ import { TradeService } from '../home/trade.service';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
-  inventoryLength: number = 0;
   inventoryItems: any = null;
-  itemsFromInventory: any = [];
-  durationInSeconds = 5;
-  filteredItems!: Observable<any[]>;
+  filteredItems: Observable<any[]> = new Observable();
   constructor(
     private _snackBar: MatSnackBar,
     private tradeService: TradeService,
