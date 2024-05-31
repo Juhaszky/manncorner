@@ -16,28 +16,29 @@ export class PaginatorComponent implements OnInit {
   route = inject(ActivatedRoute);
   pageSize: number = 10;
   pageSizeOptions: number[] = [10];
-  pageIndex = 1;
+  pageIndex = 0;
   tradeService = inject(TradeService);
 
   ngOnInit(): void {
-    this.navigateToDefaultParams();
+    this.route.queryParams.subscribe((params: any) => {
+      if (params.page) {
+        this.pageIndex = params.page - 1;
+      } else {
+        this.navigateToDefaultParams();
+      }
+    });
   }
   handlePageEvnt(event: any) {
     const pageIdx = this.setPageIndex(event);
-    console.log(pageIdx);
     this.router.navigate([], {
-      queryParams: { page: pageIdx, pageSize: this.pageSize },
+      queryParams: { page: pageIdx, pageSize: event.pageSize }, // Preserve other existing query params
     });
   }
 
   setPageIndex(event: any) {
     const { previousPageIndex, pageIndex } = event;
     if (previousPageIndex >= 0) {
-      if (previousPageIndex < pageIndex) {
-        return pageIndex + 1;
-      } else {
-        return pageIndex > 1 ? pageIndex - 1 : 1;
-      }
+      return pageIndex + 1;
     }
   }
 
