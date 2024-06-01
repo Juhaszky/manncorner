@@ -1,6 +1,6 @@
 <div class="h-full p-4">
   <div class="grid sm:grid-cols-3 grid-cols-1">
-    <div class="col-card  mb-3">
+    <div class="col-card mb-3">
       <item-selector [mode]="'toTrade'"></item-selector>
     </div>
     <div
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class="col-card  mb-3 p-1">
+    <div class="col-card mb-3 p-1">
       <div class="inventory-box">
         <item-selector [mode]="'allItems'"></item-selector>
       </div>
@@ -39,27 +39,15 @@
       </button>
     </div>
   </div>
-  <div class="row ">
-    <div class="col-6">
+  <div class="row mt-4">
+    <div class="grid-cols-6">
       <h2 [style.color]="'white'">Your backpack:</h2>
     </div>
-    <div class="col-6">
-      <!-- <input
-        type="text"
-        placeholder="Pick one"
-        aria-label="Number"
-        matInput
-        [matAutocomplete]="auto"
-        (input)="filterItems($event)"
-      />
-      <mat-autocomplete #auto="matAutocomplete">
-        @for (item of (filteredItems | async); track item.name) {
-        <mat-option [value]="item">{{ item.name }}</mat-option>
-        }
-      </mat-autocomplete> -->
+    <div class="flex flex-row-reverse p-2">
+      <app-action-bar></app-action-bar>
     </div>
     <div class="col-card mb-3 p-1">
-      <item-selector [mode]="'inventory'"></item-selector>
+      <item-selector [mode]="'inventory'" [filter]="filterText"></item-selector>
     </div>
   </div>
 </div>

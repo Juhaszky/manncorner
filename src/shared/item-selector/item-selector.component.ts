@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ItemSelectorService } from '../item-selector.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -21,10 +27,12 @@ import { StockItem } from '../models/stockItem.model';
   templateUrl: './item-selector.component.html',
   styleUrl: './item-selector.component.scss',
 })
-export class ItemSelectorComponent implements OnInit {
+export class ItemSelectorComponent implements OnInit, OnChanges {
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems';
+  @Input() filter: string = '';
+
   items: any[] = [];
-  allItems: any[] = [];
+  filteredItems: any[] = [];
   loading = false;
   borderStyle: 'unusual' | 'strange' | 'vintage' | 'elite' | 'unique' =
     'unique';
@@ -35,33 +43,34 @@ export class ItemSelectorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let itemObservable: Observable<any> = new Observable();
+    this.loadItems();
+  }
 
+  private loadItems(): void {
+    this.loading = true;
+    let itemObservable: Observable<any>;
     switch (this.mode) {
       case 'inventory':
-        this.loading = true;
-        this.itemService.itemState$.pipe(first()).subscribe((state) => {
-          console.log(state);
-          if (state.inventoryItems.length !== 0) {
-            this.items = state.inventoryItems;
-          } else {
-            itemObservable = this.itemService.fetchItems();
-          }
-        })
+        itemObservable = this.itemService.itemState$.pipe(
+          first(),
+          map((state) =>
+            state.inventoryItems.length !== 0
+              ? state.inventoryItems
+              : this.itemService.fetchItems()
+          )
+        );
         break;
       case 'allItems':
-        this.loading = true;
         itemObservable = this.itemService.getItemsForTrade();
         break;
       default:
-        this.loading = true;
         itemObservable = this.itemService.getItemsToTrade();
     }
-
     itemObservable.subscribe({
       next: (items: any[]) => {
         this.loading = false;
         this.items = items;
+        this.applyFilter();
       },
       error: (err) => {
         this.loading = false;
@@ -70,7 +79,21 @@ export class ItemSelectorComponent implements OnInit {
     });
   }
 
-  onItemSelect(idx: number) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.mode !== 'inventory') return;
+    this.applyFilter();
+  }
+
+  applyFilter(): void {
+    this.filteredItems =
+      this.filter.length > 0
+        ? this.items.filter((item) =>
+            item.name.toLowerCase().includes(this.filter.toLowerCase())
+          )
+        : this.items;
+  }
+
+  onItemSelect(idx: number): void {
     switch (this.mode) {
       case 'inventory':
         this.itemService.moveItemToTrade(idx);

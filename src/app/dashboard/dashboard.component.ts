@@ -1,8 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import {
+  afterNextRender,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Observable, combineLatest, first, map, of } from 'rxjs';
+import { Observable, combineLatest, first, map } from 'rxjs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -11,6 +17,9 @@ import { ItemSelectorService } from '../../shared/item-selector.service';
 import { UserDataService } from '../../shared/user-data.service';
 import { MatButtonModule } from '@angular/material/button';
 import { TradeService } from '../home/trade.service';
+import { MatInputModule } from '@angular/material/input';
+import { ActionBarComponent } from './action-bar/action-bar.component';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,32 +33,35 @@ import { TradeService } from '../home/trade.service';
     MatAutocompleteModule,
     ItemSelectorComponent,
     MatButtonModule,
+    MatInputModule,
+    ActionBarComponent,
   ],
   providers: [HttpClient],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   inventoryItems: any = null;
   filteredItems: Observable<any[]> = new Observable();
+  filterText: string = '';
+
   constructor(
     private _snackBar: MatSnackBar,
     private tradeService: TradeService,
     private itemSelectorService: ItemSelectorService,
-    private userDataService: UserDataService
-  ) {}
-
-  filterItems(event: any) {
-    const filterValue = event.data;
-    this.filteredItems = of(
-      this.inventoryItems.filter((item: any) => {
-        item.name.startsWith(filterValue);
-      })
-    );
+    private userDataService: UserDataService,
+    private dashboardService: DashboardService,
+    private cdRef: ChangeDetectorRef
+  ) {
+    afterNextRender(() => {
+      this.dashboardService.filterText$.subscribe((filterText) => {
+        this.filterText = filterText;
+        this.cdRef.detectChanges();
+      });
+    });
   }
-
+  ngAfterViewInit(): void {}
   ngOnInit(): void {
-    const lastFetch = JSON.parse(localStorage.getItem('lastFetch') || '0');
     this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
       this.itemSelectorService.updateState({ allItems: items });
     });
@@ -97,11 +109,12 @@ export class DashboardComponent implements OnInit {
             owner: this.userDataService.getUsername(),
           })
           .subscribe();
-          
+
         this.emptySelectedItems();
       }
     );
   }
+
   private emptySelectedItems() {
     this.itemSelectorService.emptyItemForTrade();
     this.itemSelectorService.emptyItemsToTrade();

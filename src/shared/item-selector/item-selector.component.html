@@ -13,7 +13,7 @@
     <img src="/assets/images/8333955.png" alt="" class="img-fluid" />
   </div>
   <div
-    *ngFor="let item of items; let idx = index"
+    *ngFor="let item of mode === 'inventory' ? filteredItems : items; let idx = index"
     class="item-box p-2 m-2"
     #item
     [class]="getItemBorderStyle(item)"
