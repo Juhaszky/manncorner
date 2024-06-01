@@ -31,6 +31,7 @@ import { TradeService } from './trade.service';
 })
 export class HomeComponent implements OnInit {
   data$: Observable<any> = this.fetchData();
+  page = 1;
   inventoryLength: number = 0;
   trades$!: Observable<any[]>;
   totalTrades$!: Observable<number>;
@@ -41,10 +42,9 @@ export class HomeComponent implements OnInit {
   tradeService = inject(TradeService);
 
   ngOnInit(): void {
-    let page = 1;
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      page = params.page;
-      this.loadTrades(page);
+      this.page = params.page || 1;
+      this.loadTrades(this.page);
     });
     this.trades$ = this.tradeService.getTrades();
     this.totalTrades$ = this.tradeService.getTotalTradesCount();
