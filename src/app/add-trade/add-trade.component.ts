@@ -19,7 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TradeService } from '../home/trade.service';
 import { MatInputModule } from '@angular/material/input';
 import { ActionBarComponent } from './action-bar/action-bar.component';
-import { DashboardService } from './dashboard.service';
+import { DashboardService } from './add-trade.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,10 +37,10 @@ import { DashboardService } from './dashboard.service';
     ActionBarComponent,
   ],
   providers: [HttpClient],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss',
+  templateUrl: './add-trade.component.html',
+  styleUrl: './add-trade.component.scss',
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit {
   inventoryItems: any = null;
   filteredItems: Observable<any[]> = new Observable();
   filterText: string = '';
@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       });
     });
   }
-  ngAfterViewInit(): void {}
+
   ngOnInit(): void {
     this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
       this.itemSelectorService.updateState({ allItems: items });

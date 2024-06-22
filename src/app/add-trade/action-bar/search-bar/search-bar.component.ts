@@ -6,7 +6,7 @@ import {
   inject,
   ViewChild,
 } from '@angular/core';
-import { DashboardService } from '../../dashboard.service';
+import { DashboardService } from '../../add-trade.service';
 
 @Component({
   selector: 'app-search-bar',

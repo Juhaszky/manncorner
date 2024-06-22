@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent } from './add-trade/add-trade.component';
 
 export const routes: Routes = [
   {
@@ -8,9 +8,9 @@ export const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: 'dashboard',
+    path: 'add-trade',
     loadComponent: () =>
-      import('./dashboard/dashboard.component').then(
+      import('./add-trade/add-trade.component').then(
         (m) => m.DashboardComponent
       ),
   },
