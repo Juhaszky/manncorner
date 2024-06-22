@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 html, body { height: 100%; }
 body { height: 100vh; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; box-sizing: border-box; background-color: #1E1E1E;}
@@ -68,4 +68,7 @@ md-sidenav.md-closed.md-locked-open-add-active {
   &:hover{
     background-color: rgb(38, 166, 154, 0.8) !important;
   }
+}
+.cdk-virtual-scroll-content-wrapper {
+  display: flex;
 }
