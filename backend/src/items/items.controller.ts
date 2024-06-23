@@ -10,7 +10,6 @@ import {
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { Observable } from 'rxjs';
 import { Item } from './entities/item.entity';
 
 @Controller('items')
