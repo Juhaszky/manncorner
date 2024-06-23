@@ -11,9 +11,10 @@ import { ItemSelectorService } from '../item-selector.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
-import { first, map, Observable, take } from 'rxjs';
+import { first, map, Observable, of, switchMap, tap } from 'rxjs';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { StockItem } from '../models/stockItem.model';
+
 
 @Component({
   selector: 'item-selector',
@@ -47,18 +48,11 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   private loadItems(): void {
-    this.loading = true;
     let itemObservable: Observable<any>;
     switch (this.mode) {
       case 'inventory':
-        itemObservable = this.itemService.itemState$.pipe(
-          first(),
-          map((state) =>
-            state.inventoryItems.length !== 0
-              ? state.inventoryItems
-              : this.itemService.fetchItems()
-          )
-        );
+        this.loading = true;
+        itemObservable = this.loadInventoryItems();
         break;
       case 'allItems':
         itemObservable = this.itemService.getItemsForTrade();
@@ -66,17 +60,35 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
       default:
         itemObservable = this.itemService.getItemsToTrade();
     }
+
     itemObservable.subscribe({
-      next: (items: any[]) => {
-        this.loading = false;
-        this.items = items;
-        this.applyFilter();
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error('Failed to load items:', err);
-      },
+      next: (items: any[]) => this.handleSuccess(items),
+      error: (err) => this.handleError(err),
     });
+  }
+
+  private handleSuccess(items: any[]): void {
+    this.items = items;
+    if (this.mode === 'inventory') {
+      this.applyFilter();
+    }
+  }
+
+  private handleError(err: any): void {
+    this.loading = false;
+    console.error('Failed to load items:', err);
+  }
+
+  private loadInventoryItems() {
+    return this.itemService.itemState$.pipe(
+      first(),
+      switchMap((state) =>
+        state.inventoryItems.length !== 0
+          ? of(state.filteredInventoryItems)
+          : this.itemService.fetchItems()
+      ),
+      tap(() => (this.loading = false))
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -85,24 +97,34 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   applyFilter(): void {
-    this.filteredItems =
-      this.filter.length > 0
-        ? this.items.filter((item) =>
-            item.name.toLowerCase().includes(this.filter.toLowerCase())
-          )
-        : this.items;
+    console.log(this.filter);
+    this.itemService.updateFilteredItems(this.filter);
+    this.itemService.itemState$.subscribe((state) => {
+      this.filteredItems = state.filteredInventoryItems.filter(
+        (item) => item.selected !== false
+      );
+    });
   }
 
   onItemSelect(idx: number): void {
-    switch (this.mode) {
-      case 'inventory':
-        this.itemService.moveItemToTrade(idx);
-        break;
-      default:
-        this.itemService.moveItemToInventory(idx);
-        break;
+    if (this.mode === 'inventory') {
+      let selectedItem: any;
+      if (this.filter === '') {
+        this.items[idx].selected = true;
+        selectedItem = this.items[idx];
+      } else {
+        console.log(idx);
+        this.filteredItems[idx].selected = true;
+        selectedItem = this.filteredItems[idx];
+      }
+      this.itemService.moveItemToTrade(idx);
+    } else {
+      this.itemService.moveItemToInventory(idx);
     }
+
+    this.applyFilter();
   }
+
   onOpenItemEditor() {
     let dialogRef = this.dialog.open(ItemEditorComponent, {
       height: '75vh',

@@ -11,19 +11,24 @@ export class ItemSelectorService {
   private stateSubject: BehaviorSubject<ItemState> =
     new BehaviorSubject<ItemState>({
       inventoryItems: [],
+      filteredInventoryItems: [],
       allItems: [],
       toTradeItems: [],
       forTradeItems: [],
+      filterText: '',
     });
   itemState$ = this.stateSubject.asObservable();
 
   constructor(private http: HttpClient) {
+    this.initalizeState();
+  }
+  private initalizeState(): void {
     this.fetchAllItems().subscribe((items: any[]) => {
       this.updateState({ allItems: items });
     });
 
     this.fetchItems().subscribe((items: any[]) =>
-      this.updateState({ inventoryItems: items })
+      this.updateState({ inventoryItems: items, filteredInventoryItems: items })
     );
   }
   updateState(partialState: Partial<ItemState>): void {
@@ -59,7 +64,7 @@ export class ItemSelectorService {
   fetchItems(): Observable<any> {
     return this.http
       .get<Observable<any>>('http://localhost:3000/alma')
-      .pipe(map((data: any) => data.descriptions));
+      .pipe(map((data: any) => data));
   }
 
   fetchAllItems(): Observable<StockItem[]> {
@@ -67,34 +72,74 @@ export class ItemSelectorService {
   }
 
   moveItemToTrade(index: number) {
-    this.itemState$.pipe(first()).subscribe((state) => {
-      const inventoryItems = state.inventoryItems;
-      const itemToMove = inventoryItems.splice(index, 1)[0];
+    const state = this.stateSubject.value;
+    
+    // Clone the current state arrays
+    const inventoryItems = state.inventoryItems.slice();
+    const filteredInventoryItems = state.filteredInventoryItems.slice();
+    const toTradeItems = state.toTradeItems.slice();
 
-      itemToMove.lastIndex = index;
-      this.updateState({ inventoryItems: inventoryItems });
+    
+    // Find and remove the item from inventoryItems
+    const itemToMove = filteredInventoryItems[index];
+    const originalIndex = inventoryItems.findIndex(item => item.idx === itemToMove.idx);
+    inventoryItems.splice(originalIndex, 1);
+    // Remove the item from filteredInventoryItems
+    filteredInventoryItems.splice(index, 1);
 
-      const itemsToTrade = state.toTradeItems;
-      this.updateState({ toTradeItems: [...itemsToTrade, itemToMove] });
+    // Add the item to toTradeItems
+    toTradeItems.push(itemToMove);
+
+    // Update the state with the modified arrays
+    this.updateState({
+      inventoryItems,
+      filteredInventoryItems,
+      toTradeItems,
     });
+    this.updateFilteredItems(state.filterText);
   }
 
   moveItemToInventory(index: number) {
-    this.itemState$.pipe(first()).subscribe((state) => {
-      const toItems = state.toTradeItems;
-      const item = toItems.splice(index, 1)[0];
-      const items = state.inventoryItems;
-      items.splice(item.lastIndex, 0, item);
+    const state = this.stateSubject.value;
 
-      this.updateState({ inventoryItems: items });
+    // Clone the current state arrays
+    const inventoryItems = state.inventoryItems.slice();
+    const toTradeItems = state.toTradeItems.slice();
+
+    // Find and remove the item from toTradeItems
+    const itemToMove = toTradeItems.splice(index, 1)[0];
+
+    // Insert the item back into inventoryItems at its original position
+    inventoryItems.splice(itemToMove.idx, 0, itemToMove);
+
+    // Update the state with the modified arrays
+    this.updateState({
+      inventoryItems,
+      toTradeItems,
     });
   }
 
+  filterItems(items: any[], filterText: string): StockItem[] {
+    if (!filterText || filterText.length === 0) {
+      return items;
+    }
+    return items.filter(item => item.name.toLowerCase().includes(filterText.toLowerCase()));
+  }
+
+  updateFilteredItems(filterText: string): void {
+    const state = this.stateSubject.value;
+    console.log(state);
+    const filteredItems = state.inventoryItems.filter(item =>
+      item.name.toLowerCase().includes(filterText.toLowerCase())
+    );
+    this.updateState({ filteredInventoryItems: filteredItems, filterText });
+  }
+
   removeItemFrom(index: number) {
-    this.itemState$.pipe(first()).subscribe((state) => {
-      const items = state.forTradeItems;
-      items.splice(index, 1);
-      this.updateState({ forTradeItems: items });
-    });
+    const state = this.stateSubject.value;
+
+    const items = state.forTradeItems.slice();
+    items.splice(index, 1);
+    this.updateState({ forTradeItems: items });
   }
 }
