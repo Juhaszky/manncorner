@@ -67,8 +67,11 @@ export class ItemEditorComponent implements OnInit {
     );
   }
   onSelect(event: any) {
+    if (event.source.value) {
+        this.selectedItems.push(event.source.value);
+    }
+
     this.myControl.setValue('');
-    this.selectedItems.push(event.source.value);
   }
   onClose() {
     this.dialogRef.close();

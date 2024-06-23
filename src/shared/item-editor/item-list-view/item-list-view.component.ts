@@ -10,6 +10,7 @@ import { Component, Input } from '@angular/core';
 })
 export class ItemListViewComponent {
   @Input() selectedItems: any;
+  
   removeSelectedItem(i: number) {
     this.selectedItems.splice(i, 1);
   }

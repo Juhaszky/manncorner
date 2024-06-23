@@ -30,27 +30,26 @@ p {
     
   }
   .mat-mdc-text-field-wrapper {
-    background-color: rgb(117, 117, 117) !important;
+    background-color: rgb(31 41 55) !important;
+    
     
 }
 .mat-mdc-form-field {
-  background-color: rgb(30, 30, 30, 0.9) !important;
+  background-color: rgb(31 41 55) !important;
 }
 
 .mat-mdc-option {
-  background-color: rgb(77, 77, 77) !important;
+  background-color: rgb(31 41 55) !important;
   width: 100%;
-  justify-content: center;
 }
+
 .mdc-list-item__primary-text {
-  display: flex;
-  width: 75%;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1em;
+  color: rgba(255, 255, 255, 0.5) !important;
+  width: 100%;
 }
 .mat-mdc-autocomplete-panel {
-  background-color: rgb(77, 77, 77) !important;
+  background-color: rgb(31 41 55) !important;
+  
 }
 md-sidenav, 
 md-sidenav.md-locked-open, 

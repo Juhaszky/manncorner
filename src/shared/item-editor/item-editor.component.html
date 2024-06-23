@@ -1,9 +1,9 @@
-<div class="item-editor p-3 overflow-auto">
-  <form class="example-form">
-    <mat-form-field class="w-100">
+<div class="item-editor bg-gray-800 h-full flex flex-col overflow-auto">
+  <form class="flex example-form">
+    <mat-form-field class="w-full">
       <mat-label>Item</mat-label>
       <input
-        class="input-field w-100"
+        class="input-field w-full"
         #input
         type="text"
         placeholder="Search item name.."
@@ -16,25 +16,31 @@
       <mat-autocomplete requireSelection #auto="matAutocomplete">
         @for (option of filteredOptions; track option) {
         <mat-option
-          class="d-flex justify-content-between"
+          class="flex w-full justify-between text-slate-300"
           [value]="option"
           (onSelectionChange)="onSelect($event)"
-          >{{ option.name }}
-          <img [src]="option.image_url" alt="" />
+          >
+          <div class="item w-full flex justify-between items-center">
+            {{ option.name }}
+            <img [src]="option.image_url" class="sm:h-32 sm:w-32 h-16 w-16" alt="" />
+          </div>
         </mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>
   </form>
-  <mat-dialog-actions class="d-flex flex-row gap-2">
-    <button
-      class="btn btn-success"
-      color="green"
-      [mat-dialog-close]="selectedItems"
-    >
-      Ok
-    </button>
-    <button class="btn btn-secondary" (click)="onClose();">No Thanks</button>
+  <item-list-view class="h-100" [selectedItems]="selectedItems"></item-list-view>
+    <div class="actions flex flex-col h-full gap-6 justify-end">
+    <mat-dialog-actions>
+      <div class="buttons flex flex-row w-full justify-between">
+        <button
+        class="p-4 border-2 border-slate-700 hover:bg-green-800 w-24 rounded-md text-slate-50 text-bold"
+        [mat-dialog-close]="selectedItems"
+        >
+        Ok
+      </button>
+      <button class="p-4 border-2 border-slate-700 hover:bg-red-800 w-32 rounded-md text-slate-50 text-bold" (click)="onClose();">No Thanks</button>
+    </div>
   </mat-dialog-actions>
-  <item-list-view [selectedItems]="selectedItems"></item-list-view>
+</div>
 </div>

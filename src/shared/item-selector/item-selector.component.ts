@@ -127,8 +127,8 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
 
   onOpenItemEditor() {
     let dialogRef = this.dialog.open(ItemEditorComponent, {
-      height: '75vh',
-      width: '75vw',
+      height: '90vh',
+      width: '95vw',
     });
 
     dialogRef.afterClosed().subscribe((selectedItems: StockItem[]) => {
@@ -145,6 +145,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
       }
     });
   }
+  
   getItemBorderStyle(item: any): string {
     if (item?.market_name?.includes('Unusual')) {
       return 'unusual';
