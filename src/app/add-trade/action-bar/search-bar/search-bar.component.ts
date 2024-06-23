@@ -6,7 +6,8 @@ import {
   inject,
   ViewChild,
 } from '@angular/core';
-import { DashboardService } from '../../add-trade.service';
+import { AddTradeService } from '../../add-trade.service';
+
 
 @Component({
   selector: 'app-search-bar',
@@ -17,14 +18,14 @@ import { DashboardService } from '../../add-trade.service';
 })
 export class SearchBarComponent implements AfterViewInit {
   @ViewChild('searchBar') searchBar!: ElementRef;
-  dashboardService = inject(DashboardService);
+  addTradeService = inject(AddTradeService);
   filterText: string = '';
 
   constructor() {
     afterNextRender(() => {
       this.filterText = localStorage.getItem('filterText')?.toString() || '';
       this.searchBar.nativeElement.value = this.filterText;
-      this.dashboardService.filterText$.next(this.filterText);
+      this.addTradeService.filterText$.next(this.filterText);
     });
   }
 
@@ -32,7 +33,7 @@ export class SearchBarComponent implements AfterViewInit {
     const input = event.target as HTMLInputElement;
     this.filterText = input.value;
     localStorage.setItem('filterText', this.filterText);
-    this.dashboardService.filterText$.next(this.filterText);
+    this.addTradeService.filterText$.next(this.filterText);
   }
 
   ngAfterViewInit(): void {

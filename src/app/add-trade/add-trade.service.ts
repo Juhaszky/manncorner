@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class DashboardService {
+export class AddTradeService {
   filterText$: Subject<string> = new Subject<string>();
   constructor() {}
 }

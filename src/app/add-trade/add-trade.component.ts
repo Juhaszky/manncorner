@@ -19,7 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TradeService } from '../home/trade.service';
 import { MatInputModule } from '@angular/material/input';
 import { ActionBarComponent } from './action-bar/action-bar.component';
-import { DashboardService } from './add-trade.service';
+import { AddTradeService } from './add-trade.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,11 +50,11 @@ export class DashboardComponent implements OnInit {
     private tradeService: TradeService,
     private itemSelectorService: ItemSelectorService,
     private userDataService: UserDataService,
-    private dashboardService: DashboardService,
+    private AddTradeService: AddTradeService,
     private cdRef: ChangeDetectorRef
   ) {
     afterNextRender(() => {
-      this.dashboardService.filterText$.subscribe((filterText) => {
+      this.AddTradeService.filterText$.subscribe((filterText) => {
         this.filterText = filterText;
         this.cdRef.detectChanges();
       });
