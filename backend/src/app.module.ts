@@ -6,6 +6,7 @@ import { TradesModule } from './trades/trades.module';
 import { Trade } from './trades/entities/trade.entity';
 import { ItemsModule } from './items/items.module';
 import { Item } from './items/entities/item.entity';
+import { ImagesModule } from './images/image.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { Item } from './items/entities/item.entity';
     }),
     TradesModule,
     ItemsModule,
+    ImagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
