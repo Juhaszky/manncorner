@@ -36,6 +36,10 @@ export class TradeService {
     );
   }
 
+  getTradeById(id: string): Observable<any> {
+    return this.http.get<any>(`http://localhost:3000/trades/${id}`)
+  }
+
   getTotalTradesCount(): Observable<number> {
     return this.http.get<number>("http://localhost:3000/trades/amount");
   }

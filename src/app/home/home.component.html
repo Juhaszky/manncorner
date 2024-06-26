@@ -3,7 +3,7 @@
     class="trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer"
     
     *ngFor="let trade of trades$ | async"
-    
+    (click)="selectTrade(trade.id)"
   >
     <div class="trade-details">
       <div class="flex flex-row justify-between">

@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit {
     //this.trades$ = this.http.get('http://localhost:3000/trades');
   }
   activatedRoute = inject(ActivatedRoute);
-
+  router = inject(Router);
   tradeService = inject(TradeService);
 
   ngOnInit(): void {
@@ -107,4 +107,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  selectTrade(tradeId: string): void {
+    this.router.navigate(['/trade', tradeId]);
+  }
 }
