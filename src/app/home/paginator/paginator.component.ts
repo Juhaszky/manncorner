@@ -31,7 +31,7 @@ export class PaginatorComponent implements OnInit {
   handlePageEvnt(event: any) {
     const pageIdx = this.setPageIndex(event);
     this.router.navigate([], {
-      queryParams: { page: pageIdx, pageSize: event.pageSize }, // Preserve other existing query params
+      queryParams: { page: pageIdx }, // Preserve other existing query params
     });
   }
 
@@ -44,7 +44,7 @@ export class PaginatorComponent implements OnInit {
 
   navigateToDefaultParams() {
     this.router.navigate([], {
-      queryParams: { page: 1, pageSize: 10 },
+      queryParams: { page: 1 },
     });
   }
 }
