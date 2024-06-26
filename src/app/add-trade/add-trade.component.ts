@@ -40,7 +40,7 @@ import { AddTradeService } from './add-trade.service';
   templateUrl: './add-trade.component.html',
   styleUrl: './add-trade.component.scss',
 })
-export class DashboardComponent implements OnInit {
+export class AddTradeComponent implements OnInit {
   inventoryItems: any = null;
   filteredItems: Observable<any[]> = new Observable();
   filterText: string = '';
