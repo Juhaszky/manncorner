@@ -45,6 +45,12 @@ export class TradesController {
     return this.tradesService.getTotalRows();
   }
 
+  @Get(':id')
+  async getTradeById(@Param('id') id: string): Promise<Trade> {
+    console.log(id);
+    return this.tradesService.getTradeById(id);
+  }
+
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateTradeDto: UpdateTradeDto) {
   //   return this.tradesService.update(+id, updateTradeDto);

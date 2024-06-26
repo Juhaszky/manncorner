@@ -35,6 +35,9 @@ export class TradesService {
   async getTotalRows(): Promise<number> {
     return this.tradeRepository.count();
   }
+  async getTradeById(id: string): Promise<Trade> {
+    return this.tradeRepository.findOneBy({ id });
+  }
 
   // update(id: number, updateTradeDto: UpdateTradeDto) {
   //   return `This action updates a #${id} trade`;
