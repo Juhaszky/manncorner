@@ -8,30 +8,6 @@
     cursor: pointer;
 }
 
-.elite {
-    border: 1px solid #eb4b4b;
-}
-.unusual {
-    border: 1px solid #8650AC;
-}
-.strange {
-    border: 1px solid #CF6A32;
-}
-.unique {
-    border: 1px solid #7D6D00;
-}
-.vintage {
-    border: 1px solid #476291;
-}
-.item-box {
-    border-radius: 1em;
-    &:hover {
-        cursor: pointer;
-    }
-}
-
-
-
 @media only screen and (max-width: 600px) {
     .inventory-box {
         height: 50%;

@@ -12,8 +12,14 @@ import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostDatePipe } from './post-date.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TradeService } from './trade.service';
+import { MatSpinner } from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { catchError } from 'rxjs/operators';
+import { ResizedImageComponent } from '../../shared/resized-image/resized-image.component';
+import { ItemComponent } from '../../shared/item/item.component';
+
 
 @Component({
   selector: 'app-home',
@@ -25,6 +31,9 @@ import { TradeService } from './trade.service';
     MatTooltipModule,
     PostDatePipe,
     PaginatorComponent,
+    MatProgressSpinnerModule,
+    ResizedImageComponent,
+    ItemComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -34,11 +43,13 @@ export class HomeComponent implements OnInit {
   page = 1;
   inventoryLength: number = 0;
   trades$!: Observable<any[]>;
+  loading = false;
   totalTrades$!: Observable<number>;
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {
     //this.trades$ = this.http.get('http://localhost:3000/trades');
   }
   activatedRoute = inject(ActivatedRoute);
+
   tradeService = inject(TradeService);
 
   ngOnInit(): void {
@@ -52,11 +63,22 @@ export class HomeComponent implements OnInit {
   }
 
   private loadTrades(page: number): void {
-    this.tradeService.loadTrades(page).subscribe(() => {
-      this.cdr.detectChanges();
-    });
+    this.loading = true;
+    this.tradeService
+      .loadTrades(page)
+      .pipe(
+        catchError((err) => {
+          this.loading = false;
+          this.cdr.detectChanges();
+          console.log(err);
+          return [];
+        })
+      )
+      .subscribe(() => {
+        this.cdr.detectChanges();
+        this.loading = false;
+      });
   }
-
 
   getItemBorderStyle(item: any): string {
     if (item?.name?.includes('Unusual')) {
@@ -80,8 +102,9 @@ export class HomeComponent implements OnInit {
       map((data: any) => {
         this.inventoryLength = data.total_inventory_count;
         this.cdr.detectChanges();
-        return data.descriptions;
+        return data;
       })
     );
   }
+
 }
