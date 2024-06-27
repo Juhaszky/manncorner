@@ -14,6 +14,7 @@ import { ItemEditorComponent } from '../item-editor/item-editor.component';
 import { first, map, Observable, of, switchMap, tap } from 'rxjs';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { StockItem } from '../models/stockItem.model';
+import { ItemComponent } from '../item/item.component';
 
 
 @Component({
@@ -24,6 +25,7 @@ import { StockItem } from '../models/stockItem.model';
     CommonModule,
     MatProgressSpinnerModule,
     ScrollingModule,
+    ItemComponent
   ],
   templateUrl: './item-selector.component.html',
   styleUrl: './item-selector.component.scss',
@@ -161,5 +163,8 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
     } else {
       return 'unique';
     }
+  }
+  trackByIdx(index: number, item: any): number {
+    return index;
   }
 }

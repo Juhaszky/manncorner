@@ -4,32 +4,19 @@
 >
   <div
     *ngIf="mode === 'allItems'"
-    class="item-box p-2 m-2 border border-slate-700"
-    [style.width]="'7.5em'"
+    class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20 w-20 border border-slate-700"
     matTooltip="Add items..."
     (click)="onOpenItemEditor()"
   >
     <img src="/assets/images/8333955.png" alt="" class="img-fluid" />
   </div>
-  <div
-  *ngFor="let item of mode === 'inventory' ? filteredItems : items; let idx = index"
-    class="item-box p-2 m-2"
-    #item
-    [class]="getItemBorderStyle(item)"
-    [style.width]="'7.5em'"
-    matTooltip="{{ item.name }}"
+  <item
+    *ngFor="
+      let item of mode === 'inventory' ? filteredItems : items;
+      let idx = index
+    "
+    [itemData]="item"
     (click)="onItemSelect(idx)"
-  >
-    <img
-      [src]="
-        item.icon_url
-          ? 'https://steamcommunity-a.akamaihd.net/economy/image/' +
-            item.icon_url
-          : item.image_url
-      "
-      alt=""
-      [style.width]="'100%'"
-    />
-  </div>
+  ></item>
   <mat-spinner *ngIf="loading" class="position-absolute top-100"></mat-spinner>
 </div>
