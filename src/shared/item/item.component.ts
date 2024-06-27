@@ -34,7 +34,11 @@ export class ItemComponent implements OnInit {
     }
   }
 
-  setImageUrlPrefix(url: string): string {
-    return url.includes('http') ? url : `https://steamcommunity-a.akamaihd.net/economy/image/${url}`;
+  getImageUrl(): string {
+    const itemsUrl = this.itemData.imageUrl ?? this.itemData.icon_url ?? this.itemData.image_url;
+    if(!itemsUrl) {
+      return '';
+    }
+    return itemsUrl.includes('http') ? itemsUrl : `https://steamcommunity-a.akamaihd.net/economy/image/${itemsUrl}`;
   }
 }
