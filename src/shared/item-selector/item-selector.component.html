@@ -16,7 +16,9 @@
       let idx = index
     "
     [itemData]="item"
+    [mode]="mode"
     (click)="onItemSelect(idx)"
+    (removeEmitter)="onRemoveItem(idx)"
   ></item>
   <mat-spinner *ngIf="loading" class="position-absolute top-100"></mat-spinner>
 </div>
