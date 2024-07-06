@@ -9,11 +9,11 @@
         <img
           src="{{ item.image_url }}"
           alt="image of {{ item.name }}"
-          class="w-24"
+          class="sm:w-24 w-16"
         />
       </div>
       <div class="flex items-center w-auto">
-        <button (click)="removeSelectedItem(i)" class="border-2 border-red-700 rounded-lg p-2">
+        <button (click)="removeSelectedItem(i)" class="border-2 border-slate-700 text-red-700 text-xl text-bold rounded-lg p-2 hover:border-red-600">
           X
         </button>
       </div>
