@@ -109,7 +109,6 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   onItemSelect(idx: number): void {
-    if (this.mode === 'allItems') return;
     if (this.mode === 'inventory') {
       let selectedItem: any;
       if (this.filter === '') {
@@ -121,9 +120,10 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
         selectedItem = this.filteredItems[idx];
       }
       this.itemService.moveItemToTrade(idx);
+      this.applyFilter();
     }
-    this.applyFilter();
   }
+
   onRemoveItem(idx: number) {
     if (this.mode === 'toTrade') {
       this.itemService.moveItemToInventory(idx)
