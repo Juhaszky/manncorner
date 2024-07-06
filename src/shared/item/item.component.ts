@@ -60,6 +60,12 @@ export class ItemComponent implements OnInit {
       return 'unusual';
     } else if (item?.name?.includes('Strange')) {
       return 'strange';
+    } else if (item?.name?.includes('Genuine')) {
+      return 'genuine';
+    } else if (item?.name?.includes('Haunted')) {
+      return 'haunted';
+    } else if (item?.name?.includes("Collector's")) {
+      return 'collectors';
     } else if (item?.name?.includes('Vintage')) {
       return 'vintage';
     } else if (
