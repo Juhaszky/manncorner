@@ -68,7 +68,8 @@ export class ItemEditorComponent implements OnInit {
   }
   onSelect(event: any) {
     if (event.source.value) {
-        this.selectedItems.push(event.source.value);
+      const itemCopy = {...event.source.value}
+        this.selectedItems.push(itemCopy);
     }
 
     this.myControl.setValue('');
