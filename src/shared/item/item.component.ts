@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { ItemDetailsDirective } from '../item-details/item-details.directive';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemDetailsComponent } from '../item-details/item-details.component';
+import { ItemCustomizerComponent } from '../item-customizer/item-customizer.component';
 
 @Component({
   selector: 'item',
@@ -31,27 +32,48 @@ export class ItemComponent implements OnInit {
   @Input() mode: string = '';
   @Output() removeEmitter = new EventEmitter();
   @HostListener('mouseenter') onMouseEnter() {
+    if (this.mode === 'allItems') {
+      this.canModify = true;
+    }
     if (this.mode !== 'inventory' && this.mode !== '') {
       this.showActions = true;
     }
   }
   @HostListener('mouseleave') onMouseLeave() {
     this.showActions = false;
+    this.canModify = false;
   }
+  canModify: boolean = false;
   showActions: boolean = false;
 
   constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.checkDescription();
-    console.log(this.itemData);
+    this.checkItemExtras();
   }
+
   onItemSelect() {
-    if (this.mode === 'inventory') return;
+    if (this.mode === 'inventory' || this.mode === 'allItem') return;
     this.dialog.open(ItemDetailsComponent, {
       width: '90vw',
       height: '90vh',
       data: this.itemData,
+    });
+  }
+
+  onCustomizeItem(event: any) {
+    event.stopPropagation();
+
+    if (this.mode === 'inventory') return;
+    this.itemData.name = this.itemData.originalName;
+    const dialogRef = this.dialog.open(ItemCustomizerComponent, {
+      width: '90vw',
+      height: '90vh',
+      data: this.itemData,
+    });
+    dialogRef.afterClosed().subscribe((item: any) => {
+      this.itemData.name = item.name.value;
+      this.itemData.quality = item.quality.value;
     });
   }
 
@@ -89,11 +111,14 @@ export class ItemComponent implements OnInit {
     if (!itemsUrl) {
       return '';
     }
-    return itemsUrl.includes('http')
-      ? itemsUrl
-      : `https://steamcommunity-a.akamaihd.net/economy/image/${itemsUrl}`;
+    return itemsUrl
+      ? itemsUrl.startsWith('http')
+        ? itemsUrl
+        : `https://steamcommunity-a.akamaihd.net/economy/image/${itemsUrl}`
+      : '';
   }
-  private checkDescription() {
+
+  private checkItemExtras() {
     if (this.itemData.descriptions && this.itemData.descriptions.length > 0) {
       const descriptions = this.itemData.descriptions;
       descriptions.forEach((desc: any) => {

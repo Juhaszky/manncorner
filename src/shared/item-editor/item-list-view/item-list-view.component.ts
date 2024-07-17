@@ -28,7 +28,8 @@ export class ItemListViewComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe((modifiedData: any) => {
         const quality = modifiedData.quality.value;
-        item.qualities = quality;
+        item.quality = quality;
+        item.originalName = item.name;
         item.name  = quality + " " + item.name;
         console.log(modifiedData);
       });

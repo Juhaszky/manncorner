@@ -9,4 +9,6 @@ export interface StockItem extends Item {
     craft_class: string;
     craft_material_type: string;
     lastIndex: Partial<number>;
+    originalName: string;
+    quality: string[];
 }
