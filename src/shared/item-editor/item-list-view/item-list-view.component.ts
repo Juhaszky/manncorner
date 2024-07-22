@@ -27,11 +27,12 @@ export class ItemListViewComponent implements OnInit {
         width: '85vw',
       });
       dialogRef.afterClosed().subscribe((modifiedData: any) => {
-        const quality = modifiedData.quality.value;
-        item.quality = quality;
-        item.originalName = item.name;
-        item.name  = quality + " " + item.name;
-        console.log(modifiedData);
+        if (modifiedData) {
+          const quality = modifiedData.quality.value;
+          item.quality = quality;
+          item.originalName = item.name;
+          item.name = quality + ' ' + item.name;
+        }
       });
     }
   }

@@ -9,20 +9,15 @@ import {
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ResizedImageComponent } from '../resized-image/resized-image.component';
 import { CommonModule } from '@angular/common';
-import { ItemDetailsDirective } from '../item-details/item-details.directive';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemDetailsComponent } from '../item-details/item-details.component';
 import { ItemCustomizerComponent } from '../item-customizer/item-customizer.component';
+import { getItemBorderStyle } from '../../app/common/utils';
 
 @Component({
   selector: 'item',
   standalone: true,
-  imports: [
-    MatTooltipModule,
-    ResizedImageComponent,
-    CommonModule,
-    ItemDetailsDirective,
-  ],
+  imports: [MatTooltipModule, ResizedImageComponent, CommonModule],
 
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss',
@@ -45,11 +40,13 @@ export class ItemComponent implements OnInit {
   }
   canModify: boolean = false;
   showActions: boolean = false;
+  borderStyle: string = '';
 
   constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.checkItemExtras();
+    this.borderStyle = getItemBorderStyle(this.itemData);
   }
 
   onItemSelect() {
@@ -65,40 +62,23 @@ export class ItemComponent implements OnInit {
     event.stopPropagation();
 
     if (this.mode === 'inventory') return;
-    this.itemData.name = this.itemData.originalName;
+    if (this.itemData.originalName) {
+      this.itemData.name = this.itemData.originalName;
+    }
     const dialogRef = this.dialog.open(ItemCustomizerComponent, {
       width: '90vw',
       height: '90vh',
       data: this.itemData,
     });
     dialogRef.afterClosed().subscribe((item: any) => {
-      this.itemData.name = item.name.value;
-      this.itemData.quality = item.quality.value;
+      if (item) {
+        this.itemData.name = item.name.value;
+        this.itemData.quality = item.quality.value;
+        this.updteBorderStyle();
+      }
     });
   }
 
-  getItemBorderStyle(item: any): string {
-    if (item?.name?.includes('Unusual')) {
-      return 'unusual';
-    } else if (item?.name?.includes('Strange')) {
-      return 'strange';
-    } else if (item?.name?.includes('Genuine')) {
-      return 'genuine';
-    } else if (item?.name?.includes('Haunted')) {
-      return 'haunted';
-    } else if (item?.name?.includes("Collector's")) {
-      return 'collectors';
-    } else if (item?.name?.includes('Vintage')) {
-      return 'vintage';
-    } else if (
-      (item?.descriptions && item?.descriptions[0]?.value?.includes('Elite')) ||
-      item?.descriptions?.value?.includes('Elite')
-    ) {
-      return 'elite';
-    } else {
-      return 'unique';
-    }
-  }
   onRemoveItem(): void {
     this.removeEmitter.emit(this.itemData);
   }
@@ -131,5 +111,8 @@ export class ItemComponent implements OnInit {
         }
       });
     }
+  }
+  private updteBorderStyle(): void {
+    this.borderStyle = getItemBorderStyle(this.itemData);
   }
 }

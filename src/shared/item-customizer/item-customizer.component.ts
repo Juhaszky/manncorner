@@ -6,9 +6,8 @@ import { ItemDetailsComponent } from '../item-details/item-details.component';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { StockItem } from '../models/stockItem.model';
-import { Quality, QualityType } from '../models/quality.model';
 import { Killstreak } from '../models/killstreak.model';
-import { ItemExtrasService } from '../item-extras.service';
+import { ItemQualityComponent } from './item-quality/item-quality.component';
 
 @Component({
   selector: 'item-customizer',
@@ -18,6 +17,7 @@ import { ItemExtrasService } from '../item-extras.service';
     MatChipsModule,
     CommonModule,
     MatExpansionModule,
+    ItemQualityComponent,
   ],
   templateUrl: './item-customizer.component.html',
   styleUrl: './item-customizer.component.scss',
@@ -32,17 +32,14 @@ export class ItemCustomizerComponent implements OnInit {
     craftable: new FormControl(true),
   });
 
-  qualities: Quality[] = [];
   killstreaks: Killstreak[] = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: StockItem,
-    public dialogRef: MatDialogRef<ItemDetailsComponent>,
-    private itemExtrasService: ItemExtrasService
+    public dialogRef: MatDialogRef<ItemDetailsComponent>
   ) {}
 
   ngOnInit(): void {
-    this.qualities = this.itemExtrasService.getAllQualities();
     this.details = this.data;
     this.details.name = this.details.originalName ?? this.details.name;
     this.itemFormGroup.patchValue({
@@ -69,7 +66,20 @@ export class ItemCustomizerComponent implements OnInit {
     this.dialogRef.close(this.itemFormGroup.controls);
   }
 
-  getQualityClass(qualityType: string): string {
-    return this.itemExtrasService.getClassByQuality(qualityType);
+  onSelect(quality: string) {
+    const qualityControl = this.itemFormGroup.controls['quality'];
+    const currentValues = qualityControl.value;
+
+    if (currentValues.includes(quality)) {
+      qualityControl.setValue(
+        currentValues.filter((q: string) => q !== quality)
+      );
+    } else {
+      qualityControl.setValue([...currentValues, quality]);
+    }
+  }
+
+  onQualitySelectionChange(event: any): void {
+    this.itemFormGroup.controls['quality'].patchValue(event);
   }
 }
