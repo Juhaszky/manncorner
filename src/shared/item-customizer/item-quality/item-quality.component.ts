@@ -31,6 +31,7 @@ export class ItemQualityComponent implements OnInit {
     //this.selectedQualities = this.qualityControl.value;
     return this.qualityControl?.value.includes(quality);
   }
+  
   onSelect(quality: string): void {
     const qualityIndex = this.selectedQualities.indexOf(quality);
     if (qualityIndex >= 0) {

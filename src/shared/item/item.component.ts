@@ -74,6 +74,7 @@ export class ItemComponent implements OnInit {
       if (item) {
         this.itemData.name = item.name.value;
         this.itemData.quality = item.quality.value;
+        this.itemData.effect = item.effect.value;
         this.updteBorderStyle();
       }
     });

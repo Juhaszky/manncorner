@@ -1,0 +1,16 @@
+<div class="flex w-full justify-center"
+>
+<mat-chip-listbox
+class="mat-mdc-chip-set-stacked sm:w-1/2 w-full"
+aria-label="Color selection"
+>
+@for (effect of effects; track effect) {
+  <mat-chip-option
+  [selected]="initDefaultValue(effect)"
+  (selectionChange)="emitEffectValue(effect)"
+  class="text-slate-300 w-full"
+  >{{ effect }}</mat-chip-option
+  >
+}
+</mat-chip-listbox>
+</div>

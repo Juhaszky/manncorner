@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemCustomizerComponent } from '../../item-customizer/item-customizer.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'item-list-view',
@@ -26,14 +27,26 @@ export class ItemListViewComponent implements OnInit {
         height: '70vh',
         width: '85vw',
       });
-      dialogRef.afterClosed().subscribe((modifiedData: any) => {
-        if (modifiedData) {
-          const quality = modifiedData.quality.value;
-          item.quality = quality;
-          item.originalName = item.name;
-          item.name = quality + ' ' + item.name;
-        }
-      });
+      dialogRef
+        .afterClosed()
+        .subscribe((modifiedData: { [key: string]: FormControl }) => {
+          if (modifiedData) {
+            const qualityControl = modifiedData['quality'];
+            const effectControl = modifiedData['effect'];
+            const nameControl = modifiedData['name'];
+
+            if (qualityControl.value && effectControl.value && nameControl.value) {
+              const quality = qualityControl.value;
+              const effect = effectControl.value;
+              const itemName = nameControl.value;
+
+              item.quality = quality;
+              item.effect = effect;
+              item.originalName = item.name;
+              item.name = `${itemName}`;
+            }
+          }
+        });
     }
   }
 }

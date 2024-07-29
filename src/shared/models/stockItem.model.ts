@@ -11,4 +11,5 @@ export interface StockItem extends Item {
     lastIndex: Partial<number>;
     originalName: string;
     quality: string[];
+    effect: string;
 }

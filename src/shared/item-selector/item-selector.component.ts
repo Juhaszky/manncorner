@@ -127,10 +127,11 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   onRemoveItem(idx: number) {
     if (this.mode === 'toTrade') {
       this.itemService.moveItemToInventory(idx)
-      this.applyFilter();
+
     } else {
       this.itemService.removeItemFrom(idx);
     }
+    this.applyFilter();
   }
 
   onOpenItemEditor() {
@@ -152,25 +153,5 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
           });
       }
     });
-  }
-  
-  getItemBorderStyle(item: any): string {
-    if (item?.market_name?.includes('Unusual')) {
-      return 'unusual';
-    } else if (item?.market_name?.includes('Strange')) {
-      return 'strange';
-    } else if (item?.market_name?.includes('Vintage')) {
-      return 'vintage';
-    } else if (
-      item?.descriptions &&
-      item?.descriptions[0].value?.includes('Elite')
-    ) {
-      return 'elite';
-    } else {
-      return 'unique';
-    }
-  }
-  trackByIdx(index: number, item: any): number {
-    return index;
   }
 }
