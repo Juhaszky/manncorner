@@ -41,10 +41,12 @@ export class ItemComponent implements OnInit {
   canModify: boolean = false;
   showActions: boolean = false;
   borderStyle: string = '';
+  effectUrl: string = '';
 
   constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.effectUrl = `/assets/images/effects/${this.itemData.effect}.webp`;
     this.checkItemExtras();
     this.borderStyle = getItemBorderStyle(this.itemData);
   }
