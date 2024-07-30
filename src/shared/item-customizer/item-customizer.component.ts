@@ -48,6 +48,7 @@ export class ItemCustomizerComponent implements OnInit {
   killstreaks: Killstreak[] = [];
   isUnusual: boolean = false;
   effectUrl: string = '';
+  isEffectAccordionExpanded: boolean = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: StockItem,
@@ -57,7 +58,6 @@ export class ItemCustomizerComponent implements OnInit {
 
   ngOnInit(): void {
     this.details = this.data;
-    console.log(this.details.effect);
     this.setIsUnusual();
     this.details.name = this.details.originalName ?? this.details.name;
     this.itemFormGroup.patchValue({
@@ -81,8 +81,9 @@ export class ItemCustomizerComponent implements OnInit {
 
   onSubmit(): void {
     const itemName = this.itemFormGroup.controls['name'].value;
-    const qualityValues =
-      this.itemFormGroup.controls['quality'].value.join(' ');
+    const qualityValues = this.itemFormGroup.controls['quality'].value.join(
+      ' '
+    );
 
     if (!itemName.includes(qualityValues)) {
       this.itemFormGroup.controls['name'].patchValue(
@@ -122,6 +123,5 @@ export class ItemCustomizerComponent implements OnInit {
 
   private setEffectUrl(effect: string) {
     this.effectUrl = `/assets/images/effects/${effect}.webp`;
-    console.log(this.effectUrl);
   }
 }

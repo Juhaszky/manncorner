@@ -1,18 +1,17 @@
-<div class="flex w-full justify-center"
->
-<mat-chip-listbox
-multiple="true"
-class="mat-mdc-chip-set-stacked sm:w-1/2 w-full"
-aria-label="Color selection"
->
-@for (quality of qualities; track quality) {
-  <mat-chip-option
-  [selected]="initDefaultValues(quality.type)"
-  (selectionChange)="onSelect(quality.type)"
-  [ngClass]="getQualityClass(quality.type)"
-  class="text-slate-300 w-full"
-  >{{ quality.type }}</mat-chip-option
+<div class="flex w-full justify-center">
+  <mat-chip-listbox
+    multiple="true"
+    class="mat-mdc-chip-set-stacked sm:w-1/2 w-full"
+    aria-label="Color selection"
   >
-}
-</mat-chip-listbox>
+    @for (quality of qualities; track quality) {
+    <mat-chip-option
+      [selected]="initDefaultValues(quality.type)"
+      (selectionChange)="onSelect(quality.type)"
+      [ngClass]="getQualityClass(quality.type)"
+      class="text-slate-300 w-full"
+      >{{ quality.type }}</mat-chip-option
+    >
+    }
+  </mat-chip-listbox>
 </div>

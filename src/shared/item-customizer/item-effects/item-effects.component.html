@@ -1,16 +1,23 @@
-<div class="flex w-full justify-center"
->
-<mat-chip-listbox
-class="mat-mdc-chip-set-stacked sm:w-1/2 w-full"
-aria-label="Color selection"
->
-@for (effect of effects; track effect) {
-  <mat-chip-option
-  [selected]="initDefaultValue(effect)"
-  (selectionChange)="emitEffectValue(effect)"
-  class="text-slate-300 w-full"
-  >{{ effect }}</mat-chip-option
+<div class="flex flex-col w-full justify-center">
+  <input
+    (input)="onSearch($event)"
+    matInput
+    placeholder="Search effect..."
+    class="bg-slate-800 mb-4 p-2 border border-slate-700 rounded"
+  />
+  <mat-chip-listbox
+    class="mat-mdc-chip-set-stacked w-full"
+    aria-label="Color selection"
   >
-}
-</mat-chip-listbox>
+    @for (effect of filteredEffects; track filteredEffects) {
+    <mat-chip-option
+      [selected]="isSelected(effect)"
+      (selectionChange)="emitEffectValue(effect)"
+      class="bg-slate-800 text-slate-300 text-sm flex-1 p-0"
+      [ngClass]="'bg-late-800'"
+      style="margin-right: 8px; flex-basis: 0; text-align: center;"
+      >{{ effect }}</mat-chip-option
+    >
+    }
+  </mat-chip-listbox>
 </div>
