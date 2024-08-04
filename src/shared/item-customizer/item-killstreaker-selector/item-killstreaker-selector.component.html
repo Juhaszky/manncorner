@@ -1,0 +1,50 @@
+<div class="flex flex-col w-full justify-center">
+  <h2>Killstreak</h2>
+  <mat-chip-listbox
+    class="mat-mdc-chip-set-stacked w-full mb-4"
+    aria-label="Color selection"
+  >
+    @for (killstreak of killstreaks; track killstreaks) {
+    <mat-chip-option
+      [selected]="isKillstreakSelected(killstreak)"
+      (click)="emitKillstreakValue(killstreak)"
+      class="bg-slate-800 text-slate-300 text-sm flex-1 p-0"
+      [ngClass]="'bg-late-800'"
+      style="margin-right: 8px; flex-basis: 0; text-align: center"
+      >{{ killstreak }}</mat-chip-option
+    >
+    }
+  </mat-chip-listbox>
+  <h2>Sheen</h2>
+  <mat-chip-listbox
+    class="mat-mdc-chip-set-stacked w-full"
+    aria-label="Color selection"
+  >
+    @for (sheen of sheens; track sheens) {
+    <mat-chip-option
+      [selected]="isSheenSelected(sheen)"
+      (click)="emitSheenValue(sheen)"
+      class="bg-slate-800 text-slate-300 text-sm flex-1 p-0"
+      [ngClass]="'bg-late-800'"
+      style="margin-right: 8px; flex-basis: 0; text-align: center"
+      >{{ sheen }}</mat-chip-option
+    >
+    }
+  </mat-chip-listbox>
+  <h2>Killstreaker</h2>
+  <mat-chip-listbox
+    class="mat-mdc-chip-set-stacked w-full"
+    aria-label="Color selection"
+  >
+    @for (killstreaker of killstreakers; track killstreakers) {
+    <mat-chip-option
+      [selected]="isKillstreakerSelected(killstreaker)"
+      (click)="emitKillstreakerValue(killstreaker)"
+      class="bg-slate-800 text-slate-300 text-sm flex-1 p-0"
+      [ngClass]="'bg-late-800'"
+      style="margin-right: 8px; flex-basis: 0; text-align: center"
+      >{{ killstreaker }}</mat-chip-option
+    >
+    }
+  </mat-chip-listbox>
+</div>

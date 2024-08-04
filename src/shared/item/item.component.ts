@@ -76,9 +76,12 @@ export class ItemComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((item: any) => {
       if (item) {
-        this.itemData.name = item.name.value;
-        this.itemData.quality = item.quality.value;
-        this.itemData.effect = item.effect.value;
+        this.itemData.name = item.name?.value;
+        this.itemData.quality = item.quality?.value;
+        this.itemData.effect = item.effect?.value;
+        this.itemData.killstreaker = item.killstreaker?.value;
+        this.itemData.killstreak = item.killstreak?.value;
+        this.itemData.sheen = item.sheen?.value;
         this.updteBorderStyle();
       }
     });

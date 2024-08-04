@@ -34,17 +34,17 @@ export class ItemListViewComponent implements OnInit {
             const qualityControl = modifiedData['quality'];
             const effectControl = modifiedData['effect'];
             const nameControl = modifiedData['name'];
+            const killstreakerControl = modifiedData['killstreaker'];
 
-            if (qualityControl.value && effectControl.value && nameControl.value) {
               const quality = qualityControl.value;
               const effect = effectControl.value;
               const itemName = nameControl.value;
-
+              const killstreaker = killstreakerControl.value;
               item.quality = quality;
               item.effect = effect;
+              item.killstreaker = killstreaker;
               item.originalName = item.name;
               item.name = `${itemName}`;
-            }
           }
         });
     }

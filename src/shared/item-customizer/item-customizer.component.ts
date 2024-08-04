@@ -13,10 +13,10 @@ import { ItemDetailsComponent } from '../item-details/item-details.component';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { StockItem } from '../models/stockItem.model';
-import { Killstreak } from '../models/killstreak.model';
 import { ItemQualityComponent } from './item-quality/item-quality.component';
 import { ItemEffectsComponent } from './item-effects/item-effects.component';
 import { ResizedImageComponent } from '../resized-image/resized-image.component';
+import { ItemKillstreakerSelectorComponent } from './item-killstreaker-selector/item-killstreaker-selector.component';
 
 @Component({
   selector: 'item-customizer',
@@ -29,6 +29,7 @@ import { ResizedImageComponent } from '../resized-image/resized-image.component'
     ItemQualityComponent,
     ItemEffectsComponent,
     ResizedImageComponent,
+    ItemKillstreakerSelectorComponent,
   ],
   templateUrl: './item-customizer.component.html',
   styleUrl: './item-customizer.component.scss',
@@ -41,11 +42,16 @@ export class ItemCustomizerComponent implements OnInit {
     name: new FormControl(''),
     quality: new FormControl([]),
     effect: new FormControl(''),
-    killstreak: new FormControl(null),
+    killstreaker: new FormControl(
+      this.details?.killstreaker || {
+        killstreaker: '',
+        sheen: '',
+        killstreak: '',
+      }
+    ),
     craftable: new FormControl(true),
   });
 
-  killstreaks: Killstreak[] = [];
   isUnusual: boolean = false;
   effectUrl: string = '';
   isEffectAccordionExpanded: boolean = false;
@@ -64,6 +70,11 @@ export class ItemCustomizerComponent implements OnInit {
       name: this.details.name,
       quality: this.details.quality || [],
       effect: this.details.effect || '',
+      killstreaker: this.details.killstreaker || {
+        killstreaker: '',
+        sheen: '',
+        killstreak: '',
+      },
     });
   }
 
@@ -81,9 +92,8 @@ export class ItemCustomizerComponent implements OnInit {
 
   onSubmit(): void {
     const itemName = this.itemFormGroup.controls['name'].value;
-    const qualityValues = this.itemFormGroup.controls['quality'].value.join(
-      ' '
-    );
+    const qualityValues =
+      this.itemFormGroup.controls['quality'].value.join(' ');
 
     if (!itemName.includes(qualityValues)) {
       this.itemFormGroup.controls['name'].patchValue(
@@ -107,6 +117,10 @@ export class ItemCustomizerComponent implements OnInit {
       this.setEffectUrl(event);
       this.itemFormGroup.controls['effect'].patchValue(event);
     }
+  }
+
+  onKillstreakSelectionChange(event: any) {
+    this.itemFormGroup.controls['killstreaker'].patchValue(event);
   }
 
   private setIsUnusual() {

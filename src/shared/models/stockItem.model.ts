@@ -1,4 +1,5 @@
 import { Item } from "./item.model";
+import { Killstreaker } from "./killstreaker.model";
 
 export interface StockItem extends Item {
     item_class: string;
@@ -12,4 +13,5 @@ export interface StockItem extends Item {
     originalName: string;
     quality: string[];
     effect: string;
+    killstreaker: Killstreaker
 }
