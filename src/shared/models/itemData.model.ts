@@ -40,4 +40,5 @@ export interface ItemData {
   idx: number;
   image_url: string;
   imageUrl: string;
+  selected: boolean;
 }

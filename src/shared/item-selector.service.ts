@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, first, map } from 'rxjs';
 import { StockItem } from './models/stockItem.model';
 import { ItemState } from './models/itemState.model';
+import { ItemData } from './models/itemData.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +24,11 @@ export class ItemSelectorService {
     this.initalizeState();
   }
   private initalizeState(): void {
-    this.fetchAllItems().subscribe((items: any[]) => {
+    this.fetchAllItems().subscribe((items: StockItem[]) => {
       this.updateState({ allItems: items });
     });
 
-    this.fetchItems().subscribe((items: any[]) =>
+    this.fetchItems().subscribe((items: ItemData[]) =>
       this.updateState({ inventoryItems: items, filteredInventoryItems: items })
     );
   }
@@ -61,7 +62,7 @@ export class ItemSelectorService {
     this.updateState({ forTradeItems: [] });
   }
 
-  fetchItems(): Observable<any> {
+  fetchItems(): Observable<ItemData[]> {
     return this.http
       .get<Observable<any>>('http://localhost:3000/alma')
       .pipe(map((data: any) => data));
@@ -73,16 +74,17 @@ export class ItemSelectorService {
 
   moveItemToTrade(index: number) {
     const state = this.stateSubject.value;
-    
+
     // Clone the current state arrays
     const inventoryItems = state.inventoryItems.slice();
     const filteredInventoryItems = state.filteredInventoryItems.slice();
     const toTradeItems = state.toTradeItems.slice();
 
-    
     // Find and remove the item from inventoryItems
     const itemToMove = filteredInventoryItems[index];
-    const originalIndex = inventoryItems.findIndex(item => item.idx === itemToMove.idx);
+    const originalIndex = inventoryItems.findIndex(
+      (item) => item.idx === itemToMove.idx
+    );
     inventoryItems.splice(originalIndex, 1);
     // Remove the item from filteredInventoryItems
     filteredInventoryItems.splice(index, 1);
@@ -119,17 +121,19 @@ export class ItemSelectorService {
     });
   }
 
-  filterItems(items: any[], filterText: string): StockItem[] {
+  filterItems(items: ItemData[], filterText: string): ItemData[] {
     if (!filterText || filterText.length === 0) {
       return items;
     }
-    return items.filter(item => item.name.toLowerCase().includes(filterText.toLowerCase()));
+    return items.filter((item) =>
+      item.name.toLowerCase().includes(filterText.toLowerCase())
+    );
   }
 
   updateFilteredItems(filterText: string): void {
     const state = this.stateSubject.value;
     console.log(state);
-    const filteredItems = state.inventoryItems.filter(item =>
+    const filteredItems = state.inventoryItems.filter((item) =>
       item.name.toLowerCase().includes(filterText.toLowerCase())
     );
     this.updateState({ filteredInventoryItems: filteredItems, filterText });

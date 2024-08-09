@@ -13,9 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
 import { first, map, Observable, of, switchMap, tap } from 'rxjs';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { StockItem } from '../models/stockItem.model';
 import { ItemComponent } from '../item/item.component';
-
+import { ModifiedItemData } from '../models/modifiedItem.model';
 
 @Component({
   selector: 'item-selector',
@@ -25,7 +24,7 @@ import { ItemComponent } from '../item/item.component';
     CommonModule,
     MatProgressSpinnerModule,
     ScrollingModule,
-    ItemComponent
+    ItemComponent,
   ],
   templateUrl: './item-selector.component.html',
   styleUrl: './item-selector.component.scss',
@@ -34,8 +33,8 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems';
   @Input() filter: string = '';
 
-  items: any[] = [];
-  filteredItems: any[] = [];
+  items: ModifiedItemData[] = [];
+  filteredItems: ModifiedItemData[] = [];
   loading = false;
   borderStyle: 'unusual' | 'strange' | 'vintage' | 'elite' | 'unique' =
     'unique';
@@ -50,7 +49,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   private loadItems(): void {
-    let itemObservable: Observable<any>;
+    let itemObservable: Observable<ModifiedItemData[]>;
     switch (this.mode) {
       case 'inventory':
         this.loading = true;
@@ -64,19 +63,19 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
     }
 
     itemObservable.subscribe({
-      next: (items: any[]) => this.handleSuccess(items),
+      next: (items: ModifiedItemData[]) => this.handleSuccess(items),
       error: (err) => this.handleError(err),
     });
   }
 
-  private handleSuccess(items: any[]): void {
+  private handleSuccess(items: ModifiedItemData[]): void {
     this.items = items;
     if (this.mode === 'inventory') {
       this.applyFilter();
     }
   }
 
-  private handleError(err: any): void {
+  private handleError(err: string): void {
     this.loading = false;
     console.error('Failed to load items:', err);
   }
@@ -99,7 +98,6 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   applyFilter(): void {
-    console.log(this.filter);
     this.itemService.updateFilteredItems(this.filter);
     this.itemService.itemState$.subscribe((state) => {
       this.filteredItems = state.filteredInventoryItems.filter(
@@ -110,7 +108,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
 
   onItemSelect(idx: number): void {
     if (this.mode === 'inventory') {
-      let selectedItem: any;
+      let selectedItem: ModifiedItemData;
       if (this.filter === '') {
         this.items[idx].selected = true;
         selectedItem = this.items[idx];
@@ -126,8 +124,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
 
   onRemoveItem(idx: number) {
     if (this.mode === 'toTrade') {
-      this.itemService.moveItemToInventory(idx)
-
+      this.itemService.moveItemToInventory(idx);
     } else {
       this.itemService.removeItemFrom(idx);
     }
@@ -140,7 +137,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
       width: '95vw',
     });
 
-    dialogRef.afterClosed().subscribe((selectedItems: StockItem[]) => {
+    dialogRef.afterClosed().subscribe((selectedItems: ModifiedItemData[]) => {
       if (selectedItems) {
         this.itemService.itemState$
           .pipe(

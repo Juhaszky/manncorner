@@ -2,13 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
   afterNextRender,
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnInit,
 } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Observable, combineLatest, first, map } from 'rxjs';
+import { combineLatest, first, map } from 'rxjs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -40,15 +39,13 @@ import { DescrpitionComponent } from '../../shared/descrpition/descrpition.compo
     ActionBarComponent,
     NgxEditorModule,
     FormsModule,
-    DescrpitionComponent
+    DescrpitionComponent,
   ],
   providers: [HttpClient],
   templateUrl: './add-trade.component.html',
   styleUrl: './add-trade.component.scss',
 })
 export class AddTradeComponent implements OnInit {
-  inventoryItems: any = null;
-  filteredItems: Observable<any[]> = new Observable();
   filterText: string = '';
   tradeDescription: string = '';
 
@@ -67,12 +64,11 @@ export class AddTradeComponent implements OnInit {
       });
     });
   }
-  check(event: any) {
-    this.tradeDescription = event;
+  check(description: string): void {
+    this.tradeDescription = description;
   }
 
   ngOnInit(): void {
-
     this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
       this.itemSelectorService.updateState({ allItems: items });
     });
@@ -118,7 +114,7 @@ export class AddTradeComponent implements OnInit {
             itemsTo: itemIdsForTrade,
             postDate: new Date().toISOString(),
             owner: this.userDataService.getUsername(),
-            description: this.tradeDescription
+            description: this.tradeDescription,
           })
           .subscribe();
 
@@ -126,7 +122,6 @@ export class AddTradeComponent implements OnInit {
       }
     );
   }
- 
 
   private emptySelectedItems() {
     //this.html = '';
