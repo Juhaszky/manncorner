@@ -10,4 +10,6 @@ export class CreateTradeDto {
   readonly postDate: string;
   @IsNotEmpty()
   readonly owner: string;
+  @IsNotEmpty()
+  readonly description: string;
 }

@@ -21,8 +21,9 @@ export class TradesController {
     console.log(createTradeDto);
     trade.itemsFrom = JSON.stringify(createTradeDto.itemsFrom);
     trade.itemsTo = JSON.stringify(createTradeDto.itemsTo);
-    trade.postDate = JSON.stringify(createTradeDto.postDate);
+    trade.postDate = createTradeDto.postDate;
     trade.owner = JSON.stringify(createTradeDto.owner);
+    trade.description = JSON.stringify(createTradeDto.description);
     console.log(createTradeDto);
     return this.tradesService.create(trade);
   }

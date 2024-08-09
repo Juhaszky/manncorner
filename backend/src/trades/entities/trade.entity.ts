@@ -27,4 +27,9 @@ export class Trade {
     length: 4000,
   })
   owner: string;
+  @Column({
+    type: 'nvarchar',
+    length: 'max',
+  })
+  description: string;
 }
