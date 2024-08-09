@@ -30,17 +30,17 @@
           <h3>Spell</h3>
           <h4>{{ itemData.spell }}</h4>
         </span>
-        <span *ngIf="itemData.killstreaker.sheen">
+        <span *ngIf="itemData.killstreaker?.sheen">
           <h3>Sheen</h3>
-          <h4>{{ itemData.killstreaker.sheen }}</h4>
+          <h4>{{ itemData.killstreaker?.sheen }}</h4>
         </span>
-        <span *ngIf="itemData.killstreaker.killstreaker">
+        <span *ngIf="itemData.killstreaker?.killstreaker">
           <h3>Killstreaker</h3>
-          <h4>{{ itemData.killstreaker.killstreaker }}</h4>
+          <h4>{{ itemData.killstreaker?.killstreaker }}</h4>
         </span>
-        <span *ngIf="itemData.killstreaker.killstreak">
+        <span *ngIf="itemData.killstreaker?.killstreak">
           <h3>Killstreak</h3>
-          <h4>{{ itemData.killstreaker.killstreak }}</h4>
+          <h4>{{ itemData.killstreaker?.killstreak }}</h4>
         </span>
       </div>
     </div>

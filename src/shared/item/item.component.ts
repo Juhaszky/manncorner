@@ -13,78 +13,61 @@ import { MatDialog } from '@angular/material/dialog';
 import { ItemDetailsComponent } from '../item-details/item-details.component';
 import { ItemCustomizerComponent } from '../item-customizer/item-customizer.component';
 import { getItemBorderStyle } from '../../app/common/utils';
+import { Router, RouterModule } from '@angular/router';
+import { ItemForm } from '../models/itemForm.model';
+import { ModifiedItemData } from '../models/modifiedItem.model';
 
 @Component({
   selector: 'item',
   standalone: true,
-  imports: [MatTooltipModule, ResizedImageComponent, CommonModule],
+  imports: [
+    MatTooltipModule,
+    ResizedImageComponent,
+    CommonModule,
+    RouterModule,
+  ],
 
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss',
 })
 export class ItemComponent implements OnInit {
-  @Input() itemData: any;
+  @Input() itemData!: ModifiedItemData;
   @Input() mode: string = '';
   @Output() removeEmitter = new EventEmitter();
+  canModify: boolean = false;
+  showActions: boolean = false;
+  borderStyle: string = '';
+  effectUrl: string = '';
   @HostListener('mouseenter') onMouseEnter() {
-    if (this.mode === 'allItems') {
-      this.canModify = true;
-    }
-    if (this.mode !== 'inventory' && this.mode !== '') {
-      this.showActions = true;
-    }
+    this.canModify = this.mode === 'allItems';
+    this.showActions = this.mode !== 'inventory' && this.mode !== '';
   }
   @HostListener('mouseleave') onMouseLeave() {
     this.showActions = false;
     this.canModify = false;
   }
-  canModify: boolean = false;
-  showActions: boolean = false;
-  borderStyle: string = '';
-  effectUrl: string = '';
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private router: Router) {}
 
   ngOnInit(): void {
-    if (this.itemData.effect) {
-      this.effectUrl = `/assets/images/effects/${this.itemData.effect}.webp`;
-    }
+    this.initializeEffectUrl();
     this.checkItemExtras();
-    this.borderStyle = getItemBorderStyle(this.itemData);
+    this.updateBorderStyle();
   }
 
   onItemSelect() {
-    if (this.mode === 'inventory' || this.mode === 'allItem') return;
-    this.dialog.open(ItemDetailsComponent, {
-      width: '90vw',
-      height: '90vh',
-      data: this.itemData,
-    });
+    if (this.shouldOpenDetails()) {
+      this.openItemDetails();
+    }
   }
 
-  onCustomizeItem(event: any) {
+  onCustomizeItem(event: Event) {
     event.stopPropagation();
 
     if (this.mode === 'inventory') return;
-    if (this.itemData.originalName) {
-      this.itemData.name = this.itemData.originalName;
-    }
-    const dialogRef = this.dialog.open(ItemCustomizerComponent, {
-      width: '90vw',
-      height: '90vh',
-      data: this.itemData,
-    });
-    dialogRef.afterClosed().subscribe((item: any) => {
-      if (item) {
-        this.itemData.name = item.name?.value;
-        this.itemData.quality = item.quality?.value;
-        this.itemData.effect = item.effect?.value;
-        this.itemData.killstreaker = item.killstreaker?.value;
-        this.itemData.killstreak = item.killstreak?.value;
-        this.itemData.sheen = item.sheen?.value;
-        this.updteBorderStyle();
-      }
-    });
+    this.resetItemName();
+    1;
+    this.openItemCustomizer();
   }
 
   onRemoveItem(): void {
@@ -109,18 +92,76 @@ export class ItemComponent implements OnInit {
   private checkItemExtras() {
     if (this.itemData.descriptions && this.itemData.descriptions.length > 0) {
       const descriptions = this.itemData.descriptions;
-      descriptions.forEach((desc: any) => {
+      console.log(descriptions);
+      descriptions.forEach((desc) => {
         if (desc.value.includes('Halloween')) {
           this.itemData.spell = desc.value;
         } else if (desc.value.includes('Killstreaker')) {
-          this.itemData.killstreaker = desc.value;
+          if (this.itemData.killstreaker) {
+            this.itemData.killstreaker.killstreaker = desc.value;
+          }
         } else if (desc.value.includes('Sheen')) {
-          this.itemData.sheen = desc.value;
+          if (this.itemData.killstreaker) {
+            this.itemData.killstreaker.sheen = desc.value;
+          }
         }
       });
     }
   }
-  private updteBorderStyle(): void {
+
+  private resetItemName(): void {
+    if (this.itemData.originalName) {
+      this.itemData.name = this.itemData.originalName;
+    }
+  }
+
+  private updateBorderStyle(): void {
     this.borderStyle = getItemBorderStyle(this.itemData);
+  }
+
+  private shouldOpenDetails(): boolean {
+    return (
+      !['inventory', 'allItem'].includes(this.mode) &&
+      !this.router.url.includes('home')
+    );
+  }
+  private openItemDetails(): void {
+    this.dialog.open(ItemDetailsComponent, {
+      width: '90vw',
+      height: '90vh',
+      data: this.itemData,
+    });
+  }
+  private updateItemData(item: ItemForm): void {
+    this.itemData.name = item.name?.value;
+    this.itemData.quality = item.quality?.value;
+    this.itemData.effect = item.effect?.value;
+    this.itemData.killstreaker = item.killstreaker?.value;
+    if (item.killstreaker?.value) {
+      const killstreaker = item.killstreaker?.value;
+      this.itemData.killstreaker.killstreak = killstreaker.killstreak;
+      this.itemData.killstreaker.sheen = killstreaker.sheen;
+    }
+  }
+
+  private openItemCustomizer(): void {
+    const dialogRef = this.dialog.open(ItemCustomizerComponent, {
+      width: '90vw',
+      height: '90vh',
+      data: this.itemData,
+    });
+
+    dialogRef.afterClosed().subscribe((item: ItemForm) => {
+      if (item) {
+        this.updateItemData(item);
+        this.updateBorderStyle();
+      }
+    });
+  }
+
+  private initializeEffectUrl(): void {
+    if (this.itemData.effect) {
+      this.effectUrl = `/assets/images/effects/${this.itemData.effect}.webp`;
+    }
   }
 }
