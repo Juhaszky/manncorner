@@ -7,14 +7,14 @@
       class="flex flex-col p-4 h-75 sm:justify-between justify-center items-center"
     >
       <img
-        class="h-48 hidden sm:block"
+        class="h-24 mt-4 hidden sm:block"
         src="/assets/images/arrow-right-01-512.webp"
         alt="Arrow"
       />
 
       <!-- Visible only on mobile -->
       <img
-        class="h-48 block sm:hidden"
+        class="h-24 sm:mt-4 mt-0 block sm:hidden"
         src="/assets/images/Down-Arrow-PNG-Image.png"
         alt="Arrow for Mobile"
       />
@@ -50,4 +50,6 @@
       <item-selector [mode]="'inventory'" [filter]="filterText"></item-selector>
     </div>
   </div>
+  <descrpition [canEdit]="true" (descriptionData)="check($event)">
+  </descrpition>
 </div>

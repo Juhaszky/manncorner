@@ -20,6 +20,9 @@ import { TradeService } from '../home/trade.service';
 import { MatInputModule } from '@angular/material/input';
 import { ActionBarComponent } from './action-bar/action-bar.component';
 import { AddTradeService } from './add-trade.service';
+import { NgxEditorModule } from 'ngx-editor';
+import { FormsModule } from '@angular/forms';
+import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,6 +38,9 @@ import { AddTradeService } from './add-trade.service';
     MatButtonModule,
     MatInputModule,
     ActionBarComponent,
+    NgxEditorModule,
+    FormsModule,
+    DescrpitionComponent
   ],
   providers: [HttpClient],
   templateUrl: './add-trade.component.html',
@@ -44,6 +50,7 @@ export class AddTradeComponent implements OnInit {
   inventoryItems: any = null;
   filteredItems: Observable<any[]> = new Observable();
   filterText: string = '';
+  tradeDescription: string = '';
 
   constructor(
     private _snackBar: MatSnackBar,
@@ -60,8 +67,12 @@ export class AddTradeComponent implements OnInit {
       });
     });
   }
+  check(event: any) {
+    this.tradeDescription = event;
+  }
 
   ngOnInit(): void {
+
     this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
       this.itemSelectorService.updateState({ allItems: items });
     });
@@ -107,6 +118,7 @@ export class AddTradeComponent implements OnInit {
             itemsTo: itemIdsForTrade,
             postDate: new Date().toISOString(),
             owner: this.userDataService.getUsername(),
+            description: this.tradeDescription
           })
           .subscribe();
 
@@ -114,8 +126,10 @@ export class AddTradeComponent implements OnInit {
       }
     );
   }
+ 
 
   private emptySelectedItems() {
+    //this.html = '';
     this.itemSelectorService.emptyItemForTrade();
     this.itemSelectorService.emptyItemsToTrade();
   }

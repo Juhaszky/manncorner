@@ -7,9 +7,10 @@ import { BehaviorSubject, map, Observable, pipe, tap } from 'rxjs';
 })
 export class TradeService {
   //trades$!: Observable<any[]>;
-  private tradesSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  private tradesSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(
+    []
+  );
   trades$: Observable<any[]> = this.tradesSubject.asObservable();
-
 
   constructor(private http: HttpClient) {}
 
@@ -32,16 +33,24 @@ export class TradeService {
           );
         });
       }),
-      tap(parsedTrades => this.tradesSubject.next(parsedTrades))
+      tap((parsedTrades) => this.tradesSubject.next(parsedTrades))
     );
   }
 
   getTradeById(id: string): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/trades/${id}`)
+    return this.http.get<any>(`http://localhost:3000/trades/${id}`).pipe(
+      map((trade) => {
+        // Parse the postDate field using JSON.parse
+        if (typeof trade.postDate === 'string') {
+          trade.postDate = JSON.parse(trade.postDate);
+        }
+        return trade;
+      })
+    );
   }
 
   getTotalTradesCount(): Observable<number> {
-    return this.http.get<number>("http://localhost:3000/trades/amount");
+    return this.http.get<number>('http://localhost:3000/trades/amount');
   }
 
   getTrades(): Observable<any[]> {

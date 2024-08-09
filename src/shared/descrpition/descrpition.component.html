@@ -1,0 +1,22 @@
+<div class="row my-4 text-bold text-base antialiased">
+  <div class="grid-cols-6">
+    <h2 class="text-white">Trade Description</h2>
+  </div>
+  <div class="col-card border-2 p-2 border-slate-700 rounded-md text-slate-300">
+    <div class="NgxEditor__Wrapper" *ngIf="canEdit; else descnoheader">
+      <ngx-editor-menu class="text-black" [editor]="editor" [toolbar]="toolbar">
+      </ngx-editor-menu>
+      <ngx-editor
+        class="bg-slate-800"
+        [editor]="editor"
+        [ngModel]="html"
+        (ngModelChange)="onChange($event)"
+        [disabled]="false"
+        [placeholder]="'Type here...'"
+      ></ngx-editor>
+    </div>
+    <ng-template #descnoheader>
+      <div [innerHTML]="safeHtml"></div>
+    </ng-template>
+  </div>
+</div>

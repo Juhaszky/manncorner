@@ -86,3 +86,10 @@ md-sidenav.md-closed.md-locked-open-add-active {
 .cdk-virtual-scroll-content-wrapper {
   display: flex;
 }
+.NgxEditor {
+  background-color: rgb(30 41 59 / 0.5) !important;
+  color: white !important;
+}
+.NgxEditor__MenuBar {
+  background-color: rgb(38, 166, 154, 0.8) !important;
+}
