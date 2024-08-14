@@ -460,7 +460,6 @@ export class ItemEffectsComponent {
     'Violent Violets',
   ];
   filteredEffects: string[] = [...this.effects];
-  @Input() itemData: any;
   @Input() effectControl!: AbstractControl;
   @Output() selectionChange = new EventEmitter<string>();
 

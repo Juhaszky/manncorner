@@ -16,6 +16,7 @@ import { getItemBorderStyle } from '../../app/common/utils';
 import { Router, RouterModule } from '@angular/router';
 import { ItemForm } from '../models/itemForm.model';
 import { ModifiedItemData } from '../models/modifiedItem.model';
+import { ItemExtrasService } from '../item-extras.service';
 
 @Component({
   selector: 'item',
@@ -47,7 +48,7 @@ export class ItemComponent implements OnInit {
     this.canModify = false;
   }
 
-  constructor(private dialog: MatDialog, private router: Router) {}
+  constructor(private dialog: MatDialog, private router: Router, private itemExtrasService: ItemExtrasService) {}
 
   ngOnInit(): void {
     this.initializeEffectUrl();
@@ -92,7 +93,6 @@ export class ItemComponent implements OnInit {
   private checkItemExtras() {
     if (this.itemData.descriptions && this.itemData.descriptions.length > 0) {
       const descriptions = this.itemData.descriptions;
-      console.log(descriptions);
       descriptions.forEach((desc) => {
         if (desc.value.includes('Halloween')) {
           this.itemData.spell = desc.value;
@@ -161,7 +161,8 @@ export class ItemComponent implements OnInit {
 
   private initializeEffectUrl(): void {
     if (this.itemData.effect) {
-      this.effectUrl = `/assets/images/effects/${this.itemData.effect}.webp`;
+      const url = this.itemExtrasService.getItemEffectUrl(this.itemData.effect);
+      this.effectUrl = url;
     }
   }
 }

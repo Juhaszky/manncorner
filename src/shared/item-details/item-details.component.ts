@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ResizedImageComponent } from '../resized-image/resized-image.component';
 import { CommonModule } from '@angular/common';
 import { ModifiedItemData } from '../models/modifiedItem.model';
+import { ItemExtrasService } from '../item-extras.service';
 
 @Component({
   selector: 'item-details',
@@ -13,10 +14,24 @@ import { ModifiedItemData } from '../models/modifiedItem.model';
 })
 export class ItemDetailsComponent implements OnInit {
   @Input() itemData!: ModifiedItemData;
-
-  constructor(@Inject(MAT_DIALOG_DATA) private data: ModifiedItemData) {}
+  isAllClass: boolean = false;
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: ModifiedItemData,
+    private itemExtrasService: ItemExtrasService
+  ) {}
   ngOnInit(): void {
     this.itemData = this.data;
+    if (this.itemData.tags) {
+      let classCounter = 0;
+      this.itemData.tags.forEach((t) => {
+        if (t.category === 'Class') {
+          classCounter++;
+        }
+      });
+      if (classCounter === 9) {
+        this.isAllClass = true;
+      }
+    }
   }
 
   getImageUrl(): string {
@@ -30,5 +45,12 @@ export class ItemDetailsComponent implements OnInit {
     return itemsUrl.includes('http')
       ? itemsUrl
       : `https://steamcommunity-a.akamaihd.net/economy/image/${itemsUrl}`;
+  }
+  getEffectUrl(): string {
+    let effectUrl = '';
+    if (this.itemData.effect) {
+      effectUrl = this.itemExtrasService.getItemEffectUrl(this.itemData.effect);
+    }
+    return effectUrl;
   }
 }

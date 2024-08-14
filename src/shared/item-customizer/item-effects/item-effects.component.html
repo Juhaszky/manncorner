@@ -13,8 +13,8 @@
     <mat-chip-option
       [selected]="isSelected(effect)"
       (selectionChange)="emitEffectValue(effect)"
+      [ngClass]="'bg-slate-800'"
       class="bg-slate-800 text-slate-300 text-sm flex-1 p-0"
-      [ngClass]="'bg-late-800'"
       style="margin-right: 8px; flex-basis: 0; text-align: center;"
       >{{ effect }}</mat-chip-option
     >

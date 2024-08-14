@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Quality, QualityType } from './models/quality.model';
 
-
-
 @Injectable({
   providedIn: 'root',
 })
@@ -27,7 +25,6 @@ export class ItemExtrasService {
     [QualityType.Haunted]: 'haunted',
     [QualityType.Collectors]: 'collectors',
   };
-  constructor() {}
 
   getAllQualities(): Quality[] {
     return this.qualities;
@@ -36,5 +33,8 @@ export class ItemExtrasService {
   getClassByQuality(qualityType: string): string {
     const key = qualityType as QualityType;
     return this.qualityMap[key] || '';
+  }
+  getItemEffectUrl(effect: string): string {
+    return `/assets/images/effects/${effect}.webp`;
   }
 }
