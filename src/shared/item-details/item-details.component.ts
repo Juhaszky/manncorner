@@ -15,12 +15,14 @@ import { ItemExtrasService } from '../item-extras.service';
 export class ItemDetailsComponent implements OnInit {
   @Input() itemData!: ModifiedItemData;
   isAllClass: boolean = false;
+  paintColor: {paintName: string; paintColor: string} = {paintName: '', paintColor: ''};
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: ModifiedItemData,
     private itemExtrasService: ItemExtrasService
   ) {}
   ngOnInit(): void {
     this.itemData = this.data;
+    console.log(this.itemData);
     if (this.itemData.tags) {
       let classCounter = 0;
       this.itemData.tags.forEach((t) => {
@@ -32,6 +34,7 @@ export class ItemDetailsComponent implements OnInit {
         this.isAllClass = true;
       }
     }
+    
   }
 
   getImageUrl(): string {

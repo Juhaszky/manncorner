@@ -23,9 +23,9 @@ export class SearchBarComponent implements AfterViewInit {
 
   constructor() {
     afterNextRender(() => {
-      this.filterText = localStorage.getItem('filterText')?.toString() || '';
-      this.searchBar.nativeElement.value = this.filterText;
-      this.addTradeService.filterText$.next(this.filterText);
+      //this.filterText = localStorage.getItem('filterText')?.toString() || '';
+      //this.searchBar.nativeElement.value = this.filterText;
+      //this.addTradeService.filterText$.next(this.filterText);
     });
   }
 

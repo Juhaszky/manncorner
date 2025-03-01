@@ -15,6 +15,7 @@ import { first, map, Observable, of, switchMap, tap } from 'rxjs';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ItemComponent } from '../item/item.component';
 import { ModifiedItemData } from '../models/modifiedItem.model';
+import { SortService } from '../sort.service';
 
 @Component({
   selector: 'item-selector',
@@ -41,11 +42,21 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
 
   constructor(
     private itemService: ItemSelectorService,
+    private sortService: SortService,
     public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.loadItems();
+    this.sortService.sortCriteria$.subscribe((criteria) => {
+      //this.items = this.sortService.sortItems(this.items, criteria);
+      if (this.filteredItems.length > 0) {
+        
+        //this.itemService.updateFilteredItems(criteria)
+        //this.filteredItems = this.sortService.sortItems(this.filteredItems, criteria);
+        this.itemService.updateState({filteredInventoryItems: this.filteredItems})
+      }
+    });
   }
 
   private loadItems(): void {
@@ -93,16 +104,19 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
     if (this.mode !== 'inventory') return;
     this.applyFilter();
   }
 
   applyFilter(): void {
-    this.itemService.updateFilteredItems(this.filter);
+      this.itemService.updateFilteredItems(this.filter);
     this.itemService.itemState$.subscribe((state) => {
+      this.filter = state.filterText;
       this.filteredItems = state.filteredInventoryItems.filter(
         (item) => item.selected !== false
       );
+      
     });
   }
 
@@ -123,8 +137,18 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   onRemoveItem(idx: number) {
+    this.itemService.itemState$.subscribe((state) => {
+      this.filter = state.filterText;
+    })
     if (this.mode === 'toTrade') {
-      this.itemService.moveItemToInventory(idx);
+      console.log(this.filter);
+      if (this.filter) {
+        console.log('ran');
+        this.itemService.moveItemToFilteredInventory(idx);
+        this.itemService.itemState$.subscribe((s) => console.log(s.filteredInventoryItems));
+      } else {
+        this.itemService.moveItemToInventory(idx);
+      }
     } else {
       this.itemService.removeItemFrom(idx);
     }

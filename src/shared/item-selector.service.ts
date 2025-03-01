@@ -76,9 +76,9 @@ export class ItemSelectorService {
     const state = this.stateSubject.value;
 
     // Clone the current state arrays
-    const inventoryItems = state.inventoryItems.slice();
-    const filteredInventoryItems = state.filteredInventoryItems.slice();
-    const toTradeItems = state.toTradeItems.slice();
+    const inventoryItems = [...state.inventoryItems];
+    const filteredInventoryItems = [...state.filteredInventoryItems];
+    const toTradeItems = [...state.toTradeItems];
 
     // Find and remove the item from inventoryItems
     const itemToMove = filteredInventoryItems[index];
@@ -103,13 +103,15 @@ export class ItemSelectorService {
 
   moveItemToInventory(index: number) {
     const state = this.stateSubject.value;
-
+    console.log(state.filterText);
     // Clone the current state arrays
-    const inventoryItems = state.inventoryItems.slice();
-    const toTradeItems = state.toTradeItems.slice();
+    const inventoryItems = [...state.inventoryItems];
+    const toTradeItems = [...state.toTradeItems];
 
     // Find and remove the item from toTradeItems
     const itemToMove = toTradeItems.splice(index, 1)[0];
+    itemToMove.selected = false;
+    console.log(itemToMove);
 
     // Insert the item back into inventoryItems at its original position
     inventoryItems.splice(itemToMove.idx, 0, itemToMove);
@@ -120,15 +122,35 @@ export class ItemSelectorService {
       toTradeItems,
     });
   }
+  moveItemToFilteredInventory(index: number) {
+    const state = this.stateSubject.value;
+    console.log(state.filterText);
+    // Clone the current state arrays
+    const filteredInventoryItems = [...state.filteredInventoryItems];
+    const toTradeItems = [...state.toTradeItems];
+
+    // Find and remove the item from toTradeItems
+    const itemToMove = toTradeItems.splice(index, 1)[0];
+    itemToMove.selected = false;
+    console.log(itemToMove);
+
+    // Insert the item back into inventoryItems at its original position
+    filteredInventoryItems.splice(itemToMove.idx, 0, itemToMove);
+    console.log(filteredInventoryItems);
+    
+    // Update the state with the modified arrays
+    this.updateState({
+      filteredInventoryItems,
+      toTradeItems,
+    });
+  }
 
   filterItems(items: ItemData[], filterText: string): ItemData[] {
-    if (!filterText || filterText.length === 0) {
-      return items;
-    }
     return items.filter((item) =>
       item.name.toLowerCase().includes(filterText.toLowerCase())
     );
   }
+  
 
   updateFilteredItems(filterText: string): void {
     const state = this.stateSubject.value;

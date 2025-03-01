@@ -49,7 +49,6 @@ p {
 }
 .mat-mdc-autocomplete-panel {
   background-color: rgb(31 41 55) !important;
-  
 }
 md-sidenav, 
 md-sidenav.md-locked-open, 
@@ -92,4 +91,11 @@ md-sidenav.md-closed.md-locked-open-add-active {
 }
 .NgxEditor__MenuBar {
   background-color: rgb(38, 166, 154, 0.8) !important;
+}
+.mat-mdc-menu-panel {
+  background-color: rgb(30 41 59 / 1) !important;
+  color: white !important;
+}
+.mat-mdc-menu-item-text {
+  color: rgb(156 163 175 / 1);;
 }

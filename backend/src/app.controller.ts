@@ -14,7 +14,7 @@ export class AppController {
 
   @Get('/alma')
   getData(): any {
-    return {
+    const data: any = {
       assets: [
         {
           appid: 440,
@@ -43395,6 +43395,7 @@ export class AppController {
       success: 1,
       rwgrsn: -2,
     };
+    return data.descriptions.map((item, index) => ({ ...item, idx: index }));
   }
   // @Get("/alma")
   // async getData(): Promise<any> {

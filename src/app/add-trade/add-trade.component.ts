@@ -59,8 +59,9 @@ export class AddTradeComponent implements OnInit {
   ) {
     afterNextRender(() => {
       this.AddTradeService.filterText$.subscribe((filterText) => {
+        console.log('ran');
         this.filterText = filterText;
-        this.cdRef.detectChanges();
+        //this.cdRef.detectChanges();
       });
     });
   }
@@ -94,6 +95,7 @@ export class AddTradeComponent implements OnInit {
     const itemsForTrade$ = this.itemSelectorService.getItemsForTrade().pipe(
       first(),
       map((items: any[]) => {
+        console.log(items);
         return items.map((item) => ({
           name: item.name,
           imageUrl: item.image_url,
@@ -113,7 +115,7 @@ export class AddTradeComponent implements OnInit {
             itemsFrom: itemIdsToTrade,
             itemsTo: itemIdsForTrade,
             postDate: new Date().toISOString(),
-            owner: this.userDataService.getUsername(),
+            owner: "Juhaszky",//this.userDataService.getUsername(),
             description: this.tradeDescription,
           })
           .subscribe();
