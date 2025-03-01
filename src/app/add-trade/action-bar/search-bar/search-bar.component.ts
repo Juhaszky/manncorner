@@ -10,11 +10,10 @@ import { AddTradeService } from '../../add-trade.service';
 
 
 @Component({
-  selector: 'app-search-bar',
-  standalone: true,
-  imports: [],
-  templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.scss',
+    selector: 'app-search-bar',
+    imports: [],
+    templateUrl: './search-bar.component.html',
+    styleUrl: './search-bar.component.scss'
 })
 export class SearchBarComponent implements AfterViewInit {
   @ViewChild('searchBar') searchBar!: ElementRef;

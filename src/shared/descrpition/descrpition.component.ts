@@ -14,11 +14,10 @@ import { Editor, NgxEditorModule, toHTML, Toolbar } from 'ngx-editor';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
-  selector: 'descrpition',
-  standalone: true,
-  imports: [NgxEditorModule, FormsModule, CommonModule],
-  templateUrl: './descrpition.component.html',
-  styleUrl: './descrpition.component.scss',
+    selector: 'descrpition',
+    imports: [NgxEditorModule, FormsModule, CommonModule],
+    templateUrl: './descrpition.component.html',
+    styleUrl: './descrpition.component.scss'
 })
 export class DescrpitionComponent implements OnInit, OnChanges, OnDestroy {
   description: string = '';

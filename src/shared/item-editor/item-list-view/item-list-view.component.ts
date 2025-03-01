@@ -5,11 +5,10 @@ import { ItemCustomizerComponent } from '../../item-customizer/item-customizer.c
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'item-list-view',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './item-list-view.component.html',
-  styleUrl: './item-list-view.component.scss',
+    selector: 'item-list-view',
+    imports: [CommonModule],
+    templateUrl: './item-list-view.component.html',
+    styleUrl: './item-list-view.component.scss'
 })
 export class ItemListViewComponent implements OnInit {
   readonly dialog = inject(MatDialog);

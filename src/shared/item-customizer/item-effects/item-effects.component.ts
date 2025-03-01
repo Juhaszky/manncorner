@@ -5,11 +5,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-item-effects',
-  standalone: true,
-  imports: [MatChipsModule, CommonModule, MatInputModule],
-  templateUrl: './item-effects.component.html',
-  styleUrl: './item-effects.component.scss',
+    selector: 'app-item-effects',
+    imports: [MatChipsModule, CommonModule, MatInputModule],
+    templateUrl: './item-effects.component.html',
+    styleUrl: './item-effects.component.scss'
 })
 export class ItemEffectsComponent {
   effects: string[] = [

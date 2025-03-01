@@ -18,17 +18,16 @@ import { ModifiedItemData } from '../models/modifiedItem.model';
 import { SortService } from '../sort.service';
 
 @Component({
-  selector: 'item-selector',
-  standalone: true,
-  imports: [
-    MatTooltipModule,
-    CommonModule,
-    MatProgressSpinnerModule,
-    ScrollingModule,
-    ItemComponent,
-  ],
-  templateUrl: './item-selector.component.html',
-  styleUrl: './item-selector.component.scss',
+    selector: 'item-selector',
+    imports: [
+        MatTooltipModule,
+        CommonModule,
+        MatProgressSpinnerModule,
+        ScrollingModule,
+        ItemComponent,
+    ],
+    templateUrl: './item-selector.component.html',
+    styleUrl: './item-selector.component.scss'
 })
 export class ItemSelectorComponent implements OnInit, OnChanges {
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems';

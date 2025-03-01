@@ -18,25 +18,24 @@ import { first, tap } from 'rxjs';
 import { ItemState } from '../models/itemState.model';
 
 @Component({
-  selector: 'app-item-editor',
-  standalone: true,
-  templateUrl: './item-editor.component.html',
-  styleUrl: './item-editor.component.scss',
-  imports: [
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule,
-    AsyncPipe,
-    MatDialogClose,
-    MatDialogActions,
-    CommonModule,
-    MatSelectModule,
-    MatButtonModule,
-    ItemListViewComponent,
-    MatIconModule,
-  ],
+    selector: 'app-item-editor',
+    templateUrl: './item-editor.component.html',
+    styleUrl: './item-editor.component.scss',
+    imports: [
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatAutocompleteModule,
+        ReactiveFormsModule,
+        AsyncPipe,
+        MatDialogClose,
+        MatDialogActions,
+        CommonModule,
+        MatSelectModule,
+        MatButtonModule,
+        ItemListViewComponent,
+        MatIconModule,
+    ]
 })
 export class ItemEditorComponent implements OnInit {
   tooltip = '';

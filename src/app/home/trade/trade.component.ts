@@ -17,19 +17,18 @@ import { toHTML } from 'ngx-editor';
 import { DescrpitionComponent } from '../../../shared/descrpition/descrpition.component';
 
 @Component({
-  selector: 'app-trade',
-  standalone: true,
-  imports: [
-    MatTooltipModule,
-    ResizedImageComponent,
-    PostDatePipe,
-    DatePipe,
-    CommonModule,
-    ItemComponent,
-    DescrpitionComponent,
-  ],
-  templateUrl: './trade.component.html',
-  styleUrl: './trade.component.scss',
+    selector: 'app-trade',
+    imports: [
+        MatTooltipModule,
+        ResizedImageComponent,
+        PostDatePipe,
+        DatePipe,
+        CommonModule,
+        ItemComponent,
+        DescrpitionComponent,
+    ],
+    templateUrl: './trade.component.html',
+    styleUrl: './trade.component.scss'
 })
 export class TradeComponent implements OnInit {
   tradeId!: string;

@@ -24,30 +24,28 @@ import { FormsModule } from '@angular/forms';
 import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [
-    MatTooltipModule,
-    CommonModule,
-    
-// TODO: `HttpClientModule` should not be imported into a component directly.
-// Please refactor the code to add `provideHttpClient()` call to the provider list in the
-// application bootstrap logic and remove the `HttpClientModule` import from this component.
-HttpClientModule,
-    MatSnackBarModule,
-    MatListModule,
-    MatAutocompleteModule,
-    ItemSelectorComponent,
-    MatButtonModule,
-    MatInputModule,
-    ActionBarComponent,
-    NgxEditorModule,
-    FormsModule,
-    DescrpitionComponent,
-  ],
-  providers: [HttpClient],
-  templateUrl: './add-trade.component.html',
-  styleUrl: './add-trade.component.scss',
+    selector: 'app-dashboard',
+    imports: [
+        MatTooltipModule,
+        CommonModule,
+        // TODO: `HttpClientModule` should not be imported into a component directly.
+        // Please refactor the code to add `provideHttpClient()` call to the provider list in the
+        // application bootstrap logic and remove the `HttpClientModule` import from this component.
+        HttpClientModule,
+        MatSnackBarModule,
+        MatListModule,
+        MatAutocompleteModule,
+        ItemSelectorComponent,
+        MatButtonModule,
+        MatInputModule,
+        ActionBarComponent,
+        NgxEditorModule,
+        FormsModule,
+        DescrpitionComponent,
+    ],
+    providers: [HttpClient],
+    templateUrl: './add-trade.component.html',
+    styleUrl: './add-trade.component.scss'
 })
 export class AddTradeComponent implements OnInit {
   filterText: string = '';

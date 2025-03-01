@@ -6,11 +6,10 @@ import { ModifiedItemData } from '../models/modifiedItem.model';
 import { ItemExtrasService } from '../item-extras.service';
 
 @Component({
-  selector: 'item-details',
-  standalone: true,
-  imports: [ItemDetailsComponent, ResizedImageComponent, CommonModule],
-  templateUrl: './item-details.component.html',
-  styleUrl: './item-details.component.scss',
+    selector: 'item-details',
+    imports: [ItemDetailsComponent, ResizedImageComponent, CommonModule],
+    templateUrl: './item-details.component.html',
+    styleUrl: './item-details.component.scss'
 })
 export class ItemDetailsComponent implements OnInit {
   @Input() itemData!: ModifiedItemData;

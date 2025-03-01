@@ -19,17 +19,15 @@ import { ModifiedItemData } from '../models/modifiedItem.model';
 import { ItemExtrasService } from '../item-extras.service';
 
 @Component({
-  selector: 'item',
-  standalone: true,
-  imports: [
-    MatTooltipModule,
-    ResizedImageComponent,
-    CommonModule,
-    RouterModule,
-  ],
-
-  templateUrl: './item.component.html',
-  styleUrl: './item.component.scss',
+    selector: 'item',
+    imports: [
+        MatTooltipModule,
+        ResizedImageComponent,
+        CommonModule,
+        RouterModule,
+    ],
+    templateUrl: './item.component.html',
+    styleUrl: './item.component.scss'
 })
 export class ItemComponent implements OnInit {
   @Input() itemData!: ModifiedItemData;

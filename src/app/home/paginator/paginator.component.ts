@@ -4,11 +4,10 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TradeService } from '../trade.service';
 
 @Component({
-  selector: 'paginator',
-  standalone: true,
-  imports: [MatPaginatorModule, RouterModule],
-  templateUrl: './paginator.component.html',
-  styleUrl: './paginator.component.scss',
+    selector: 'paginator',
+    imports: [MatPaginatorModule, RouterModule],
+    templateUrl: './paginator.component.html',
+    styleUrl: './paginator.component.scss'
 })
 export class PaginatorComponent implements OnInit {
   @Input() tradeLength: number = 0;

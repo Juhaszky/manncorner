@@ -19,21 +19,20 @@ import { ResizedImageComponent } from '../resized-image/resized-image.component'
 import { ItemKillstreakerSelectorComponent } from './item-killstreaker-selector/item-killstreaker-selector.component';
 
 @Component({
-  selector: 'item-customizer',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatChipsModule,
-    CommonModule,
-    MatExpansionModule,
-    ItemQualityComponent,
-    ItemEffectsComponent,
-    ResizedImageComponent,
-    ItemKillstreakerSelectorComponent,
-  ],
-  templateUrl: './item-customizer.component.html',
-  styleUrl: './item-customizer.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'item-customizer',
+    imports: [
+        ReactiveFormsModule,
+        MatChipsModule,
+        CommonModule,
+        MatExpansionModule,
+        ItemQualityComponent,
+        ItemEffectsComponent,
+        ResizedImageComponent,
+        ItemKillstreakerSelectorComponent,
+    ],
+    templateUrl: './item-customizer.component.html',
+    styleUrl: './item-customizer.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemCustomizerComponent implements OnInit {
   @Input() details!: StockItem;

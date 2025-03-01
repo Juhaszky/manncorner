@@ -22,25 +22,23 @@ import { ItemComponent } from '../../shared/item/item.component';
 
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [
-    
-// TODO: `HttpClientModule` should not be imported into a component directly.
-// Please refactor the code to add `provideHttpClient()` call to the provider list in the
-// application bootstrap logic and remove the `HttpClientModule` import from this component.
-HttpClientModule,
-    MatCardModule,
-    CommonModule,
-    MatTooltipModule,
-    PostDatePipe,
-    PaginatorComponent,
-    MatProgressSpinnerModule,
-    ResizedImageComponent,
-    ItemComponent
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+    selector: 'app-home',
+    imports: [
+        // TODO: `HttpClientModule` should not be imported into a component directly.
+        // Please refactor the code to add `provideHttpClient()` call to the provider list in the
+        // application bootstrap logic and remove the `HttpClientModule` import from this component.
+        HttpClientModule,
+        MatCardModule,
+        CommonModule,
+        MatTooltipModule,
+        PostDatePipe,
+        PaginatorComponent,
+        MatProgressSpinnerModule,
+        ResizedImageComponent,
+        ItemComponent
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
   data$: Observable<any> = this.fetchData();

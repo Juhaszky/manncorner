@@ -13,12 +13,11 @@ import { MatInputModule } from '@angular/material/input';
 import { Killstreaker } from '../../models/killstreaker.model';
 
 @Component({
-  selector: 'item-killstreak',
-  standalone: true,
-  imports: [MatChipsModule, CommonModule, MatInputModule],
-  templateUrl: './item-killstreaker-selector.component.html',
-  styleUrls: ['./item-killstreaker-selector.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'item-killstreak',
+    imports: [MatChipsModule, CommonModule, MatInputModule],
+    templateUrl: './item-killstreaker-selector.component.html',
+    styleUrls: ['./item-killstreaker-selector.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemKillstreakerSelectorComponent implements OnInit {
   @Input() killstreakerControl!: AbstractControl;

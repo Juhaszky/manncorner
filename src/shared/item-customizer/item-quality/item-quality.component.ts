@@ -6,11 +6,10 @@ import { CommonModule } from '@angular/common';
 import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'item-quality',
-  standalone: true,
-  imports: [MatChipsModule, CommonModule, ReactiveFormsModule],
-  templateUrl: './item-quality.component.html',
-  styleUrl: './item-quality.component.scss',
+    selector: 'item-quality',
+    imports: [MatChipsModule, CommonModule, ReactiveFormsModule],
+    templateUrl: './item-quality.component.html',
+    styleUrl: './item-quality.component.scss'
 })
 export class ItemQualityComponent implements OnInit {
   @Input() qualityControl!: AbstractControl;

@@ -13,15 +13,15 @@ export interface Players {
   players: UserData[];
 }
 @Component({
-  selector: 'app-user-data',
-  standalone: true,
-  imports: [
-// TODO: `HttpClientModule` should not be imported into a component directly.
-// Please refactor the code to add `provideHttpClient()` call to the provider list in the
-// application bootstrap logic and remove the `HttpClientModule` import from this component.
-HttpClientModule, MatMenuModule, CommonModule],
-  templateUrl: './user-data.component.html',
-  styleUrl: './user-data.component.scss',
+    selector: 'app-user-data',
+    imports: [
+        // TODO: `HttpClientModule` should not be imported into a component directly.
+        // Please refactor the code to add `provideHttpClient()` call to the provider list in the
+        // application bootstrap logic and remove the `HttpClientModule` import from this component.
+        HttpClientModule, MatMenuModule, CommonModule
+    ],
+    templateUrl: './user-data.component.html',
+    styleUrl: './user-data.component.scss'
 })
 export class UserDataComponent implements OnInit {
   http = inject(HttpClient);

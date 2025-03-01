@@ -7,17 +7,16 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'navbar',
-  standalone: true,
-  imports: [
-    CommonModule,
-    UserDataComponent,
-    RouterModule,
-    MatSidenavModule,
-    MatIcon,
-  ],
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
+    selector: 'navbar',
+    imports: [
+        CommonModule,
+        UserDataComponent,
+        RouterModule,
+        MatSidenavModule,
+        MatIcon,
+    ],
+    templateUrl: './navbar.component.html',
+    styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = true;
