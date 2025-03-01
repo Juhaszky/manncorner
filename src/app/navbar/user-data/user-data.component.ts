@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -15,7 +15,11 @@ export interface Players {
 @Component({
   selector: 'app-user-data',
   standalone: true,
-  imports: [HttpClientModule, MatMenuModule, CommonModule],
+  imports: [
+// TODO: `HttpClientModule` should not be imported into a component directly.
+// Please refactor the code to add `provideHttpClient()` call to the provider list in the
+// application bootstrap logic and remove the `HttpClientModule` import from this component.
+HttpClientModule, MatMenuModule, CommonModule],
   templateUrl: './user-data.component.html',
   styleUrl: './user-data.component.scss',
 })
