@@ -4,7 +4,7 @@
   </div>
   <div class="col-card border-2 p-2 border-slate-700 rounded-md text-slate-300">
     <div class="NgxEditor__Wrapper" *ngIf="canEdit; else descnoheader">
-      <ngx-editor-menu class="text-black" [editor]="editor" [toolbar]="toolbar">
+      <!-- <ngx-editor-menu class="text-black" [editor]="editor" [toolbar]="toolbar">
       </ngx-editor-menu>
       <ngx-editor
         class="bg-slate-800"
@@ -13,7 +13,7 @@
         (ngModelChange)="onChange($event)"
         [disabled]="false"
         [placeholder]="'Type here...'"
-      ></ngx-editor>
+      ></ngx-editor> -->
     </div>
     <ng-template #descnoheader>
       <div [innerHTML]="safeHtml"></div>

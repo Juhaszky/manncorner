@@ -3,6 +3,7 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SortBarComponent } from './sort-bar/sort-bar.component';
 
 @Component({
+    standalone: true,
     selector: 'app-action-bar',
     imports: [SearchBarComponent, SortBarComponent],
     templateUrl: './action-bar.component.html',

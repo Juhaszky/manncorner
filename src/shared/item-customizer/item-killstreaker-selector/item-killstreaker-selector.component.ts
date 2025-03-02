@@ -8,13 +8,12 @@ import {
   OnInit,
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatInputModule } from '@angular/material/input';
 import { Killstreaker } from '../../models/killstreaker.model';
 
 @Component({
+  standalone: true,
     selector: 'item-killstreak',
-    imports: [MatChipsModule, CommonModule, MatInputModule],
+    imports: [CommonModule],
     templateUrl: './item-killstreaker-selector.component.html',
     styleUrls: ['./item-killstreaker-selector.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush

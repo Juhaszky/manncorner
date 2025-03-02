@@ -1,10 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { MatMenuModule } from '@angular/material/menu';
 import { SortService } from '../../../../shared/sort.service';
 
 @Component({
+  standalone: true,
     selector: 'sort-bar',
-    imports: [MatMenuModule],
     templateUrl: './sort-bar.component.html',
     styleUrl: './sort-bar.component.scss'
 })

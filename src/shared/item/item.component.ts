@@ -6,10 +6,8 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { ResizedImageComponent } from '../resized-image/resized-image.component';
 import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
 import { ItemDetailsComponent } from '../item-details/item-details.component';
 import { ItemCustomizerComponent } from '../item-customizer/item-customizer.component';
 import { getItemBorderStyle } from '../../app/common/utils';
@@ -17,14 +15,16 @@ import { Router, RouterModule } from '@angular/router';
 import { ItemForm } from '../models/itemForm.model';
 import { ModifiedItemData } from '../models/modifiedItem.model';
 import { ItemExtrasService } from '../item-extras.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
+    standalone: true,
     selector: 'item',
     imports: [
-        MatTooltipModule,
         ResizedImageComponent,
         CommonModule,
         RouterModule,
+        TooltipModule
     ],
     templateUrl: './item.component.html',
     styleUrl: './item.component.scss'
@@ -46,7 +46,7 @@ export class ItemComponent implements OnInit {
     this.canModify = false;
   }
 
-  constructor(private dialog: MatDialog, private router: Router, private itemExtrasService: ItemExtrasService) {}
+  constructor( private router: Router, private itemExtrasService: ItemExtrasService) {}
 
   ngOnInit(): void {
     this.initializeEffectUrl();
@@ -124,11 +124,11 @@ export class ItemComponent implements OnInit {
     );
   }
   private openItemDetails(): void {
-    this.dialog.open(ItemDetailsComponent, {
-      width: '90vw',
-      height: '90vh',
-      data: this.itemData,
-    });
+    // this.dialog.open(ItemDetailsComponent, {
+    //   width: '90vw',
+    //   height: '90vh',
+    //   data: this.itemData,
+    // });
   }
   private updateItemData(item: ItemForm): void {
     this.itemData.name = item.name?.value;
@@ -143,18 +143,18 @@ export class ItemComponent implements OnInit {
   }
 
   private openItemCustomizer(): void {
-    const dialogRef = this.dialog.open(ItemCustomizerComponent, {
-      width: '90vw',
-      height: '90vh',
-      data: this.itemData,
-    });
+    // const dialogRef = this.dialog.open(ItemCustomizerComponent, {
+    //   width: '90vw',
+    //   height: '90vh',
+    //   data: this.itemData,
+    // });
 
-    dialogRef.afterClosed().subscribe((item: ItemForm) => {
-      if (item) {
-        this.updateItemData(item);
-        this.updateBorderStyle();
-      }
-    });
+    // dialogRef.afterClosed().subscribe((item: ItemForm) => {
+    //   if (item) {
+    //     this.updateItemData(item);
+    //     this.updateBorderStyle();
+    //   }
+    // });
   }
 
   private initializeEffectUrl(): void {

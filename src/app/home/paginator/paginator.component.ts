@@ -1,11 +1,11 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TradeService } from '../trade.service';
 
 @Component({
+    standalone: true,
     selector: 'paginator',
-    imports: [MatPaginatorModule, RouterModule],
+    imports: [RouterModule],
     templateUrl: './paginator.component.html',
     styleUrl: './paginator.component.scss'
 })

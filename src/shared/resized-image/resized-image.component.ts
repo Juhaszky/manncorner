@@ -2,6 +2,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { ImageService } from './image.service';
 
 @Component({
+    standalone: true,
     selector: 'resized-image',
     imports: [],
     templateUrl: './resized-image.component.html',

@@ -7,19 +7,17 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TradeService } from '../trade.service';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { ResizedImageComponent } from '../../../shared/resized-image/resized-image.component';
 import { PostDatePipe } from '../post-date.pipe';
 import { CommonModule, DatePipe } from '@angular/common';
 import { map, Observable, Subject } from 'rxjs';
 import { ItemComponent } from '../../../shared/item/item.component';
-import { toHTML } from 'ngx-editor';
 import { DescrpitionComponent } from '../../../shared/descrpition/descrpition.component';
 
 @Component({
+  standalone: true,
     selector: 'app-trade',
     imports: [
-        MatTooltipModule,
         ResizedImageComponent,
         PostDatePipe,
         DatePipe,

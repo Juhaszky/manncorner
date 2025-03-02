@@ -6,42 +6,28 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { combineLatest, first, map } from 'rxjs';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatListModule } from '@angular/material/list';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ItemSelectorComponent } from '../../shared/item-selector/item-selector.component';
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { UserDataService } from '../../shared/user-data.service';
-import { MatButtonModule } from '@angular/material/button';
 import { TradeService } from '../home/trade.service';
-import { MatInputModule } from '@angular/material/input';
 import { ActionBarComponent } from './action-bar/action-bar.component';
 import { AddTradeService } from './add-trade.service';
-import { NgxEditorModule } from 'ngx-editor';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
+import { ModifiedItemData } from '../../shared/models/modifiedItem.model';
+import { chunkItems } from '../common/utils';
 
 @Component({
+  standalone: true,
     selector: 'app-dashboard',
     imports: [
-        MatTooltipModule,
         CommonModule,
-        // TODO: `HttpClientModule` should not be imported into a component directly.
-        // Please refactor the code to add `provideHttpClient()` call to the provider list in the
-        // application bootstrap logic and remove the `HttpClientModule` import from this component.
-        HttpClientModule,
-        MatSnackBarModule,
-        MatListModule,
-        MatAutocompleteModule,
         ItemSelectorComponent,
-        MatButtonModule,
-        MatInputModule,
         ActionBarComponent,
-        NgxEditorModule,
         FormsModule,
         DescrpitionComponent,
+        ReactiveFormsModule
     ],
     providers: [HttpClient],
     templateUrl: './add-trade.component.html',
@@ -50,9 +36,13 @@ import { DescrpitionComponent } from '../../shared/descrpition/descrpition.compo
 export class AddTradeComponent implements OnInit {
   filterText: string = '';
   tradeDescription: string = '';
+  tradeForm: FormGroup = new FormGroup({
+    itemsToTrade: new FormControl([]),
+    itemsForTrade: new FormControl([]),
+    tradeDescription: new FormControl(''),
+  });
 
   constructor(
-    private _snackBar: MatSnackBar,
     private tradeService: TradeService,
     private itemSelectorService: ItemSelectorService,
     private userDataService: UserDataService,
@@ -75,10 +65,31 @@ export class AddTradeComponent implements OnInit {
     this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
       this.itemSelectorService.updateState({ allItems: items });
     });
+    this.tradeForm.valueChanges.subscribe((change) => {
+      console.log(change);
+    });
+
+  }
+  handleItemAddToTrade(item: any): void {
+    console.log(item);
+  
+    // Get current items
+    const updatedItems = [...this.tradeForm.controls["itemsToTrade"].value, item];
+  
+    // Update form control
+    this.tradeForm.controls["itemsToTrade"].setValue(updatedItems);
+  
+    // Re-chunk the items to maintain the layout
+    
+  
+    console.log(this.tradeForm);
+  }
+  onChunkItems(items: ModifiedItemData[]): ModifiedItemData[][] {
+    return chunkItems(items, 7);
   }
 
   openSnackBar(error: any) {
-    this._snackBar.open(error, 'X');
+    
   }
 
   makeTrade() {

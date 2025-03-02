@@ -1,7 +1,8 @@
 <div class="p-4">
+  <form [formGroup]="tradeForm">
   <div class="grid sm:grid-cols-3 grid-cols-1">
     <div class="col-card mb-3">
-      <item-selector [mode]="'toTrade'"></item-selector>
+      <item-selector [items]="onChunkItems(tradeForm.controls['itemsToTrade'].value)"  [mode]="'toTrade'"></item-selector>
     </div>
     <div
       class="flex flex-col p-4 h-75 sm:justify-between justify-center items-center"
@@ -47,9 +48,10 @@
       <app-action-bar></app-action-bar>
     </div>
     <div class="col-card mb-3 p-1">
-      <item-selector [mode]="'inventory'" [filter]="filterText"></item-selector>
+      <item-selector (onItemAdd)="handleItemAddToTrade($event);" [mode]="'inventory'" [filter]="filterText"></item-selector>
     </div>
   </div>
   <descrpition [canEdit]="true" (descriptionData)="check($event)">
   </descrpition>
+</form>
 </div>

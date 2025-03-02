@@ -7,33 +7,23 @@ import {
   OnInit,
 } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostDatePipe } from './post-date.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TradeService } from './trade.service';
-import { MatSpinner } from '@angular/material/progress-spinner';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { catchError } from 'rxjs/operators';
 import { ResizedImageComponent } from '../../shared/resized-image/resized-image.component';
 import { ItemComponent } from '../../shared/item/item.component';
 
 
 @Component({
+  standalone: true,
     selector: 'app-home',
     imports: [
-        // TODO: `HttpClientModule` should not be imported into a component directly.
-        // Please refactor the code to add `provideHttpClient()` call to the provider list in the
-        // application bootstrap logic and remove the `HttpClientModule` import from this component.
-        HttpClientModule,
-        MatCardModule,
         CommonModule,
-        MatTooltipModule,
         PostDatePipe,
         PaginatorComponent,
-        MatProgressSpinnerModule,
         ResizedImageComponent,
         ItemComponent
     ],

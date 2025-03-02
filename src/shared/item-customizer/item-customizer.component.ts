@@ -7,11 +7,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatChipsModule } from '@angular/material/chips';
-import { ItemDetailsComponent } from '../item-details/item-details.component';
 import { CommonModule } from '@angular/common';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { StockItem } from '../models/stockItem.model';
 import { ItemQualityComponent } from './item-quality/item-quality.component';
 import { ItemEffectsComponent } from './item-effects/item-effects.component';
@@ -19,12 +15,11 @@ import { ResizedImageComponent } from '../resized-image/resized-image.component'
 import { ItemKillstreakerSelectorComponent } from './item-killstreaker-selector/item-killstreaker-selector.component';
 
 @Component({
+  standalone: true,
     selector: 'item-customizer',
     imports: [
         ReactiveFormsModule,
-        MatChipsModule,
         CommonModule,
-        MatExpansionModule,
         ItemQualityComponent,
         ItemEffectsComponent,
         ResizedImageComponent,
@@ -56,13 +51,10 @@ export class ItemCustomizerComponent implements OnInit {
   isEffectAccordionExpanded: boolean = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: StockItem,
-    public dialogRef: MatDialogRef<ItemDetailsComponent>,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.details = this.data;
     this.setIsUnusual();
     this.details.name = this.details.originalName ?? this.details.name;
     this.itemFormGroup.patchValue({
@@ -99,7 +91,7 @@ export class ItemCustomizerComponent implements OnInit {
         `${qualityValues} ${itemName}`
       );
     }
-    this.dialogRef.close(this.itemFormGroup.controls);
+    // this.dialogRef.close(this.itemFormGroup.controls);
   }
 
   onQualitySelectionChange(event: any): void {

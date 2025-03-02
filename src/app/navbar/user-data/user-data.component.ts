@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { UserData } from '../../../shared/models/userdata.model';
 import { CommonModule } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
 import { UserDataService } from '../../../shared/user-data.service';
 export interface Response {
   response: Players;
@@ -13,12 +11,9 @@ export interface Players {
   players: UserData[];
 }
 @Component({
+  standalone: true,
     selector: 'app-user-data',
-    imports: [
-        // TODO: `HttpClientModule` should not be imported into a component directly.
-        // Please refactor the code to add `provideHttpClient()` call to the provider list in the
-        // application bootstrap logic and remove the `HttpClientModule` import from this component.
-        HttpClientModule, MatMenuModule, CommonModule
+    imports: [ CommonModule
     ],
     templateUrl: './user-data.component.html',
     styleUrl: './user-data.component.scss'
@@ -26,9 +21,7 @@ export interface Players {
 export class UserDataComponent implements OnInit {
   http = inject(HttpClient);
   userDataService = inject(UserDataService);
-  dialog = inject(MatDialog);
 
-  @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
   userData!: UserData;
   menus = ['tradeUrl', 'contact'];
 

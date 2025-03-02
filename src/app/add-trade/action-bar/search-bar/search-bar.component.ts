@@ -10,6 +10,7 @@ import { AddTradeService } from '../../add-trade.service';
 
 
 @Component({
+  standalone: true,
     selector: 'app-search-bar',
     imports: [],
     templateUrl: './search-bar.component.html',

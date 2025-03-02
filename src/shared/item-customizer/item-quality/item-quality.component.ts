@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatChipsModule } from '@angular/material/chips';
 import { Quality } from '../../models/quality.model';
 import { ItemExtrasService } from '../../item-extras.service';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
+  standalone: true,
     selector: 'item-quality',
-    imports: [MatChipsModule, CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule],
     templateUrl: './item-quality.component.html',
     styleUrl: './item-quality.component.scss'
 })

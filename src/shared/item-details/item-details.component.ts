@@ -1,11 +1,11 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ResizedImageComponent } from '../resized-image/resized-image.component';
 import { CommonModule } from '@angular/common';
 import { ModifiedItemData } from '../models/modifiedItem.model';
 import { ItemExtrasService } from '../item-extras.service';
 
 @Component({
+  standalone: true,
     selector: 'item-details',
     imports: [ItemDetailsComponent, ResizedImageComponent, CommonModule],
     templateUrl: './item-details.component.html',
@@ -16,11 +16,9 @@ export class ItemDetailsComponent implements OnInit {
   isAllClass: boolean = false;
   paintColor: {paintName: string; paintColor: string} = {paintName: '', paintColor: ''};
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: ModifiedItemData,
     private itemExtrasService: ItemExtrasService
   ) {}
   ngOnInit(): void {
-    this.itemData = this.data;
     console.log(this.itemData);
     if (this.itemData.tags) {
       let classCounter = 0;

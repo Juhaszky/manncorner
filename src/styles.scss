@@ -2,7 +2,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-
+@import "primeicons/primeicons.css";
 html, body { height: 100%; }
 body { height: 100vh; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; box-sizing: border-box; background-color: #1E1E1E;}
 p {
@@ -29,73 +29,3 @@ p {
     background: #555;
     
   }
-  .mat-mdc-text-field-wrapper {
-    background-color: rgb(31 41 55) !important;
-    
-    
-}
-.mat-mdc-form-field {
-  background-color: rgb(31 41 55) !important;
-}
-
-.mat-mdc-option {
-  background-color: rgb(31 41 55) !important;
-  width: 100%;
-}
-
-.mdc-list-item__primary-text {
-  color: rgba(255, 255, 255, 0.5) !important;
-  width: 100%;
-}
-.mat-mdc-autocomplete-panel {
-  background-color: rgb(31 41 55) !important;
-}
-md-sidenav, 
-md-sidenav.md-locked-open, 
-md-sidenav.md-closed.md-locked-open-add-active {
-    min-width: 200px !important;
-    width: 100vw !important;
-    max-width: 400px !important;
-} 
-.mat-mdc-paginator {
-  background-color: rgb(31 41 55) !important;
-  color: rgb(184, 184, 184) !important;
-}
-.mat-success {
-  background-color: rgb(38, 166, 154, 1) !important;
-  &:hover{
-    background-color: rgb(38, 166, 154, 0.8) !important;
-  }
-}
-.mat-expansion-panel-header.mat-expanded,
-.mat-expansion-panel-header.mat-expanded:hover,
-.mat-expansion-panel-header.mat-expanded:focus,
-.mat-expansion-panel-header,
-.mat-expansion-panel,
-.mat-expansion-panel-content {
-    background-color: rgb(30 41 59 / 1) !important;
-    color: white !important;
-}
-.mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
-  color: rgb(184, 184, 184) !important
-}
-.mat-accordion {
-  width: 100% !important;
-}
-.cdk-virtual-scroll-content-wrapper {
-  display: flex;
-}
-.NgxEditor {
-  background-color: rgb(30 41 59 / 0.5) !important;
-  color: white !important;
-}
-.NgxEditor__MenuBar {
-  background-color: rgb(38, 166, 154, 0.8) !important;
-}
-.mat-mdc-menu-panel {
-  background-color: rgb(30 41 59 / 1) !important;
-  color: white !important;
-}
-.mat-mdc-menu-item-text {
-  color: rgb(156 163 175 / 1);;
-}

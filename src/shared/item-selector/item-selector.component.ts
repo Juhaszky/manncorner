@@ -1,30 +1,33 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { ItemSelectorService } from '../item-selector.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatDialog } from '@angular/material/dialog';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
 import { first, map, Observable, of, switchMap, tap } from 'rxjs';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ScrollingModule, ViewportRuler } from '@angular/cdk/scrolling';
 import { ItemComponent } from '../item/item.component';
 import { ModifiedItemData } from '../models/modifiedItem.model';
 import { SortService } from '../sort.service';
+import { ScrollerModule } from 'primeng/scroller';
+import { SkeletonModule } from 'primeng/skeleton';
+import { chunkItems } from '../../app/common/utils';
 
 @Component({
+  standalone: true,
     selector: 'item-selector',
     imports: [
-        MatTooltipModule,
+        ScrollerModule,
         CommonModule,
-        MatProgressSpinnerModule,
         ScrollingModule,
         ItemComponent,
+        SkeletonModule
     ],
     templateUrl: './item-selector.component.html',
     styleUrl: './item-selector.component.scss'
@@ -32,8 +35,9 @@ import { SortService } from '../sort.service';
 export class ItemSelectorComponent implements OnInit, OnChanges {
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems';
   @Input() filter: string = '';
-
-  items: ModifiedItemData[] = [];
+  @Output() onItemAdd: EventEmitter<ModifiedItemData> = new EventEmitter();
+  @Input() items: ModifiedItemData[][] = [];
+  chunkedItems: any[][] = [];
   filteredItems: ModifiedItemData[] = [];
   loading = false;
   borderStyle: 'unusual' | 'strange' | 'vintage' | 'elite' | 'unique' =
@@ -42,7 +46,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   constructor(
     private itemService: ItemSelectorService,
     private sortService: SortService,
-    public dialog: MatDialog
+    private viewportRuler: ViewportRuler
   ) {}
 
   ngOnInit(): void {
@@ -57,10 +61,15 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
       }
     });
   }
+  getItemSize(): number {
+    const width = this.viewportRuler.getViewportSize().width;
+    return width >= 640 ? 96 : 80; // Matches `sm:h-24` (96px) and `h-20` (80px)
+  }
 
   private loadItems(): void {
     let itemObservable: Observable<ModifiedItemData[]>;
     switch (this.mode) {
+
       case 'inventory':
         this.loading = true;
         itemObservable = this.loadInventoryItems();
@@ -79,12 +88,16 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   private handleSuccess(items: ModifiedItemData[]): void {
-    this.items = items;
+    //this.items = items;
+    this.chunkedItems = chunkItems(items, 7);
+    console.log(this.chunkedItems);
     if (this.mode === 'inventory') {
       this.applyFilter();
     }
   }
-
+  trackByFn(index: number, item: any) {
+    return item?.id || index; // Use unique ID if available
+  }
   private handleError(err: string): void {
     this.loading = false;
     console.error('Failed to load items:', err);
@@ -105,7 +118,8 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
     if (this.mode !== 'inventory') return;
-    this.applyFilter();
+    //this.applyFilter();
+      //this.chunkedItems = this.chunkItems([...this.items], 6); // Ensure stable reference
   }
 
   applyFilter(): void {
@@ -119,20 +133,22 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
     });
   }
 
-  onItemSelect(idx: number): void {
-    if (this.mode === 'inventory') {
-      let selectedItem: ModifiedItemData;
-      if (this.filter === '') {
-        this.items[idx].selected = true;
-        selectedItem = this.items[idx];
-      } else {
-        console.log(idx);
-        this.filteredItems[idx].selected = true;
-        selectedItem = this.filteredItems[idx];
-      }
-      this.itemService.moveItemToTrade(idx);
-      this.applyFilter();
-    }
+  onItemSelect(item: ModifiedItemData): void {
+    this.onItemAdd.emit(item);
+    // console.log(idx);
+    // if (this.mode === 'inventory') {
+    //   let selectedItem: ModifiedItemData;
+    //   if (this.filter === '') {
+    //     this.items[idx].selected = true;
+    //     selectedItem = this.items[idx];
+    //   } else {
+    //     console.log(idx);
+    //     this.filteredItems[idx].selected = true;
+    //     selectedItem = this.filteredItems[idx];
+    //   }
+    //   this.itemService.moveItemToTrade(idx);
+    //   this.applyFilter();
+    // }
   }
 
   onRemoveItem(idx: number) {
@@ -155,23 +171,23 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   onOpenItemEditor() {
-    let dialogRef = this.dialog.open(ItemEditorComponent, {
-      height: '90vh',
-      width: '95vw',
-    });
+    // let dialogRef = this.dialog.open(ItemEditorComponent, {
+    //   height: '90vh',
+    //   width: '95vw',
+    // });
 
-    dialogRef.afterClosed().subscribe((selectedItems: ModifiedItemData[]) => {
-      if (selectedItems) {
-        this.itemService.itemState$
-          .pipe(
-            first(),
-            map((state) => state.forTradeItems)
-          )
-          .subscribe((forTradeItems) => {
-            const updatedItems = [...forTradeItems, ...selectedItems];
-            this.itemService.updateState({ forTradeItems: updatedItems });
-          });
-      }
-    });
+    // dialogRef.afterClosed().subscribe((selectedItems: ModifiedItemData[]) => {
+    //   if (selectedItems) {
+    //     this.itemService.itemState$
+    //       .pipe(
+    //         first(),
+    //         map((state) => state.forTradeItems)
+    //       )
+    //       .subscribe((forTradeItems) => {
+    //         const updatedItems = [...forTradeItems, ...selectedItems];
+    //         this.itemService.updateState({ forTradeItems: updatedItems });
+    //       });
+    //   }
+    // });
   }
 }

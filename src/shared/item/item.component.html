@@ -1,9 +1,11 @@
 <div
-  class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20 w-20 hover:cursor-pointer rounded-lg relative z-0"
+  class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20  hover:cursor-pointer rounded-lg relative z-0"
   [class.disabled]="itemData.selected"
+  [class]="borderStyle"
   (click)="onItemSelect()"
   [ngStyle]="{ 'background-image': 'url(' + effectUrl + ')' }"
-  matTooltip="{{itemData.name}}"
+  pTooltip="{{itemData.name}}"
+  tooltipPosition="bottom"
 >
   <resized-image [imageUrl]="getImageUrl()"></resized-image>
   <div class="top-1 flex gap-1 absolute z-10" *ngIf="itemData">

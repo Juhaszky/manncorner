@@ -11,7 +11,10 @@ export class ImagesService {
       });
       const imageBuffer = Buffer.from(response.data, 'binary');
 
-      return await sharp(imageBuffer).resize(128, 128).png().toBuffer();
+      return await sharp(imageBuffer)
+        .resize(128, 128)
+        .webp({ quality: 80 })
+        .toBuffer();
     } catch (error) {
       throw new HttpException(
         'Failed to fetch or process image',

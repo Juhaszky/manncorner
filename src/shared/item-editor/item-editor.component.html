@@ -1,6 +1,6 @@
 <div class="item-editor bg-gray-800 h-full flex flex-col overflow-auto">
   <form class="flex example-form">
-    <mat-form-field class="w-full">
+    <!-- <mat-form-field class="w-full">
       <mat-label>Item</mat-label>
       <input
         class="input-field w-full"
@@ -9,11 +9,10 @@
         placeholder="Search item name.."
         matInput
         [formControl]="myControl"
-        [matAutocomplete]="auto"
         (input)="filter()"
         (focus)="filter()"
       />
-      <mat-autocomplete requireSelection #auto="matAutocomplete">
+      <!-- <mat-autocomplete requireSelection #auto="matAutocomplete">
         @for (option of filteredOptions; track option) {
         <mat-option
           class="flex w-full justify-between text-slate-300"
@@ -27,11 +26,11 @@
         </mat-option>
         }
       </mat-autocomplete>
-    </mat-form-field>
+    </mat-form-field> -->
   </form>
   <item-list-view class="h-100" [selectedItems]="selectedItems"></item-list-view>
     <div class="actions flex flex-col h-full gap-6 justify-end">
-    <mat-dialog-actions>
+    <!-- <mat-dialog-actions>
       <div class="buttons flex flex-row w-full justify-between">
         <button
         class="p-4 border-2 border-slate-700 hover:bg-green-800 w-24 rounded-md text-slate-50 text-bold"
@@ -41,6 +40,6 @@
       </button>
       <button class="p-4 border-2 border-slate-700 hover:bg-red-800 w-32 rounded-md text-slate-50 text-bold" (click)="onClose();">No Thanks</button>
     </div>
-  </mat-dialog-actions>
+  </mat-dialog-actions> -->
 </div>
 </div>

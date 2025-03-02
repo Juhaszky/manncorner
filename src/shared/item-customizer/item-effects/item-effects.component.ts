@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
+  standalone: true,
     selector: 'app-item-effects',
-    imports: [MatChipsModule, CommonModule, MatInputModule],
+    imports: [CommonModule],
     templateUrl: './item-effects.component.html',
     styleUrl: './item-effects.component.scss'
 })
