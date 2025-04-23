@@ -17,6 +17,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
 import { ModifiedItemData } from '../../shared/models/modifiedItem.model';
 import { chunkItems } from '../common/utils';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   standalone: true,
@@ -27,7 +28,8 @@ import { chunkItems } from '../common/utils';
         ActionBarComponent,
         FormsModule,
         DescrpitionComponent,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        ButtonModule
     ],
     providers: [HttpClient],
     templateUrl: './add-trade.component.html',
@@ -37,6 +39,7 @@ export class AddTradeComponent implements OnInit {
   filterText: string = '';
   tradeDescription: string = '';
   tradeForm: FormGroup = new FormGroup({
+    inventory: new FormControl([]),
     itemsToTrade: new FormControl([]),
     itemsForTrade: new FormControl([]),
     tradeDescription: new FormControl(''),
@@ -62,27 +65,31 @@ export class AddTradeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.itemSelectorService.fetchItems().subscribe((items) => {
+      this.tradeForm.controls["inventory"].setValue(items);
+    })
     this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
-      this.itemSelectorService.updateState({ allItems: items });
+      
     });
     this.tradeForm.valueChanges.subscribe((change) => {
-      console.log(change);
+      
     });
 
   }
   handleItemAddToTrade(item: any): void {
-    console.log(item);
-  
     // Get current items
-    const updatedItems = [...this.tradeForm.controls["itemsToTrade"].value, item];
+    
   
     // Update form control
-    this.tradeForm.controls["itemsToTrade"].setValue(updatedItems);
+    this.tradeForm.controls["itemsToTrade"].patchValue(item, {emitEvent: false});
   
     // Re-chunk the items to maintain the layout
     
   
     console.log(this.tradeForm);
+  }
+  handleItemRemoveFromTrade(item: any): void {
+
   }
   onChunkItems(items: ModifiedItemData[]): ModifiedItemData[][] {
     return chunkItems(items, 7);

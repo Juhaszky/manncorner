@@ -116,7 +116,6 @@ export class ItemSelectorComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (this.mode !== 'inventory') return;
     //this.applyFilter();
       //this.chunkedItems = this.chunkItems([...this.items], 6); // Ensure stable reference

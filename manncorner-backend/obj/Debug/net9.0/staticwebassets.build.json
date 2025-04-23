@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "iXj3MIV910YF41rNGvc2MPqAkDc32kS/w8szR5crzuU=",
+  "Source": "manncorner-backend",
+  "BasePath": "_content/manncorner-backend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

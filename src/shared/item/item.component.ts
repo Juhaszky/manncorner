@@ -38,8 +38,8 @@ export class ItemComponent implements OnInit {
   borderStyle: string = '';
   effectUrl: string = '';
   @HostListener('mouseenter') onMouseEnter() {
-    this.canModify = this.mode === 'allItems';
-    this.showActions = this.mode !== 'inventory' && this.mode !== '';
+    //this.canModify = this.mode === 'allItems';
+    //this.showActions = this.mode !== 'inventory' && this.mode !== '';
   }
   @HostListener('mouseleave') onMouseLeave() {
     this.showActions = false;
