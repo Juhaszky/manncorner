@@ -1,25 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Develop\\manncorner\\manncorner-backend\\manncorner-backend.csproj": {}
+    "D:\\Develop\\manncorner\\manncorner-backend\\manncorner-backend.csproj": {}
   },
   "projects": {
-    "C:\\Develop\\manncorner\\manncorner-backend\\manncorner-backend.csproj": {
+    "D:\\Develop\\manncorner\\manncorner-backend\\manncorner-backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Develop\\manncorner\\manncorner-backend\\manncorner-backend.csproj",
+        "projectUniqueName": "D:\\Develop\\manncorner\\manncorner-backend\\manncorner-backend.csproj",
         "projectName": "manncorner-backend",
-        "projectPath": "C:\\Develop\\manncorner\\manncorner-backend\\manncorner-backend.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Develop\\manncorner\\manncorner-backend\\obj\\",
+        "projectPath": "D:\\Develop\\manncorner\\manncorner-backend\\manncorner-backend.csproj",
+        "packagesPath": "C:\\Users\\Krisztián\\.nuget\\packages\\",
+        "outputPath": "D:\\Develop\\manncorner\\manncorner-backend\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Krisztián\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -45,6 +52,18 @@
           "targetAlias": "net9.0",
           "dependencies": {
             "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[9.0.4, )"
             },

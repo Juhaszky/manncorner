@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("manncorner-backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3c4b258381a6cb735ebde5b9538b283905149689")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+050f6407b931b1fe491f07d68889be77f079218a")]
 [assembly: System.Reflection.AssemblyProductAttribute("manncorner-backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("manncorner-backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
