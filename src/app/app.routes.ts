@@ -1,12 +1,15 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { TradeComponent } from './home/trade/trade.component';
+import { LoginSuccessComponent } from './login-success/login-success.component';
+import { authGuardGuard } from './auth-guard.guard';
 
 export const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
   },
+  { path: 'login-successful', component: LoginSuccessComponent },
   { path: 'trade/:id', component: TradeComponent },
   {
     path: 'add-trade',
@@ -14,6 +17,7 @@ export const routes: Routes = [
       import('./add-trade/add-trade.component').then(
         (m) => m.AddTradeComponent
       ),
+    canActivate: [authGuardGuard]
   },
   {
     path: '**',

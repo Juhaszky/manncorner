@@ -3,17 +3,18 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UserDataComponent } from './user-data/user-data.component';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
-    selector: 'navbar',
-    standalone: true,
-    imports: [
-        CommonModule,
-        UserDataComponent,
-        RouterModule,
-    ],
-    templateUrl: './navbar.component.html',
-    styleUrl: './navbar.component.scss'
+  selector: 'navbar',
+  standalone: true,
+  imports: [
+    CommonModule,
+    UserDataComponent,
+    RouterModule,
+  ],
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent implements OnInit {
   @Output() toggleDrawer = new EventEmitter<void>();
@@ -21,13 +22,19 @@ export class NavbarComponent implements OnInit {
   userData: Subject<any> = new Subject();
   userInfo!: any;
 
+  constructor(private authService: AuthService) {}
   ngOnInit(): void {
+    this.authService.isAuthenticated$.subscribe((status) => {
+      this.isLoggedIn = status;
+    })
     this.userData.subscribe((data) => {
-      console.log(data);
       this.userInfo = data;
     });
   }
   handletoggleDrawer(): void {
-    this.toggleDrawer.emit(); // Emit event to toggle the drawer in app.component
+    this.toggleDrawer.emit();
+  }
+  handleLogout() {
+    this.authService.logout();
   }
 }
