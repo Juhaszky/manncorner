@@ -9,6 +9,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
@@ -30,6 +31,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<SteamApiService>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
