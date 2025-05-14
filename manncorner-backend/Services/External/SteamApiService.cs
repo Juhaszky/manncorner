@@ -10,9 +10,25 @@ public class SteamApiService : ISteamApiService
     }
     public async Task<string> GetPlayerSummary(string steamId)
     {
-        var url = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={_apiKey}&steamids={steamId}";
-        var response = await this._httpClient.GetAsync(url);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
+        try
+        {
+            var url = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={_apiKey}&steamids={steamId}";
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                Console.WriteLine($"Steam API error: {(int)response.StatusCode} - {response.ReasonPhrase}");
+                return null;
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Steam API doesn't respond: {ex.Message}");
+            return null;
+        }
     }
 }

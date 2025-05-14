@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, filter, map, tap, throwError } from 'rxjs';
 import { UserData } from '../../../shared/models/userdata.model';
 import { CommonModule } from '@angular/common';
 import { UserDataService } from '../../../shared/user-data.service';
+import { AuthService } from '../../auth.service';
 export interface Response {
   response: Players;
 }
@@ -20,24 +21,42 @@ export interface Players {
 })
 export class UserDataComponent implements OnInit {
   http = inject(HttpClient);
+  authService = inject(AuthService);
   userDataService = inject(UserDataService);
 
   userData!: UserData;
   menus = ['tradeUrl', 'contact'];
 
   ngOnInit(): void {
-    this.userDataService.userData$.subscribe((userData) => {
-      if (userData) {
-        this.userData = userData;
-      } else {
-        this.fetchUserData();
-      }
-    });
+    this.userDataService.userData$
+      .pipe(
+        filter(() => this.authService.checkAuth()),
+        tap((userData) => {
+          if (userData) {
+            this.userData = userData;
+          } else {
+            this.fetchUserData();
+          }
+        })
+      )
+      .subscribe();
   }
+  
   fetchUserSummary(): Observable<Response> {
     return this.http.get<Response>(
-      'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=17F30AEE22C8E49C0F2CFD2BB6FE0398&steamids=76561198027857565'
+      'http://localhost:5268/api/steam/profile/76561198027857565'
+    ).pipe(
+      catchError(this.handleError)
     );
+  }
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
+      console.error('An error occurred:', error.error);
+    } else {
+      console.error(
+        `Backend returned code ${error.status}, body was: `, error.error);
+    }
+    return throwError(() => new Error('Something bad happened; please try again later.'));
   }
 
   fetchUserData() {
