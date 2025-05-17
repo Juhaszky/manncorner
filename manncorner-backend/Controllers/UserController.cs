@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,13 +36,22 @@ public class UserController : ControllerBase
         }
         return Ok(user);
     }
+    [Authorize]
     [HttpPut]
     [Route("{steamId}/tradeurl")]
     public async Task<IActionResult> SetTradeUrl(string steamId, string tradeUrl)
     {
+        var tokenSteamId = User.FindFirst("steamid")?.Value;
+        if (string.IsNullOrEmpty(tokenSteamId))
+        {
+            return Unauthorized("Invalid token: steamId not found.");
+        }
+        if (tokenSteamId != steamId) {
+            return Forbid("You are not allowed to modify another user's trade URL.");
+        }
         try
         {
-            await _userService.SetTradeUrlAsync(steamId, tradeUrl); // ✅ await!
+            await _userService.SetTradeUrlAsync(steamId, tradeUrl);
             return Ok("Trade URL updated successfully");
         }
         catch (Exception ex)

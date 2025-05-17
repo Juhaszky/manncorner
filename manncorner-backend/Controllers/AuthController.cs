@@ -12,10 +12,12 @@ public class AuthController : Controller
 {
     private readonly IConfiguration _configuration;
     private readonly AuthService _authService;
-    public AuthController(IConfiguration configuration, AuthService authService)
+    private readonly UserService _userService;
+    public AuthController(IConfiguration configuration, AuthService authService, UserService userService)
     {
         _configuration = configuration;
         _authService = authService;
+        _userService = userService;
     }
     [HttpGet("login")]
     public IActionResult Login()
@@ -37,13 +39,18 @@ public class AuthController : Controller
         var claims = result.Principal.Claims;
 
 
-        var steamId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+        var url = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
                ?? claims.FirstOrDefault(c => c.Type == "sub")?.Value
                ?? claims.FirstOrDefault(c => c.Type.Contains("nameidentifier"))?.Value;
-
+        var steamId = new Uri(url).Segments.Last();
         if (string.IsNullOrEmpty(steamId))
         {
             return BadRequest("SteamID not found in claims.");
+        }
+        var existingUser = await _userService.GetUserBySteamIdAsync(steamId);
+        if (existingUser == null)
+        {
+            await _userService.CreateUserAsync(steamId, "");
         }
         var token = _authService.GenerateJwtToken(steamId);
 

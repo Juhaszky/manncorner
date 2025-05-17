@@ -8,7 +8,7 @@
 
     <div class="flex items-center lg:order-2">
       <div class="max-[1024px]:hidden">
-        <app-user-data></app-user-data>
+        <app-user-data *ngIf="isLoggedIn"></app-user-data>
       </div>
 
       <!-- Drawer Toggle Button for Mobile -->
