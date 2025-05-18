@@ -1,6 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { UserDataService } from '../../shared/user-data.service';
-import { map, Observable } from 'rxjs';
+import { filter, Observable, switchMap } from 'rxjs';
 import { UserData } from '../../shared/models/userdata.model';
 import { CommonModule } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -15,6 +21,7 @@ import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-user-profile',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     ProgressBarModule,
@@ -33,6 +40,7 @@ export class UserProfileComponent implements OnInit {
   userService = inject(UserDataService);
   messageService = inject(MessageService);
   httpClient = inject(HttpClient);
+  cdr = inject(ChangeDetectorRef);
   userData!: UserData | null;
   chipData: { label: string; link: string }[] = [];
   tradeUrl = '';
@@ -40,7 +48,8 @@ export class UserProfileComponent implements OnInit {
   ngOnInit(): void {
     this.userService.userData$
       .pipe(
-        map(data => {
+        filter(data => !!data),
+        switchMap(data => {
           this.userData = data;
           this.chipData = [
             {
@@ -60,10 +69,36 @@ export class UserProfileComponent implements OnInit {
               link: data?.steamid ? `https://rep.tf/${data.steamid}` : '',
             },
           ].filter(chip => !!chip.link);
+
+          // Ensure steamId exists before calling getTradeUrl
+          if (!data?.steamid) {
+            //throw new Error('No Steam ID found in user data');
+          }
+
+          return this.getTradeUrl(); // return observable here
         })
       )
-      .subscribe();
+      .subscribe({
+        next: (tradeUrl: {
+          id: number;
+          steamId: string;
+          tradeUrl: string;
+          xp: number;
+        }) => {
+          this.tradeUrl = tradeUrl.tradeUrl ?? '';
+          this.cdr.detectChanges();
+        },
+        error: err => {
+          console.error('Error fetching trade URL:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Could not fetch trade URL.',
+          });
+        },
+      });
   }
+
   onSaveTradeUrl(): void {
     this.saveTradeUrl().subscribe({
       next: () => {
@@ -82,6 +117,18 @@ export class UserProfileComponent implements OnInit {
       },
     });
   }
+
+  getTradeUrl() {
+    const steamId = this.userData?.steamid;
+    const url = `https://localhost:7221/api/User/${steamId}`;
+    return this.httpClient.get<{
+      id: number;
+      steamId: string;
+      tradeUrl: string;
+      xp: number;
+    }>(url);
+  }
+
   private saveTradeUrl(): Observable<string> {
     const steamId = this.userData?.steamid;
     const url = `https://localhost:7221/api/user/${steamId}/tradeurl`;

@@ -21,12 +21,12 @@ public class AuthService
         var claims = new[]
         {
         new Claim(ClaimTypes.NameIdentifier, steamId),
-        new Claim("SteamId", steamId)
+        new Claim("steamId", steamId)
     };
 
         var token = new JwtSecurityToken(
-            issuer: "manncorner.com",
-            audience: "manncorner.com",
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credentials

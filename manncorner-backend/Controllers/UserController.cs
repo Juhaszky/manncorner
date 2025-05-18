@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -25,28 +26,30 @@ public class UserController : ControllerBase
             return BadRequest($"Error creating user: {ex.Message}");
         }
     }
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet]
     [Route("{steamId}")]
     public async Task<IActionResult> GetUser(string steamId)
     {
-        var user = await _userService.GetUserBySteamIdAsync(steamId);  // Aszinkron hívás
+        var user = await _userService.GetUserBySteamIdAsync(steamId);
         if (user == null)
         {
             return NotFound("User not found");
         }
         return Ok(user);
     }
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut]
     [Route("{steamId}/tradeurl")]
     public async Task<IActionResult> SetTradeUrl(string steamId, string tradeUrl)
     {
-        var tokenSteamId = User.FindFirst("steamid")?.Value;
+        var tokenSteamId = User.FindFirst("steamId")?.Value;
         if (string.IsNullOrEmpty(tokenSteamId))
         {
             return Unauthorized("Invalid token: steamId not found.");
         }
-        if (tokenSteamId != steamId) {
+        if (tokenSteamId != steamId)
+        {
             return Forbid("You are not allowed to modify another user's trade URL.");
         }
         try

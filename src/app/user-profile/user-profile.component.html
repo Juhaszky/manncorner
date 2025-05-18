@@ -36,15 +36,17 @@
   </div>
   <div
     class="trade-url-box w-full max-w-xl mx-auto flex flex-col gap-4 rounded-md border border-gray-600 p-4 sm:p-6">
-    <h3 class="text-xl sm:text-2xl font-semibold">Trade URL</h3>
-    <p class="text-teal-500 text-sm sm:text-base">
-      <a
-        href="https://steamcommunity.com/my/tradeoffers/privacy#trade_offer_access_url"
-        target="_blank"
-        class="underline hover:text-teal-600 transition-colors duration-200"
-        >Get your trade URL</a
-      >
-    </p>
+    <div class="flex justify-between mb-4">
+      <h3 class="text-xl sm:text-2xl font-semibold">Trade URL</h3>
+      <p class="text-teal-500 text-sm sm:text-base">
+        <a
+          href="https://steamcommunity.com/my/tradeoffers/privacy#trade_offer_access_url"
+          target="_blank"
+          class="underline hover:text-teal-600 transition-colors duration-200"
+          >Get your trade URL</a
+        >
+      </p>
+    </div>
     <p-floatlabel>
       <input
         [(ngModel)]="tradeUrl"
@@ -60,4 +62,4 @@
       label="Save Trade URL" />
   </div>
 </div>
-<p-toast position="bottom-right"/>
+<p-toast position="bottom-right" />

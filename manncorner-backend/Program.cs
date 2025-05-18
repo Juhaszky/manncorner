@@ -1,4 +1,8 @@
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,13 +14,61 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
+var configuration = builder.Configuration;
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
     options.DefaultChallengeScheme = "Steam";
+
 })
 .AddCookie("Cookies")
-.AddSteam();
+.AddSteam(options =>
+{
+    options.Events.OnAuthenticated = context =>
+    {
+        var url = context.Identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var steamId = new Uri(url).Segments.Last();
+        if (!string.IsNullOrEmpty(steamId))
+        {
+
+            context.Identity?.AddClaim(new Claim("steamId", steamId));
+        }
+        return Task.CompletedTask;
+    };
+}).AddJwtBearer(options =>
+{
+    var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]);
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("Authentication failed: " + context.Exception.Message);
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine("Token validated successfully.");
+            return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            Console.WriteLine("JWT challenge: " + context.Error + " - " + context.ErrorDescription);
+            return Task.CompletedTask;
+        }
+    };
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = configuration["Jwt:Issuer"],
+        ValidAudience = configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -26,7 +78,6 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
-var configuration = builder.Configuration;
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<UserService>();
