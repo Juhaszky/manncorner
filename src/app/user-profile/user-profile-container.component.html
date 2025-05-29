@@ -1,0 +1,7 @@
+<app-user-profile 
+    [profileData]="facade.profileData$ | async" 
+    [userData]="facade.userData$ | async "
+    [chipData]="(facade.chipData$ | async) || []"
+    [tradeControl]="facade.tradeControl"
+    (saveTradeUrl)="facade.saveTradeUrl()">
+</app-user-profile>

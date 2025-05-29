@@ -3,7 +3,6 @@ import { HomeComponent } from './home/home.component';
 import { TradeComponent } from './home/trade/trade.component';
 import { LoginSuccessComponent } from './login-success/login-success.component';
 import { authGuardGuard } from './auth-guard.guard';
-import { userResolver } from './user.resolver';
 
 export const routes: Routes = [
   {
@@ -21,13 +20,10 @@ export const routes: Routes = [
   {
     path: 'user-profile',
     loadComponent: () =>
-      import('./user-profile/user-profile.component').then(
-        m => m.UserProfileComponent
+      import('./user-profile/user-profile-container.component').then(
+        m => m.UserProfileContainerComponent
       ),
-    canActivate: [authGuardGuard],
-    resolve: {
-      user: userResolver,
-    },
+    canActivate: [authGuardGuard]
   },
   {
     path: '**',
