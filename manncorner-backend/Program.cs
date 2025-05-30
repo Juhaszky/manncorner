@@ -80,8 +80,11 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+    
+builder.Services.AddScoped<ExpService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<SteamApiService>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
