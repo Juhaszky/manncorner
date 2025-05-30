@@ -55,7 +55,11 @@ public class UserController : ControllerBase
         try
         {
             await _userService.SetTradeUrlAsync(steamId, tradeUrl);
-            return Ok("Trade URL updated successfully");
+            return Ok(new { message = "Trade URL updated successfully", status = 200 });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(new { error = ex.Message, status = 404 });
         }
         catch (Exception ex)
         {

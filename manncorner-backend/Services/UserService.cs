@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 public class UserService
 {
     private readonly AppDbContext _context;
-    private readonly ExpService _expService;
+    private readonly IServiceProvider _serviceProvider;
 
-    public UserService(AppDbContext context, ExpService expService)
+    public UserService(AppDbContext context, IServiceProvider serviceProvider)
     {
         _context = context;
-        _expService = expService;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task CreateUserAsync(string steamId, string tradeUrl)
@@ -32,15 +32,18 @@ public class UserService
     public async Task SetTradeUrlAsync(string steamId, string tradeUrl)
     {
         var user = await GetUserBySteamIdAsync(steamId);
-        if (user != null)
+        if (user == null)
         {
-            bool isFirstTime = string.IsNullOrEmpty(tradeUrl);
-            user.TradeUrl = tradeUrl;
-            if (isFirstTime)
-            {
-                await _expService.increaseExp(25, user.SteamId);
-            }
-            await _context.SaveChangesAsync();
+            throw new InvalidOperationException($"User with Steam ID '{steamId}' not found.");
         }
+
+        bool isFirstTime = string.IsNullOrEmpty(user.TradeUrl);
+        user.TradeUrl = tradeUrl;
+        if (isFirstTime)
+        {
+            var expService = _serviceProvider.GetRequiredService<ExpService>();
+            await expService.increaseExp(25, user.SteamId);
+        }
+        await _context.SaveChangesAsync();
     }
 }
