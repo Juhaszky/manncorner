@@ -1,0 +1,9 @@
+<app-item 
+    [itemData]="item" 
+    [itemImgUrl]="facade.getImageUrl(item)" 
+    [mode]="mode"
+    [borderStyle]="facade.getBorderStyle(item)"
+    [effectUrl]="facade.initializeEffectUrl(item)"
+    (selectEmitter)="facade.onItemSelect(mode)"
+    (customizeEmitter)="facade.handleCustomizeItem(item)">
+</app-item>

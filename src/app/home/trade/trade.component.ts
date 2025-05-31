@@ -13,6 +13,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { map, Observable, Subject } from 'rxjs';
 import { ItemComponent } from '../../../shared/item/item.component';
 import { DescrpitionComponent } from '../../../shared/descrpition/descrpition.component';
+import { ItemContainerComponent } from '../../../shared/item/item-container.component';
 
 @Component({
   standalone: true,
@@ -23,6 +24,7 @@ import { DescrpitionComponent } from '../../../shared/descrpition/descrpition.co
         DatePipe,
         CommonModule,
         ItemComponent,
+        ItemContainerComponent,
         DescrpitionComponent,
     ],
     templateUrl: './trade.component.html',

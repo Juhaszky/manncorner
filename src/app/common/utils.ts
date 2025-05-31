@@ -1,7 +1,6 @@
 import { ModifiedItemData } from "../../shared/models/modifiedItem.model";
 
-export function getItemBorderStyle(item: any): string {
-  console.log(item);
+export function getItemBorderStyle(item: ModifiedItemData): string {
   if (item?.name?.includes('Unusual')) {
     return 'unusual';
   } else if (item?.name?.includes('Strange')) {
@@ -16,7 +15,7 @@ export function getItemBorderStyle(item: any): string {
     return 'vintage';
   } else if (
     (item?.descriptions && item?.descriptions[0]?.value?.includes('Elite')) ||
-    item?.descriptions?.value?.includes('Elite')
+    item?.descriptions.find((desc) => desc.value === "Elite")
   ) {
     return 'elite';
   } else {

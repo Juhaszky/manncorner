@@ -26,13 +26,13 @@
       }">
       
       <ng-container *ngFor="let item of row trackBy: trackByFn">
-        <item
+        <app-item-container
           class="w-full flex justify-center"
-          [itemData]="item"
+          [item]="item"
           [mode]="mode"
           (click)="onItemSelect(item)"
           (removeEmitter)="onRemoveItem(options.index)">
-        </item>
+        </app-item-container>
       </ng-container>
 
     </div>

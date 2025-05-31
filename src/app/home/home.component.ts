@@ -15,6 +15,7 @@ import { TradeService } from './trade.service';
 import { catchError } from 'rxjs/operators';
 import { ResizedImageComponent } from '../../shared/resized-image/resized-image.component';
 import { ItemComponent } from '../../shared/item/item.component';
+import { ItemContainerComponent } from '../../shared/item/item-container.component';
 
 
 @Component({
@@ -25,7 +26,8 @@ import { ItemComponent } from '../../shared/item/item.component';
         PostDatePipe,
         PaginatorComponent,
         ResizedImageComponent,
-        ItemComponent
+        ItemComponent,
+        ItemContainerComponent
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'

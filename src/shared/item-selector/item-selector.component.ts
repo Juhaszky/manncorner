@@ -18,6 +18,7 @@ import { SortService } from '../sort.service';
 import { ScrollerModule } from 'primeng/scroller';
 import { SkeletonModule } from 'primeng/skeleton';
 import { chunkItems } from '../../app/common/utils';
+import { ItemContainerComponent } from '../item/item-container.component';
 
 @Component({
   standalone: true,
@@ -27,7 +28,8 @@ import { chunkItems } from '../../app/common/utils';
         CommonModule,
         ScrollingModule,
         ItemComponent,
-        SkeletonModule
+        SkeletonModule,
+        ItemContainerComponent
     ],
     templateUrl: './item-selector.component.html',
     styleUrl: './item-selector.component.scss'
