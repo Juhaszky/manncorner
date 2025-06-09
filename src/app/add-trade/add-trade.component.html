@@ -48,7 +48,7 @@
       <app-action-bar></app-action-bar>
     </div>
     <div class="col-card mb-3 p-1">
-      <item-selector (onItemAdd)="handleItemAddToTrade($event);" [mode]="'inventory'" [filter]="filterText"></item-selector>
+      <item-selector (onItemAdd)="handleItemAddToTrade($event);" [mode]="'inventory'" [items]="onChunkItems(tradeForm.controls['inventory'].value)" [filter]="filterText"></item-selector>
     </div>
   </div>
   <descrpition [canEdit]="true" (descriptionData)="check($event)">

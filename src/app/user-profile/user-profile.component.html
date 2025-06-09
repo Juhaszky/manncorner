@@ -2,7 +2,7 @@
   <div class="profile-data flex flex-row items-center gap-2">
     <img routerLink="userprofile" class="h-24 w-24 rounded-full" [src]="userData.avatarfull" alt="asd" />
     <div class="flex flex-row gap-2 h-8 items-center">
-      <p-chip *ngFor="let chip of chipData" [label]="chip.label" (click)="openLink(chip.link)"></p-chip>
+      <p-chip class="chip" *ngFor="let chip of chipData" [label]="chip.label" (click)="openLink(chip.link)"></p-chip>
     </div>
   </div>
   <h1 class="text-3xl font-bold">{{ userData.personaname }}'s profile</h1>

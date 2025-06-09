@@ -9,6 +9,6 @@ export class ImageService {
   constructor(private http: HttpClient) { }
   
   getResizedImageUrl(imageUrl: string): string {
-    return `http://localhost:3000/image/resize?url=${imageUrl}`
+    return `http://localhost:5268/convert-img?imageUrl=${imageUrl}`
   }
 }

@@ -81,12 +81,19 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
     
+builder.Services.AddScoped<Tf2SchemaService>();
 builder.Services.AddScoped<ExpService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<SteamApiService>();
+
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var schemaService = scope.ServiceProvider.GetRequiredService<Tf2SchemaService>();
+    await schemaService.SyncTf2SchemaAsync();
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

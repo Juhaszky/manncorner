@@ -64,8 +64,8 @@ export class ItemSelectorService {
 
   fetchItems(): Observable<ItemData[]> {
     return this.http
-      .get<Observable<any>>('http://localhost:3000/alma')
-      .pipe(map((data: any) => data));
+      .get<Observable<any>>('https://localhost:7221/items')
+      .pipe(map((data: any) => data.descriptions));
   }
 
   fetchAllItems(): Observable<StockItem[]> {

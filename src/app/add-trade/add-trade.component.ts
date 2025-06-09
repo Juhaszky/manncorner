@@ -4,9 +4,10 @@ import {
   afterNextRender,
   ChangeDetectorRef,
   Component,
+  inject,
   OnInit,
 } from '@angular/core';
-import { combineLatest, first, map } from 'rxjs';
+import { combineLatest, first, map, Observable } from 'rxjs';
 import { ItemSelectorComponent } from '../../shared/item-selector/item-selector.component';
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { UserDataService } from '../../shared/user-data.service';
@@ -36,8 +37,9 @@ import { ButtonModule } from 'primeng/button';
     styleUrl: './add-trade.component.scss'
 })
 export class AddTradeComponent implements OnInit {
-  filterText: string = '';
-  tradeDescription: string = '';
+  http = inject(HttpClient);
+  filterText = '';
+  tradeDescription = '';
   tradeForm: FormGroup = new FormGroup({
     inventory: new FormControl([]),
     itemsToTrade: new FormControl([]),
@@ -66,15 +68,19 @@ export class AddTradeComponent implements OnInit {
 
   ngOnInit(): void {
     this.itemSelectorService.fetchItems().subscribe((items) => {
+      console.log(items)
       this.tradeForm.controls["inventory"].setValue(items);
     })
-    this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
+    // this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
       
-    });
-    this.tradeForm.valueChanges.subscribe((change) => {
+    // });
+    // this.tradeForm.valueChanges.subscribe((change) => {
       
-    });
+    // });
 
+  }
+  getItems (): Observable<any> {
+    return this.http.get<any>("http://localhost:5268/items");
   }
   handleItemAddToTrade(item: any): void {
     // Get current items

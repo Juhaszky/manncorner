@@ -18,7 +18,7 @@ public class ImageService
         using var inputStream = new MemoryStream(imageBytes);
         using var image = await Image.LoadAsync(inputStream);
 
-        image.Mutate(x => x.Resize(50, 50)); 
+        image.Mutate(x => x.Resize(128, 128)); 
 
         using var outputStream = new MemoryStream();
         await image.SaveAsync(outputStream, new WebpEncoder { Quality = 75 });

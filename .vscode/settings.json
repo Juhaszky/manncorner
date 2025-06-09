@@ -1,3 +1,4 @@
 {
-    "dotnet.defaultSolution": "manncorner-backend.sln"
+    "dotnet.defaultSolution": "manncorner-backend.sln",
+    "eslint.format.enable": true
 }
