@@ -9,10 +9,12 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { authInterceptor } from './auth.interceptor';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     MessageService,
+    DialogService,
     provideRouter(routes),
     provideClientHydration(),
     provideAnimationsAsync(),

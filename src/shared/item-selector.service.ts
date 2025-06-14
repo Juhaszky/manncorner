@@ -24,13 +24,13 @@ export class ItemSelectorService {
     this.initalizeState();
   }
   private initalizeState(): void {
-    this.fetchAllItems().subscribe((items: StockItem[]) => {
-      this.updateState({ allItems: items });
-    });
+    // this.fetchAllItems().subscribe((items: StockItem[]) => {
+    //   this.updateState({ allItems: items });
+    // });
 
-    this.fetchItems().subscribe((items: ItemData[]) =>
-      this.updateState({ inventoryItems: items, filteredInventoryItems: items })
-    );
+    // this.fetchItems(0,20).subscribe((items: ItemData[]) =>
+    //   this.updateState({ inventoryItems: items, filteredInventoryItems: items })
+    // );
   }
   updateState(partialState: Partial<ItemState>): void {
     this.stateSubject.next({
@@ -40,19 +40,19 @@ export class ItemSelectorService {
   }
 
   getAllItems(): Observable<StockItem[]> {
-    return this.stateSubject.pipe(map((state) => state.allItems));
+    return this.stateSubject.pipe(map(state => state.allItems));
   }
 
   getInventoryItems() {
-    return this.stateSubject.pipe(map((state) => state.inventoryItems));
+    return this.stateSubject.pipe(map(state => state.inventoryItems));
   }
 
   getItemsToTrade() {
-    return this.stateSubject.pipe(map((state) => state.toTradeItems));
+    return this.stateSubject.pipe(map(state => state.toTradeItems));
   }
 
   getItemsForTrade() {
-    return this.stateSubject.pipe(map((state) => state.forTradeItems));
+    return this.stateSubject.pipe(map(state => state.forTradeItems));
   }
 
   emptyItemsToTrade(): void {
@@ -62,10 +62,10 @@ export class ItemSelectorService {
     this.updateState({ forTradeItems: [] });
   }
 
-  fetchItems(): Observable<ItemData[]> {
-    return this.http
-      .get<Observable<any>>('https://localhost:7221/items')
-      .pipe(map((data: any) => data.descriptions));
+  fetchItems(offset: number, limit: number): Observable<ItemData[]> {
+    return this.http.get<ItemData[]>(
+      `https://localhost:7221/items?offset=${offset}&limit=${limit}`
+    );
   }
 
   fetchAllItems(): Observable<StockItem[]> {
@@ -83,7 +83,7 @@ export class ItemSelectorService {
     // Find and remove the item from inventoryItems
     const itemToMove = filteredInventoryItems[index];
     const originalIndex = inventoryItems.findIndex(
-      (item) => item.idx === itemToMove.idx
+      item => item.idx === itemToMove.idx
     );
     inventoryItems.splice(originalIndex, 1);
     // Remove the item from filteredInventoryItems
@@ -137,7 +137,7 @@ export class ItemSelectorService {
     // Insert the item back into inventoryItems at its original position
     filteredInventoryItems.splice(itemToMove.idx, 0, itemToMove);
     console.log(filteredInventoryItems);
-    
+
     // Update the state with the modified arrays
     this.updateState({
       filteredInventoryItems,
@@ -146,16 +146,15 @@ export class ItemSelectorService {
   }
 
   filterItems(items: ItemData[], filterText: string): ItemData[] {
-    return items.filter((item) =>
+    return items.filter(item =>
       item.name.toLowerCase().includes(filterText.toLowerCase())
     );
   }
-  
 
   updateFilteredItems(filterText: string): void {
     const state = this.stateSubject.value;
     console.log(state);
-    const filteredItems = state.inventoryItems.filter((item) =>
+    const filteredItems = state.inventoryItems.filter(item =>
       item.name.toLowerCase().includes(filterText.toLowerCase())
     );
     this.updateState({ filteredInventoryItems: filteredItems, filterText });

@@ -21,8 +21,8 @@ export interface ItemData {
   instanceid: string;
   currency: number;
   background_color: string;
-  icon_url: string;
-  icon_url_large: string;
+  icon_Url: string;
+  icon_Url_Large: string;
   descriptions: Description[];
   tradable: number;
   actions: Action[];
