@@ -2,6 +2,8 @@ import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { ItemComponent } from './item.component';
 import { ItemFacade } from './item.facade';
 import { ModifiedItemData } from '../models/modifiedItem.model';
+import { TradeServiceFacade } from '../../app/add-trade/trade-service.facade';
+import { ItemSelectorFacade } from '../item-selector/item-selector.facade';
 
 @Component({
   selector: 'app-item-container',
@@ -10,8 +12,12 @@ import { ModifiedItemData } from '../models/modifiedItem.model';
 })
 export class ItemContainerComponent implements OnChanges {
   @Input() item!: ModifiedItemData;
+
+  @Input() disabled = false;
   @Input() mode = '';
   facade = inject(ItemFacade);
+  itemSelectorFacade = inject(ItemSelectorFacade);
+  tradeFacade = inject(TradeServiceFacade);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["item"] && this.item) {

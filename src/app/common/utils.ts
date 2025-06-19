@@ -15,7 +15,7 @@ export function getItemBorderStyle(item: ModifiedItemData): string {
     return 'vintage';
   } else if (
     (item?.descriptions && item?.descriptions[0]?.value?.includes('Elite')) ||
-    item?.descriptions.find((desc) => desc.value === "Elite")
+    item?.descriptions?.find((desc) => desc.value === "Elite")
   ) {
     return 'elite';
   } else {

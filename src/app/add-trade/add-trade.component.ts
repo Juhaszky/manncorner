@@ -22,6 +22,7 @@ import { ButtonModule } from 'primeng/button';
 import { ModifiedItemData } from '../../shared/models/modifiedItem.model';
 import { ItemSelectorFacade } from '../../shared/item-selector/item-selector.facade';
 import { DialogService } from 'primeng/dynamicdialog';
+import { InventoryItemsSelectorComponent } from './inventory-items-selector/inventory-items-selector.component';
 
 @Component({
   standalone: true,
@@ -34,6 +35,7 @@ import { DialogService } from 'primeng/dynamicdialog';
     DescrpitionComponent,
     ReactiveFormsModule,
     ButtonModule,
+    InventoryItemsSelectorComponent
   ],
   providers: [HttpClient, DialogService],
   templateUrl: './add-trade.component.html',
@@ -43,7 +45,7 @@ export class AddTradeComponent implements OnInit {
   http = inject(HttpClient);
   filterText = '';
   tradeDescription = '';
-  inventoryItems:any[] = [];
+  inventoryItems: any[] = [];
   tradeForm: FormGroup = new FormGroup({
     inventory: new FormControl([]),
     itemsToTrade: new FormControl([]),
@@ -55,7 +57,7 @@ export class AddTradeComponent implements OnInit {
     private tradeService: TradeService,
     private itemSelectorService: ItemSelectorService,
     private cdRef: ChangeDetectorRef,
-    private itemSelectorFacade: ItemSelectorFacade
+    private itemSelectorFacade: ItemSelectorFacade,
   ) {
     // afterNextRender(() => {
     //   this.AddTradeService.filterText$.subscribe(filterText => {
@@ -71,6 +73,13 @@ export class AddTradeComponent implements OnInit {
 
   ngOnInit(): void {
     this.itemSelectorFacade.loadItemsLazy(0, 42);
+    this.itemSelectorFacade.items$.subscribe((items) => {
+      this.inventoryItems = items;
+    });
+    this.itemSelectorFacade.itemsToTrade$.subscribe((items) => {
+      console.log(items);
+      this.tradeForm.controls["itemsToTrade"].setValue(items, { emitEvent: false })
+    });
     this.tradeForm.valueChanges.subscribe((value) => {
       console.log(value);
     });
@@ -89,7 +98,7 @@ export class AddTradeComponent implements OnInit {
 
     // });
   }
-    chunkItemsIntoRows(
+  chunkItemsIntoRows(
     items: ModifiedItemData[],
     chunkSize = 7
   ): ModifiedItemData[][] {
@@ -99,7 +108,7 @@ export class AddTradeComponent implements OnInit {
     }
     return result;
   }
-  
+
   handleItemAddToTrade(item: ModifiedItemData): void {
     // Get current items
     console.log(item);
@@ -113,9 +122,9 @@ export class AddTradeComponent implements OnInit {
 
     console.log(this.tradeForm);
   }
-  handleItemRemoveFromTrade(item: any): void {}
+  handleItemRemoveFromTrade(item: any): void { }
 
-  openSnackBar(error: any) {}
+  openSnackBar(error: any) { }
 
   makeTrade() {
     const itemsToTrade$ = this.itemSelectorService.getItemsToTrade().pipe(

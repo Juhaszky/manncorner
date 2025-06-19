@@ -1,0 +1,15 @@
+<div class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full" #inventorySelector
+  [class.justify-center]="mode !== 'allItems'">
+  <div class="flex flex-row flex-wrap w-full justify-between gap-2 p-2">
+    <div *ngFor="let item of items" class="w-24">
+      <app-item-container 
+        [item]="item" 
+        [mode]="mode" 
+        [disabled]="selectedItemIds.has(item.idx)"
+        (click)="onItemSelect(item)"
+        (removeEmitter)="onRemoveItem(item.idx)">
+
+      </app-item-container>
+    </div>
+  </div>
+</div>

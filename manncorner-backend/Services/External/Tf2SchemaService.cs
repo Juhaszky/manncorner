@@ -37,7 +37,7 @@ public class Tf2SchemaService
         {
             var entity = new Tf2ItemSchema
             {
-                Defindex = item.Defindex,//Convert.ToInt32(item.Defindex.ToString() + index.ToString()),
+                Defindex = Convert.ToInt32(item.Defindex.ToString() + index.ToString()),//item.Defindex,//
                 Name = item.Name,
                 ItemClass = item.ItemClass,
                 ItemTypeName = item.ItemTypeName,

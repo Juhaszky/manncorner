@@ -41,6 +41,9 @@ export class ItemFacade {
       this.openItemDetails();
     }
   }
+  onRemoveItem(item: ModifiedItemData) {
+
+  }
 
   openItemDetails() {
     return null;

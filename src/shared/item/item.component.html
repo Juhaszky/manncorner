@@ -1,5 +1,5 @@
 <div class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20  hover:cursor-pointer rounded-lg relative z-0"
-  [class.disabled]="itemData.selected" [class]="borderStyle" (click)="onItemSelect()" (keydown)="onItemSelect()"
+  [class.disabled]="disabled" [class]="borderStyle" (click)="onItemSelect()" (keydown)="onItemSelect()"
   [ngStyle]="{ 'background-image': 'url(' + effectUrl + ')', 'opacity': itemData.selected ? '0.2' : '1'}"
   [pTooltip]="itemData.name" tooltipPosition="bottom" tabindex="0">
   <resized-image [imageUrl]="itemImgUrl"></resized-image>

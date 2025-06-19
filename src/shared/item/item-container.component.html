@@ -2,8 +2,10 @@
     [itemData]="item" 
     [itemImgUrl]="facade.getImageUrl(item)" 
     [mode]="mode"
+    [disabled]="disabled"
     [borderStyle]="facade.getBorderStyle(item)"
     [effectUrl]="facade.initializeEffectUrl(item)"
-    (selectEmitter)="facade.onItemSelect(mode)"
+    (selectEmitter)="itemSelectorFacade.onAddItem(item)"
+    (removeEmitter)="itemSelectorFacade.onRemoveItem(item)"
     (customizeEmitter)="facade.handleCustomizeItem(item)">
 </app-item>

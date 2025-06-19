@@ -27,6 +27,7 @@ import { TooltipModule } from 'primeng/tooltip';
 export class ItemComponent {
   @Input() itemData!: ModifiedItemData;
   @Input() itemImgUrl = '';
+  @Input() disabled = false;
   @Input() mode = '';
   @Output() customizeEmitter = new EventEmitter();
   @Output() removeEmitter = new EventEmitter();

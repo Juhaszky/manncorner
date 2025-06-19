@@ -4,7 +4,10 @@
     <div class="col-card mb-3">
       <item-selector 
         [items]="tradeForm.controls['itemsToTrade'].value"
-        [mode]="'toTrade'"></item-selector>
+        [mode]="'toTrade'"
+        (itemRemove)="handleItemRemoveFromTrade($event)">
+
+      </item-selector>
     </div>
     <div
       class="flex flex-col p-4 h-75 sm:justify-between justify-center items-center"
@@ -50,12 +53,13 @@
       <app-action-bar></app-action-bar>
     </div>
     <div class="col-card mb-3 p-1">
-      <item-selector 
+      <app-inventory-items-selector
         (itemAdd)="handleItemAddToTrade($event)" 
         [mode]="'inventory'" 
         [items]="inventoryItems" 
         [filter]="filterText">
-      </item-selector>
+
+      </app-inventory-items-selector>
     </div>
   </div>
   <descrpition [canEdit]="true" (descriptionData)="check($event)">
