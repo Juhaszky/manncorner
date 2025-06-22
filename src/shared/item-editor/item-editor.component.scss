@@ -1,11 +1,9 @@
-.mdc-text-field {
-    background-color: rgb(31 41 55);
+::ng-deep .p-autocomplete {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 100% !important;
+  box-sizing: border-box;
 }
-.topunit.mat-select-panel
-{
-  background-color: rgb(31 41 55);
-
-}
-.mat-mdc-option-ripple {
-    background-color: gold !important;
+::ng-deep .p-dialog-header, .p-dialog-content {
+  background-color: rgba(31 41 55) !important;
 }

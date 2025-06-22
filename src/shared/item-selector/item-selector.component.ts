@@ -22,6 +22,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ItemContainerComponent } from '../item/item-container.component';
 import { ItemSelectorFacade } from './item-selector.facade';
 import { fromEvent } from 'rxjs';
+import { DialogModule } from 'primeng/dialog';
+import { ItemEditorComponent } from '../item-editor/item-editor.component';
 
 @Component({
   standalone: true,
@@ -33,18 +35,25 @@ import { fromEvent } from 'rxjs';
     ItemComponent,
     SkeletonModule,
     ItemContainerComponent,
+    DialogModule,
+    ItemEditorComponent,
   ],
   templateUrl: './item-selector.component.html',
   styleUrl: './item-selector.component.scss',
 })
 export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
+  visible = false;
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems';
   @Input() filter = '';
   @Output() itemAdd = new EventEmitter<ModifiedItemData>();
   @Output() itemRemove = new EventEmitter<ModifiedItemData>();
   @ViewChild('inventorySelector') inventorySelectorEl!: ElementRef;
-  @Output() lazyLoadEmitter = new EventEmitter<{ first: number, row: number }>();
+  @Output() lazyLoadEmitter = new EventEmitter<{
+    first: number;
+    row: number;
+  }>();
   @Input() items: ModifiedItemData[] = [];
+  @Input() allItems: ModifiedItemData[] = [];
   @HostListener('scroll', ['$event'])
   doSomething(event: any) {
     console.log(event);
@@ -52,49 +61,67 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
   filteredItems: ModifiedItemData[] = [];
   loading = false;
   pageSize = 21;
+  currentPageItems: any[] = [];
   constructor(
     private itemService: ItemSelectorService,
     private sortService: SortService,
     private viewportRuler: ViewportRuler,
     public itemSelectorFacade: ItemSelectorFacade
-  ) { }
+  ) {}
 
   ngAfterViewInit(): void {
-    fromEvent(this.inventorySelectorEl.nativeElement, "scroll").subscribe((event: any) => {
-      const target = event.target;
-      const scrollTop = target.scrollTop;
-      const scrollHeight = target.scrollHeight;
-      const clientHeight = target.clientHeight;
+    fromEvent(this.inventorySelectorEl.nativeElement, 'scroll').subscribe(
+      (event: any) => {
+        const target = event.target;
+        const scrollTop = target.scrollTop;
+        const scrollHeight = target.scrollHeight;
+        const clientHeight = target.clientHeight;
 
-      const threshold = 50;
+        const threshold = 50;
 
-      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+        const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
 
-      if (distanceFromBottom <= threshold) {
-        console.log("Almost on bottom");
-        this.itemSelectorFacade.loadItemsLazy(this.itemSelectorFacade.itemsLength, this.pageSize);
+        if (distanceFromBottom <= threshold) {
+          console.log('Almost on bottom');
+          this.itemSelectorFacade.loadItemsLazy(
+            this.itemSelectorFacade.itemsLength,
+            this.pageSize
+          );
+        }
       }
-
-    })
+    );
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.mode === 'allItems') {
+      console.log(this.items);
+    }
+  }
 
-
-    //this.loadItems();
-    // this.sortService.sortCriteria$.subscribe(criteria => {
-    //   //this.items = this.sortService.sortItems(this.items, criteria);
-    //   if (this.filteredItems.length > 0) {
-    //     //this.itemService.updateFilteredItems(criteria)
-    //     //this.filteredItems = this.sortService.sortItems(this.filteredItems, criteria);
-    //     this.itemService.updateState({
-    //       filteredInventoryItems: this.filteredItems,
-    //     });
-    //   }
-    // });
+  //this.loadItems();
+  // this.sortService.sortCriteria$.subscribe(criteria => {
+  //   //this.items = this.sortService.sortItems(this.items, criteria);
+  //   if (this.filteredItems.length > 0) {
+  //     //this.itemService.updateFilteredItems(criteria)
+  //     //this.filteredItems = this.sortService.sortItems(this.filteredItems, criteria);
+  //     this.itemService.updateState({
+  //       filteredInventoryItems: this.filteredItems,
+  //     });
+  //   }
+  // });
 
   getItemSize(): number {
     const width = this.viewportRuler.getViewportSize().width;
     return width >= 640 ? 96 : 80; // Matches `sm:h-24` (96px) and `h-20` (80px)
+  }
+  onLazyLoad(event: { query: string }) {
+    const filtered = this.allItems.filter(item =>
+    item.name.toLowerCase().includes(event.query.toLowerCase())
+  );
+
+  // Optionally limit results for performance
+  this.currentPageItems = filtered.slice(0, 20);
+
+    // Update paging for next call if you want
   }
 
   private loadItems(): void {
@@ -204,6 +231,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   onOpenItemEditor() {
+    this.visible = true;
     // let dialogRef = this.dialog.open(ItemEditorComponent, {
     //   height: '90vh',
     //   width: '95vw',

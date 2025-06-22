@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import {
-  ChangeDetectorRef,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { combineLatest, first, map } from 'rxjs';
 import { ItemSelectorComponent } from '../../shared/item-selector/item-selector.component';
 import { ItemSelectorService } from '../../shared/item-selector.service';
@@ -35,7 +30,7 @@ import { InventoryItemsSelectorComponent } from './inventory-items-selector/inve
     DescrpitionComponent,
     ReactiveFormsModule,
     ButtonModule,
-    InventoryItemsSelectorComponent
+    InventoryItemsSelectorComponent,
   ],
   providers: [HttpClient, DialogService],
   templateUrl: './add-trade.component.html',
@@ -46,18 +41,14 @@ export class AddTradeComponent implements OnInit {
   filterText = '';
   tradeDescription = '';
   inventoryItems: any[] = [];
-  tradeForm: FormGroup = new FormGroup({
-    inventory: new FormControl([]),
-    itemsToTrade: new FormControl([]),
-    itemsForTrade: new FormControl([]),
-    tradeDescription: new FormControl(''),
-  });
+  itemsToSell: ModifiedItemData[] = [];
+  itemsToBuy: ModifiedItemData[] = [];
 
   constructor(
     private tradeService: TradeService,
     private itemSelectorService: ItemSelectorService,
     private cdRef: ChangeDetectorRef,
-    private itemSelectorFacade: ItemSelectorFacade,
+    private itemSelectorFacade: ItemSelectorFacade
   ) {
     // afterNextRender(() => {
     //   this.AddTradeService.filterText$.subscribe(filterText => {
@@ -73,22 +64,25 @@ export class AddTradeComponent implements OnInit {
 
   ngOnInit(): void {
     this.itemSelectorFacade.loadItemsLazy(0, 42);
-    this.itemSelectorFacade.items$.subscribe((items) => {
+    this.itemSelectorFacade.items$.subscribe(items => {
       this.inventoryItems = items;
     });
-    this.itemSelectorFacade.itemsToTrade$.subscribe((items) => {
+    this.itemSelectorFacade.itemsToTrade$.subscribe(items => {
+      this.itemsToSell = items;
+    });
+    this.itemSelectorFacade.itemsForTrade$.subscribe(items => {
       console.log(items);
-      this.tradeForm.controls["itemsToTrade"].setValue(items, { emitEvent: false })
+      this.itemsToBuy = items;
     });
-    this.tradeForm.valueChanges.subscribe((value) => {
-      console.log(value);
-    });
+    // this.tradeForm.valueChanges.subscribe((value) => {
+    //   console.log(value);
+    // });
     // this.itemSelectorService.fetchItems(0, 20).subscribe(items => {
     //   console.log(items);
     //   this.tradeForm.controls['inventory'].setValue(items);
     //   const chunked = this.chunkItemsIntoRows(items, 7);
     //   this.itemSelectorFacade.items$.
-    //   this.inventoryItems = [...this.inventoryItems, ...chunked]; 
+    //   this.inventoryItems = [...this.inventoryItems, ...chunked];
     //   console.log(this.inventoryItems);
     // });
     // this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
@@ -112,19 +106,19 @@ export class AddTradeComponent implements OnInit {
   handleItemAddToTrade(item: ModifiedItemData): void {
     // Get current items
     console.log(item);
-    console.log(...this.tradeForm.controls['itemsToTrade'].value);
+    //console.log(...this.tradeForm.controls['itemsToTrade'].value);
     // Update form control
-    this.tradeForm.controls['itemsToTrade'].patchValue([...this.tradeForm.controls['itemsToTrade'].value, item], {
-      emitEvent: false,
-    });
+    // this.tradeForm.controls['itemsToTrade'].patchValue([...this.tradeForm.controls['itemsToTrade'].value, item], {
+    //   emitEvent: false,
+    // });
 
     // Re-chunk the items to maintain the layout
 
-    console.log(this.tradeForm);
+    //console.log(this.tradeForm);
   }
-  handleItemRemoveFromTrade(item: any): void { }
+  handleItemRemoveFromTrade(item: any): void {}
 
-  openSnackBar(error: any) { }
+  openSnackBar(error: any) {}
 
   makeTrade() {
     const itemsToTrade$ = this.itemSelectorService.getItemsToTrade().pipe(

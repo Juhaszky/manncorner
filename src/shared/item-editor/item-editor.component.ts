@@ -1,58 +1,67 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ItemSelectorService } from '../item-selector.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ItemListViewComponent } from './item-list-view/item-list-view.component';
 import { first } from 'rxjs';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { ButtonModule } from 'primeng/button';
+
 @Component({
   standalone: true,
-    selector: 'app-item-editor',
-    templateUrl: './item-editor.component.html',
-    styleUrl: './item-editor.component.scss',
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        AsyncPipe,
-        CommonModule,
-        ItemListViewComponent,
-    ]
+  selector: 'app-item-editor',
+  templateUrl: './item-editor.component.html',
+  styleUrl: './item-editor.component.scss',
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    CommonModule,
+    ItemListViewComponent,
+    AutoCompleteModule,
+    ButtonModule,
+  ],
 })
 export class ItemEditorComponent implements OnInit {
   tooltip = '';
   left = 0;
   top = 0;
+  @Input() options: any[] = [];
+  @Output() lazyLoad = new EventEmitter<{
+    query: string;
+  }>();
   selectedItems: any[] = [];
   selected!: any;
-  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
-  filteredOptions!: any[];
-  constructor(
-    private itemService: ItemSelectorService
-  ) {}
+
   myControl = new FormControl('');
-  options: any;
+  filteredOptions: any[] = [];
+
+  constructor(private itemService: ItemSelectorService) {}
+
   ngOnInit(): void {
-    this.itemService.itemState$
-      .pipe(first())
-      .subscribe((state) => (this.options = state.allItems));
-    //this.options = this.itemService.getAllItems().getValue();
-    console.log(this.options);
-    this.filteredOptions = this.options.slice();
+    this.myControl.valueChanges.subscribe(value => this.filter(value ?? ''));
   }
-  filter(): void {
-    const filterValue = this.input.nativeElement.value.toLowerCase();
+  loadItemsLazy(event: { query: string }): void {
+    this.lazyLoad.emit({
+      query: event.query,
+    });
+  }
+  onLazyLoadResponse(items: any[]) {
+    this.filteredOptions = items;
+  }
+  filter(query: string): void {
+    const lower = query?.toLowerCase() || '';
     this.filteredOptions = this.options.filter((o: any) =>
-      o.name.toLowerCase().includes(filterValue)
+      o.name.toLowerCase().includes(lower)
     );
   }
-  onSelect(event: any) {
-    if (event.source.value) {
-      const itemCopy = {...event.source.value}
-        this.selectedItems.push(itemCopy);
-    }
 
-    this.myControl.setValue('');
+  onSelect(item: any): void {
+    this.selectedItems.push(item);
+    console.log('Selected item:', item);
+
   }
-  onClose() {
-    
+
+  onClose(): void {
   }
 }

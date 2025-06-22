@@ -11,6 +11,23 @@ public class AppDbContext : DbContext
     public DbSet<Tf2ItemSchema> schemaItems { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Tf2ItemSchema>()
+         .HasKey(x => x.Id);
+
+        modelBuilder.Entity<Tf2ItemSchema>()
+            .HasIndex(x => x.Defindex);
+
+        modelBuilder.Entity<Tf2ItemSchema>()
+            .HasMany(x => x.Styles)
+            .WithOne(s => s.Tf2ItemSchema)
+            .HasForeignKey(s => s.Tf2ItemSchemaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Tf2ItemSchema>()
+            .HasMany(x => x.Attributes)
+            .WithOne(a => a.Tf2ItemSchema)
+            .HasForeignKey(a => a.Tf2ItemSchemaId)
+            .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Tf2ItemSchema>().ToTable("Tf2ItemSchemas");
     }
     // public DbSet<Item> Items { get; set; }

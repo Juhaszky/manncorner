@@ -5,6 +5,7 @@ import { ItemSelectorService } from '../item-selector.service';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
+
 @Injectable({ providedIn: 'root' })
 export class ItemSelectorFacade {
   private _items = new BehaviorSubject<ModifiedItemData[]>([]);
@@ -18,12 +19,14 @@ export class ItemSelectorFacade {
   itemsLength = 0;
   itemsToTrade$ = this._itemsToTrade.asObservable();
   itemsForTrade$ = this._itemsForTrade.asObservable();
-
+  private _customIdCounter = 0;
   constructor(
     private itemService: ItemSelectorService,
     private dialogService: DialogService
-  ) { }
-
+  ) {}
+  private deepEqual(obj1: any, obj2: any): boolean {
+    return JSON.stringify(obj1) === JSON.stringify(obj2);
+  }
   loadItemsLazy(first: number, rows: number): void {
     const pageKey = `${first}-${rows}`;
     if (this.loadedPages.has(pageKey)) return;
@@ -36,6 +39,11 @@ export class ItemSelectorFacade {
       },
       error: err => console.error('Lazy loading failed', err),
     });
+  }
+  loadAllItems() {
+    this.itemService.fetchAllItems().subscribe((items) => {
+      this._itemsForTrade.next(items);
+    })
   }
   onOpenItemEditor() {
     this.dialogRef = this.dialogService.open(ItemEditorComponent, {
@@ -65,12 +73,20 @@ export class ItemSelectorFacade {
     this._items.next([]);
   }
   onAddItem(item: ModifiedItemData) {
-        const exists = this._itemsToTrade.getValue().find((i) => i.idx === item.idx);
-        if (!exists) {
-            this._itemsToTrade.next([...this._itemsToTrade.getValue(), item]);
-        }
-    }
+  const currentItems = this._itemsToTrade.getValue();
+  const exists = currentItems.some(existingItem =>
+    this.deepEqual(existingItem, item)
+  );
+
+  if (!exists) {
+    const itemWithCustomId = { ...item, customId: ++this._customIdCounter };
+    this._itemsToTrade.next([...currentItems, itemWithCustomId]);
+    console.log('added', this._itemsToTrade.getValue());
+  }
+}
   onRemoveItem(item: ModifiedItemData) {
-    this._itemsToTrade.next(this._itemsToTrade.getValue().filter((i) => i.idx !== item.idx))
+    this._itemsToTrade.next(
+      this._itemsToTrade.getValue().filter(i => i.idx !== item.idx)
+    );
   }
 }

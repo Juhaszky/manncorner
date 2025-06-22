@@ -68,8 +68,8 @@ export class ItemSelectorService {
     );
   }
 
-  fetchAllItems(): Observable<StockItem[]> {
-    return this.http.get<StockItem[]>('http://localhost:3000/items/all-items');
+  fetchAllItems(): Observable<any> {
+    return this.http.get("/assets/items.json");
   }
 
   moveItemToTrade(index: number) {

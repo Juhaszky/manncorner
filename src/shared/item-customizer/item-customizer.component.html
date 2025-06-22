@@ -6,7 +6,8 @@
       [ngStyle]="{ 'background-image': 'url(' + effectUrl + ')' }"
       class="bg-no-repeat bg-cover"
     >
-      <resized-image [imageUrl]="getImageUrl()"></resized-image>
+    <img [src]="details?.image_url" alt="">
+      
     </div>
   </div>
   <form
@@ -18,7 +19,7 @@
       <h2>Name</h2>
       <h3>
         {{ itemFormGroup.controls["quality"].value.join(" ") }}
-        {{ details.name }}
+        {{ details?.name }}
       </h3>
     </div>
     <div

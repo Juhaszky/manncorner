@@ -23,3 +23,6 @@
     </div>
   </div>
 </div>
+<p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+  <item-customizer [details]="selectedItems[selectedIndex]?.value"></item-customizer>
+</p-dialog>

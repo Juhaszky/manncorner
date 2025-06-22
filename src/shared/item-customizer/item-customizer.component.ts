@@ -30,7 +30,8 @@ import { ItemKillstreakerSelectorComponent } from './item-killstreaker-selector/
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemCustomizerComponent implements OnInit {
-  @Input() details!: StockItem;
+  @Input() details!: any;
+  @Input() showDialog = false;
 
   itemFormGroup: FormGroup = new FormGroup({
     name: new FormControl(''),
@@ -55,8 +56,12 @@ export class ItemCustomizerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.details);
     this.setIsUnusual();
-    this.details.name = this.details.originalName ?? this.details.name;
+    if (this.details) {
+
+    
+    this.details.name = this.details?.originalName ?? this.details?.name;
     this.itemFormGroup.patchValue({
       name: this.details.name,
       quality: this.details.quality || [],
@@ -67,18 +72,23 @@ export class ItemCustomizerComponent implements OnInit {
         killstreak: '',
       },
     });
+    }
   }
 
   getImageUrl(): string {
-    const itemsUrl = this.details.image_url;
-    if (!itemsUrl) {
-      return '';
-    }
-    return itemsUrl
+    if (this.details) {
+
+      const itemsUrl = this.details.image_url;
+      if (!itemsUrl) {
+        return '';
+      }
+      return itemsUrl
       ? itemsUrl.startsWith('http')
-        ? itemsUrl
-        : `https://steamcommunity-a.akamaihd.net/economy/image/${itemsUrl}`
+      ? itemsUrl
+      : `https://steamcommunity-a.akamaihd.net/economy/image/${itemsUrl}`
       : '';
+    }
+    return ''
   }
 
   onSubmit(): void {

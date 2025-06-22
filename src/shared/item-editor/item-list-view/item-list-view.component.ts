@@ -2,22 +2,27 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ItemCustomizerComponent } from '../../item-customizer/item-customizer.component';
 import { FormControl } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   standalone: true,
     selector: 'item-list-view',
-    imports: [CommonModule],
+    imports: [CommonModule, DialogModule, ItemCustomizerComponent],
     templateUrl: './item-list-view.component.html',
     styleUrl: './item-list-view.component.scss'
 })
 export class ItemListViewComponent implements OnInit {
   @Input() selectedItems: any;
-
+  selectedIndex = -1;
+  visible = false;
   ngOnInit(): void {}
   removeSelectedItem(i: number) {
     this.selectedItems.splice(i, 1);
   }
   customizeSelectedItem(i: number) {
+    this.selectedIndex = i;
+    console.log(this.selectedItems[i].value);
+    this.visible = true;
     const item = this.selectedItems[i];
     if (item) {
       // const dialogRef = this.dialog.open(ItemCustomizerComponent, {

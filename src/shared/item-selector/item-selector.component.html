@@ -1,16 +1,31 @@
-<div class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full" #inventorySelector
+<div
+  class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
+  #inventorySelector
   [class.justify-center]="mode !== 'allItems'">
-  <div *ngIf="mode === 'allItems'" class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20 w-20 border border-slate-700"
-    matTooltip="Add items..." (click)="onOpenItemEditor()" tabindex="1" (keydown)="onOpenItemEditor()">
+  <div
+    *ngIf="mode === 'allItems'"
+    class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20 w-20 border border-slate-700"
+    matTooltip="Add items..."
+    (click)="onOpenItemEditor()"
+    tabindex="1"
+    (keydown)="onOpenItemEditor()">
     <img src="/assets/images/8333955.png" alt="" class="img-fluid" />
   </div>
-  <div class="grid grid-cols-7 gap-2 p-2 w-full">
-    <div *ngFor="let item of items">
-      <app-item-container 
-        [item]="item" 
-        [mode]="mode" 
-        (click)="onItemSelect(item)">
+  <div class="flex flex-row flex-wrap w-full justify-between gap-2 p-2">
+    <div *ngFor="let item of items" class="w-24">
+      <app-item-container
+        [item]="item"
+        [mode]="mode"
+        (click)="onItemSelect(item)"
+        (removeEmitter)="onRemoveItem(item.idx)">
       </app-item-container>
     </div>
   </div>
 </div>
+<p-dialog
+  header="Customize Item"
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '25rem' }">
+  <app-item-editor [options]="currentPageItems" (lazyLoad)="onLazyLoad($event)"></app-item-editor>
+</p-dialog>

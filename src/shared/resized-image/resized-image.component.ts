@@ -13,6 +13,7 @@ export class ResizedImageComponent implements OnInit {
   resizedImageUrl = '';
   imageService = inject(ImageService);
   ngOnInit(): void {
+    console.log(this.imageUrl);
     this.resizedImageUrl = this.imageService.getResizedImageUrl(this.imageUrl);
   }
 }

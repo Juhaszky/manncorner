@@ -1,9 +1,8 @@
 <div class="p-4">
-  <form [formGroup]="tradeForm">
   <div class="grid sm:grid-cols-3 grid-cols-1">
     <div class="col-card mb-3">
       <item-selector 
-        [items]="tradeForm.controls['itemsToTrade'].value"
+        [items]="itemsToSell"
         [mode]="'toTrade'"
         (itemRemove)="handleItemRemoveFromTrade($event)">
 
@@ -34,7 +33,12 @@
     </div>
     <div class="col-card mb-3 p-1">
       <div class="inventory-box">
-        <!-- <item-selector [mode]="'allItems'"></item-selector> -->
+        <item-selector 
+        [allItems]="itemsToBuy"
+        [mode]="'allItems'"
+        (itemRemove)="handleItemRemoveFromTrade($event)">
+
+      </item-selector>
       </div>
     </div>
   </div>
@@ -64,5 +68,5 @@
   </div>
   <descrpition [canEdit]="true" (descriptionData)="check($event)">
   </descrpition>
-</form>
+
 </div>
