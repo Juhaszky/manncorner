@@ -11,21 +11,20 @@
     (keydown)="onOpenItemEditor()">
     <img src="/assets/images/8333955.png" alt="" class="img-fluid" />
   </div>
-  <div class="flex flex-row flex-wrap w-full justify-between gap-2 p-2">
+  <div class="flex flex-row flex-wrap w-full justify-between gap-2 p-2" *ngIf="items">
     <div *ngFor="let item of items" class="w-24">
       <app-item-container
         [item]="item"
         [mode]="mode"
-        (click)="onItemSelect(item)"
-        (removeEmitter)="onRemoveItem(item.idx)">
+        (click)="onItemSelect(item)">
       </app-item-container>
     </div>
   </div>
 </div>
-<p-dialog
+<p-dialog *ngIf="mode === 'allItems'"
   header="Customize Item"
   [modal]="true"
   [(visible)]="visible"
-  [style]="{ width: '25rem' }">
+  [style]="{ width: '80%', height: '80%' }">
   <app-item-editor [options]="currentPageItems" (lazyLoad)="onLazyLoad($event)"></app-item-editor>
 </p-dialog>

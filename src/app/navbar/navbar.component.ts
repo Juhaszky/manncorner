@@ -28,6 +28,7 @@ export class NavbarComponent implements OnInit {
       this.isLoggedIn = status;
     })
     this.userData.subscribe((data) => {
+      console.log(data);
       this.userInfo = data;
     });
   }

@@ -1,11 +1,9 @@
 <app-item 
     [itemData]="item" 
-    [itemImgUrl]="facade.getImageUrl(item)" 
+    [itemImgUrl]="item.img" 
     [mode]="mode"
     [disabled]="disabled"
     [borderStyle]="facade.getBorderStyle(item)"
-    [effectUrl]="facade.initializeEffectUrl(item)"
     (selectEmitter)="itemSelectorFacade.onAddItem(item)"
-    (removeEmitter)="itemSelectorFacade.onRemoveItem(item)"
-    (customizeEmitter)="facade.handleCustomizeItem(item)">
+    (removeEmitter)="itemSelectorFacade.onRemoveItem(item)">
 </app-item>

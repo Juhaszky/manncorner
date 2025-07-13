@@ -5,9 +5,7 @@
       <app-item-container 
         [item]="item" 
         [mode]="mode" 
-        [disabled]="selectedItemIds.has(item.idx)"
-        (click)="onItemSelect(item)"
-        (removeEmitter)="onRemoveItem(item.idx)">
+        (click)="onItemSelect(item)">
 
       </app-item-container>
     </div>

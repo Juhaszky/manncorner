@@ -2,17 +2,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Inject,
   Input,
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { StockItem } from '../models/stockItem.model';
 import { ItemQualityComponent } from './item-quality/item-quality.component';
 import { ItemEffectsComponent } from './item-effects/item-effects.component';
 import { ResizedImageComponent } from '../resized-image/resized-image.component';
 import { ItemKillstreakerSelectorComponent } from './item-killstreaker-selector/item-killstreaker-selector.component';
+import { AccordionModule } from 'primeng/accordion';
+
 
 @Component({
   standalone: true,
@@ -24,6 +24,8 @@ import { ItemKillstreakerSelectorComponent } from './item-killstreaker-selector/
         ItemEffectsComponent,
         ResizedImageComponent,
         ItemKillstreakerSelectorComponent,
+        AccordionModule
+        
     ],
     templateUrl: './item-customizer.component.html',
     styleUrl: './item-customizer.component.scss',
@@ -77,7 +79,7 @@ export class ItemCustomizerComponent implements OnInit {
 
   getImageUrl(): string {
     if (this.details) {
-
+      console.log(this.details);
       const itemsUrl = this.details.image_url;
       if (!itemsUrl) {
         return '';
@@ -105,6 +107,7 @@ export class ItemCustomizerComponent implements OnInit {
   }
 
   onQualitySelectionChange(event: any): void {
+    console.log(event);
     this.itemFormGroup.controls['quality'].patchValue(event);
     this.setIsUnusual();
     this.cdr.markForCheck();
@@ -126,6 +129,7 @@ export class ItemCustomizerComponent implements OnInit {
 
   private setIsUnusual() {
     const qualities = this.itemFormGroup.controls['quality'].value;
+    console.log(qualities);
     if (qualities.includes('Unusual')) {
       this.isUnusual = true;
     } else {

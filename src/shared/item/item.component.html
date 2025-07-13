@@ -1,26 +1,25 @@
 <div class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20  hover:cursor-pointer rounded-lg relative z-0"
   [class.disabled]="disabled" [class]="borderStyle" (click)="onItemSelect()" (keydown)="onItemSelect()"
-  [ngStyle]="{ 'background-image': 'url(' + effectUrl + ')', 'opacity': itemData.selected ? '0.2' : '1'}"
-  [pTooltip]="itemData.name" tooltipPosition="bottom" tabindex="0">
+  [pTooltip]="itemData.fullName" tooltipPosition="bottom" tabindex="0">
   <resized-image [imageUrl]="itemImgUrl"></resized-image>
   <div class="top-1 flex gap-1 absolute z-10" *ngIf="itemData">
-    <p class="sm:h-4 h-3 sm:w-4 w-3" *ngIf="itemData.spell">
+    <p class="sm:h-4 h-3 sm:w-4 w-3" *ngIf="itemData.spells && itemData.spells.length > 0">
       <img src="/icons/spell.svg" alt="spell-icon" />
     </p>
     <p class="sm:h-4 h-3 sm:w-4 w-3"
-      *ngIf="itemData.killstreaker?.killstreaker || itemData.killstreaker?.sheen || itemData.killstreaker?.killstreak">
-      <img src="/icons/killstreak.svg" alt="killstreak-icon" />
+      *ngIf="itemData.parts && itemData.parts.length > 0">
+      <img src="assets/icons/killstreak.svg" alt="killstreak-icon" />
     </p>
-    <p class="sm:h-4 h-3 sm:w-4 w-3" *ngIf="itemData.part">
-      <img src="/icons/part.svg" alt="part-icon" />
+    <p class="sm:h-4 h-3 sm:w-4 w-3" *ngIf="itemData.parts && itemData.parts.length > 0">
+      <img src="assets/icons/part.svg" alt="part-icon" />
     </p>
     <span class="flex w-full justify-between" *ngIf="showActions">
-      <p class="sm:h-4 h-3 sm:w-4 w-3" (click)="removeEmitter.emit()" (keydown)="removeEmitter.emit()" tabindex="1">
+      <p class="sm:h-4 h-3 sm:w-4 w-3" (click)="onRemoveItem()" (keydown)="onRemoveItem()" tabindex="1">
         <img src="assets/icons/trash.svg" alt="trash-icon" />
       </p>
       <p tabindex="2" (keydown)="customizeEmitter.emit($event)" (click)="customizeEmitter.emit()"
         class="sm:h-4 h-3 sm:w-4 w-3" *ngIf="canModify">
-        <img src="/icons/modify.svg" alt="modify-icon" />
+        <img src="assets/icons/modify.svg" alt="modify-icon" />
       </p>
     </span>
   </div>

@@ -13,7 +13,7 @@ public class SteamApiService : ISteamApiService
         try
         {
             var url = $"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={_apiKey}&steamids={steamId}";
-            var response = await _httpClient.GetAsync(url);
+            //var response = await _httpClient.GetAsync(url);
             var mockResponse = @"{
             ""response"": {
                 ""players"": [
@@ -38,15 +38,15 @@ public class SteamApiService : ISteamApiService
             }
         }";
         return mockResponse;
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadAsStringAsync();
-            }
-            else
-            {
-                Console.WriteLine($"Steam API error: {(int)response.StatusCode} - {response.ReasonPhrase}");
-                return null;
-            }
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     return await response.Content.ReadAsStringAsync();
+            // }
+            // else
+            // {
+            //     Console.WriteLine($"Steam API error: {(int)response.StatusCode} - {response.ReasonPhrase}");
+            //     return null;
+            // }
         }
         catch (HttpRequestException ex)
         {

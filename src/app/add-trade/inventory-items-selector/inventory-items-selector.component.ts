@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { ModifiedItemData } from '../../../shared/models/modifiedItem.model';
 import { ItemSelectorFacade } from '../../../shared/item-selector/item-selector.facade';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
 import { fromEvent } from 'rxjs';
+import { Item } from '../../../shared/models/item.model';
 
 @Component({
   selector: 'app-inventory-items-selector',
@@ -14,14 +14,15 @@ import { fromEvent } from 'rxjs';
 export class InventoryItemsSelectorComponent implements AfterViewInit {
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems';
   @Input() filter = '';
-  @Output() itemAdd = new EventEmitter<ModifiedItemData>();
+  @Output() itemAdd = new EventEmitter<Item>();
   @ViewChild('inventorySelector') inventorySelectorEl!: ElementRef;
   @Output() lazyLoadEmitter = new EventEmitter<{ first: number, row: number }>();
-  @Input() items: ModifiedItemData[] = [];
+  @Input() items: Item[] = [];
   selectedItemIds = new Set<number>();
 
   constructor(public itemSelectorFacade: ItemSelectorFacade) { }
   ngAfterViewInit(): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fromEvent(this.inventorySelectorEl.nativeElement, "scroll").subscribe((event: any) => {
       const target = event.target;
       const scrollTop = target.scrollTop;
@@ -39,9 +40,9 @@ export class InventoryItemsSelectorComponent implements AfterViewInit {
 
     })
   }
-  onItemSelect(item: ModifiedItemData): void {
+  onItemSelect(item: Item): void {
     this.itemAdd.emit(item);
-    this.selectedItemIds.add(item.idx);
+    this.selectedItemIds.add(item.defindex);
     // console.log(idx);
     // if (this.mode === 'inventory') {
     //   let selectedItem: ModifiedItemData;
@@ -58,6 +59,7 @@ export class InventoryItemsSelectorComponent implements AfterViewInit {
     // }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onRemoveItem(idx: number) {
     // this.itemService.itemState$.subscribe(state => {
     //   this.filter = state.filterText;

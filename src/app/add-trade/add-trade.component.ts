@@ -7,17 +7,16 @@ import { ItemSelectorService } from '../../shared/item-selector.service';
 import { TradeService } from '../home/trade.service';
 import { ActionBarComponent } from './action-bar/action-bar.component';
 import {
-  FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
 import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
 import { ButtonModule } from 'primeng/button';
-import { ModifiedItemData } from '../../shared/models/modifiedItem.model';
 import { ItemSelectorFacade } from '../../shared/item-selector/item-selector.facade';
 import { DialogService } from 'primeng/dynamicdialog';
 import { InventoryItemsSelectorComponent } from './inventory-items-selector/inventory-items-selector.component';
+import { BuyItemPanelComponent } from './buy-item-panel/buy-item-panel.component';
+import { Item } from '../../shared/models/item.model';
 
 @Component({
   standalone: true,
@@ -31,6 +30,7 @@ import { InventoryItemsSelectorComponent } from './inventory-items-selector/inve
     ReactiveFormsModule,
     ButtonModule,
     InventoryItemsSelectorComponent,
+    BuyItemPanelComponent
   ],
   providers: [HttpClient, DialogService],
   templateUrl: './add-trade.component.html',
@@ -40,9 +40,10 @@ export class AddTradeComponent implements OnInit {
   http = inject(HttpClient);
   filterText = '';
   tradeDescription = '';
-  inventoryItems: any[] = [];
-  itemsToSell: ModifiedItemData[] = [];
-  itemsToBuy: ModifiedItemData[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  inventoryItems: Item[] = [];
+  itemsToSell: Item[] = [];
+  itemsToBuy: Item[] = [];
 
   constructor(
     private tradeService: TradeService,
@@ -93,9 +94,9 @@ export class AddTradeComponent implements OnInit {
     // });
   }
   chunkItemsIntoRows(
-    items: ModifiedItemData[],
+    items: Item[],
     chunkSize = 7
-  ): ModifiedItemData[][] {
+  ): Item[][] {
     const result = [];
     for (let i = 0; i < items.length; i += chunkSize) {
       result.push(items.slice(i, i + chunkSize));
@@ -103,7 +104,7 @@ export class AddTradeComponent implements OnInit {
     return result;
   }
 
-  handleItemAddToTrade(item: ModifiedItemData): void {
+  handleItemAddToTrade(item: Item): void {
     // Get current items
     console.log(item);
     //console.log(...this.tradeForm.controls['itemsToTrade'].value);
@@ -116,37 +117,13 @@ export class AddTradeComponent implements OnInit {
 
     //console.log(this.tradeForm);
   }
-  handleItemRemoveFromTrade(item: any): void {}
-
-  openSnackBar(error: any) {}
 
   makeTrade() {
-    const itemsToTrade$ = this.itemSelectorService.getItemsToTrade().pipe(
-      first(),
-      map((items: any[]) => {
-        return items.map(item => ({
-          name: item.name,
-          descriptions: item.descriptions[0],
-          tags: item.tags.find((tag: any) => tag.category === 'Quality'),
-          imageUrl: item.icon_url,
-        }));
-      })
-    );
 
-    const itemsForTrade$ = this.itemSelectorService.getItemsForTrade().pipe(
-      first(),
-      map((items: any[]) => {
-        console.log(items);
-        return items.map(item => ({
-          name: item.name,
-          imageUrl: item.image_url,
-          descriptions: item.descriptions,
-        }));
-      })
-    );
-
-    combineLatest([itemsToTrade$, itemsForTrade$]).subscribe(
+    combineLatest([this.itemSelectorFacade.itemsToTrade$, this.itemSelectorFacade.itemsForTrade$]).subscribe(
       ([itemIdsToTrade, itemIdsForTrade]) => {
+        console.log(itemIdsForTrade);
+        console.log(itemIdsToTrade);
         if (itemIdsToTrade.length === 0 || itemIdsForTrade.length === 0) {
           return alert('You must select one item from each category!');
         }

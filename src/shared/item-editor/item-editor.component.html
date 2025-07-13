@@ -1,17 +1,16 @@
 <div class="item-editor bg-gray-800 h-full w-full flex flex-col overflow-auto">
-  <form class="flex example-form w-full">
+
+  <!-- <form class="flex example-form w-full">
     <p-autoComplete
       class="w-full"
       [formControl]="myControl"
       [suggestions]="filteredOptions"
       (completeMethod)="loadItemsLazy($event)"
       field="name"
-      [dropdown]="true"
-      [forceSelection]="true"
       placeholder="Search item name.."
       (onSelect)="onSelect($event)"
     >
-      <ng-template let-item pTemplate="item">
+      <ng-template let-item pTemplate="item" class="w-full">
         <div class="item w-full flex justify-between items-center text-slate-300">
           {{ item.name }}
           <img
@@ -22,9 +21,29 @@
         </div>
       </ng-template>
     </p-autoComplete>
-  </form>
+  </form> -->
+  <p-multiselect 
+      [options]="filteredOptions"
+      [virtualScroll]="true"
+      [virtualScrollItemSize]="100"
+      [formControl]="myControl"
+      [selectionLimit]="10" [maxSelectedLabels]="3"
+      placeholder="Select Items"
+      optionLabel="name"
+      class="w-full md:w-80">
+      <ng-template let-item pTemplate="item" class="w-full">
+        <div class="item w-full flex justify-between items-center text-slate-300">
+          {{ item.name }}
+          <img
+            [src]="item.img"
+            class="sm:h-32 sm:w-32 h-16 w-16"
+            alt=""
+          />
+        </div>
+      </ng-template>
+  </p-multiselect>
 
-  <item-list-view class="h-100" [selectedItems]="selectedItems"></item-list-view>
+  <item-list-view class="h-100" [selectedItems]="myControl.value"></item-list-view>
 
   <div class="actions flex flex-col h-full gap-6 justify-end mt-4">
     <div class="buttons flex flex-row w-full justify-between">
@@ -33,6 +52,7 @@
         type="button"
         label="Ok"
         class="p-button-success w-24"
+        (click)="onConfirmSelection()"
       >d</button>
       <button
         pButton

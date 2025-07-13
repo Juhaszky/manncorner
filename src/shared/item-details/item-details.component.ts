@@ -3,6 +3,7 @@ import { ResizedImageComponent } from '../resized-image/resized-image.component'
 import { CommonModule } from '@angular/common';
 import { ModifiedItemData } from '../models/modifiedItem.model';
 import { ItemExtrasService } from '../item-extras.service';
+import { Item } from '../models/item.model';
 
 @Component({
   standalone: true,
@@ -12,33 +13,32 @@ import { ItemExtrasService } from '../item-extras.service';
     styleUrl: './item-details.component.scss'
 })
 export class ItemDetailsComponent implements OnInit {
-  @Input() itemData!: ModifiedItemData;
-  isAllClass: boolean = false;
+  @Input() itemData!: Item;
+  isAllClass = false;
   paintColor: {paintName: string; paintColor: string} = {paintName: '', paintColor: ''};
   constructor(
     private itemExtrasService: ItemExtrasService
   ) {}
   ngOnInit(): void {
     console.log(this.itemData);
-    if (this.itemData.tags) {
-      let classCounter = 0;
-      this.itemData.tags.forEach((t) => {
-        if (t.category === 'Class') {
-          classCounter++;
-        }
-      });
-      if (classCounter === 9) {
-        this.isAllClass = true;
-      }
-    }
+    // if (this.itemData.tags) {
+    //   let classCounter = 0;
+    //   this.itemData.tags.forEach((t) => {
+    //     if (t.category === 'Class') {
+    //       classCounter++;
+    //     }
+    //   });
+    //   if (classCounter === 9) {
+    //     this.isAllClass = true;
+    //   }
+    // }
     
   }
 
   getImageUrl(): string {
+    console.log(this.itemData);
     const itemsUrl =
-      this.itemData.imageUrl ??
-      this.itemData.icon_url ??
-      this.itemData.image_url;
+      this.itemData.img
     if (!itemsUrl) {
       return '';
     }
@@ -49,7 +49,7 @@ export class ItemDetailsComponent implements OnInit {
   getEffectUrl(): string {
     let effectUrl = '';
     if (this.itemData.effect) {
-      effectUrl = this.itemExtrasService.getItemEffectUrl(this.itemData.effect);
+      //effectUrl = this.itemExtrasService.getItemEffectUrl(this.itemData.effect);
     }
     return effectUrl;
   }

@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, first, map } from 'rxjs';
-import { StockItem } from './models/stockItem.model';
+import { BehaviorSubject, Observable, map } from 'rxjs';
+import { StockTF2Item } from './models/stockItem.model';
 import { ItemState } from './models/itemState.model';
 import { ItemData } from './models/itemData.model';
+import { Item } from './models/item.model';
 
 @Injectable({
   providedIn: 'root',
@@ -39,7 +40,7 @@ export class ItemSelectorService {
     });
   }
 
-  getAllItems(): Observable<StockItem[]> {
+  getAllItems(): Observable<StockTF2Item[]> {
     return this.stateSubject.pipe(map(state => state.allItems));
   }
 
@@ -62,8 +63,8 @@ export class ItemSelectorService {
     this.updateState({ forTradeItems: [] });
   }
 
-  fetchItems(offset: number, limit: number): Observable<ItemData[]> {
-    return this.http.get<ItemData[]>(
+  fetchItems(offset: number, limit: number): Observable<Item[]> {
+    return this.http.get<Item[]>(
       `https://localhost:7221/items?offset=${offset}&limit=${limit}`
     );
   }

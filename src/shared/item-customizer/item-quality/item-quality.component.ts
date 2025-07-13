@@ -2,12 +2,16 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Quality } from '../../models/quality.model';
 import { ItemExtrasService } from '../../item-extras.service';
 import { CommonModule } from '@angular/common';
-import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChipModule } from 'primeng/chip';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { SelectButtonModule } from 'primeng/selectbutton';
+
 
 @Component({
   standalone: true,
     selector: 'item-quality',
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, ChipModule, ToggleButtonModule, FormsModule, SelectButtonModule],
     templateUrl: './item-quality.component.html',
     styleUrl: './item-quality.component.scss'
 })
@@ -31,13 +35,18 @@ export class ItemQualityComponent implements OnInit {
     return this.qualityControl?.value.includes(quality);
   }
   
-  onSelect(quality: string): void {
-    const qualityIndex = this.selectedQualities.indexOf(quality);
+  onSelect(quality: {type: string; color: string}[]): void {
+    console.log(quality);
+    console.log(this.selectedQualities);
+    const qualityIndex = this.selectedQualities.indexOf(quality[quality.length - 1].type);
+    console.log(qualityIndex);
     if (qualityIndex >= 0) {
       this.selectedQualities.splice(qualityIndex, 1);
     } else {
-      this.selectedQualities.push(quality);
+      this.selectedQualities.push(quality[quality.length - 1].type);
     }
+    console.log(this.qualityControl);
+    console.log(this.selectedQualities);
     this.qualityControl.patchValue([...this.selectedQualities]);
     this.selectionChange.emit([...this.selectedQualities]);
   }

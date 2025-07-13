@@ -4,13 +4,13 @@ import { ModifiedItemData } from '../models/modifiedItem.model';
 import { ItemSelectorService } from '../item-selector.service';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-
+import { Item } from '../models/item.model';
 
 @Injectable({ providedIn: 'root' })
 export class ItemSelectorFacade {
-  private _items = new BehaviorSubject<ModifiedItemData[]>([]);
-  private _itemsToTrade = new BehaviorSubject<ModifiedItemData[]>([]);
-  private _itemsForTrade = new BehaviorSubject<ModifiedItemData[]>([]);
+  private _items = new BehaviorSubject<Item[]>([]);
+  private _itemsToTrade = new BehaviorSubject<Item[]>([]);
+  private _itemsForTrade = new BehaviorSubject<Item[]>([]);
 
   private loadedPages = new Set<string>();
 
@@ -41,9 +41,9 @@ export class ItemSelectorFacade {
     });
   }
   loadAllItems() {
-    this.itemService.fetchAllItems().subscribe((items) => {
+    this.itemService.fetchAllItems().subscribe(items => {
       this._itemsForTrade.next(items);
-    })
+    });
   }
   onOpenItemEditor() {
     this.dialogRef = this.dialogService.open(ItemEditorComponent, {
@@ -54,7 +54,7 @@ export class ItemSelectorFacade {
       maximizable: true,
     });
 
-    this.dialogRef?.onClose.subscribe((selectedItems: ModifiedItemData[]) => {
+    this.dialogRef?.onClose.subscribe((selectedItems: Item[]) => {
       //   if (selectedItems) {
       //     this.itemService.itemState$
       //       .pipe(
@@ -72,21 +72,27 @@ export class ItemSelectorFacade {
   resetItems(): void {
     this._items.next([]);
   }
-  onAddItem(item: ModifiedItemData) {
-  const currentItems = this._itemsToTrade.getValue();
-  const exists = currentItems.some(existingItem =>
-    this.deepEqual(existingItem, item)
-  );
-
-  if (!exists) {
-    const itemWithCustomId = { ...item, customId: ++this._customIdCounter };
-    this._itemsToTrade.next([...currentItems, itemWithCustomId]);
-    console.log('added', this._itemsToTrade.getValue());
-  }
-}
-  onRemoveItem(item: ModifiedItemData) {
-    this._itemsToTrade.next(
-      this._itemsToTrade.getValue().filter(i => i.idx !== item.idx)
+  onAddItem(item: Item) {
+    const currentItems = this._itemsToTrade.getValue();
+    const exists = currentItems.some(existingItem =>
+      this.deepEqual(existingItem, item)
     );
+
+    if (!exists) {
+      const itemWithCustomId = { ...item, customId: ++this._customIdCounter };
+      this._itemsToTrade.next([...currentItems, itemWithCustomId]);
+      console.log('added', this._itemsToTrade.getValue());
+    }
+  }
+  onAddDefaultItem(items: Item[]) {
+    this._itemsForTrade.next(items);
+    console.log("added", this._itemsForTrade.value);
+  }
+  onRemoveItem(item: Item) {
+    const currentItems = this._itemsToTrade.getValue();
+    console.log("current items", currentItems);
+    const newItems = currentItems.filter((i) => i.defindex !== item.defindex);
+    console.log("newItems", newItems);
+    this._itemsToTrade.next(newItems);
   }
 }

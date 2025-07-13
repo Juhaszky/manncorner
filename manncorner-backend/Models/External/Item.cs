@@ -1,24 +1,21 @@
-public class ItemDescription
+public class Item
 {
-    public int Appid { get; set; }
-    public string Classid { get; set; }
-    public string Instanceid { get; set; }
-    public int Currency { get; set; }
-    public string Background_Color { get; set; }
-    public string Icon_Url { get; set; }
-    public string Icon_Url_Large { get; set; }
-    public List<DescriptionEntry> Descriptions { get; set; }
-    public int Tradable { get; set; }
-    public List<ActionEntry> Actions { get; set; }
     public string Name { get; set; }
-    public string Name_Color { get; set; }
+    public string FullName { get; set; }
+    public string? Id { get; set; }
+    public string Img { get; set; }
+    public bool Craftable { get; set; }
+    public bool Tradable { get; set; }
     public string Type { get; set; }
-    public string Market_Name { get; set; }
-    public string Market_Hash_Name { get; set; }
-    public List<ActionEntry> Market_Actions { get; set; }
-    public int Commodity { get; set; }
-    public int Market_Tradable_Restriction { get; set; }
-    public int Market_Marketable_Restriction { get; set; }
-    public int Marketable { get; set; }
-    public List<Tag> Tags { get; set; }
+    public int? Effect { get; set; } // optional
+    public int Quality { get; set; }
+    public int Defindex { get; set; }
+
+    // EconItem attributes
+    public bool? Marketable { get; set; } // optional
+    public bool? Commodity { get; set; }  // optional
+    public int? Level { get; set; }    // optional
+    public List<string>? Classes { get; set; } // optional
+    public List<string>? Parts { get; set; }   // optional
+    public List<string>? Spells { get; set; }  // optional
 }

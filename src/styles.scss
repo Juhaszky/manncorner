@@ -29,3 +29,7 @@ p {
     background: #555;
     
   }
+  ::ng-deep .p-dialog-header, ::ng-deep .p-dialog-content {
+  background-color: rgba(31 41 55) !important;
+  padding: 0 0 0 0 !important;
+}

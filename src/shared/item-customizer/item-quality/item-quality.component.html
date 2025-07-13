@@ -1,17 +1,23 @@
-<div class="flex w-full justify-center">
-  <!-- <mat-chip-listbox
-    multiple="true"
-    class="mat-mdc-chip-set-stacked sm:w-1/2 w-full"
-    aria-label="Color selection"
-  >
-    @for (quality of qualities; track quality) {
-    <mat-chip-option
-      [selected]="initDefaultValues(quality.type)"
-      (selectionChange)="onSelect(quality.type)"
-      [ngClass]="getQualityClass(quality.type)"
-      class="text-slate-300 w-full"
-      >{{ quality.type }}</mat-chip-option
+<div class="w-full flex justify-center">
+  <div class="w-full">
+    <p-selectButton
+      [options]="qualities"
+      optionLabel="type"
+      multiple="true"
+      ariaLabel="Color selection"
+      class="w-full flex flex-wrap"
+      (onChange)="onSelect($event.value)"
+      [ngClass]="{ 'chip-container': true }"
+      [style.flexWrap]="'wrap'"
     >
-    }
-  </mat-chip-listbox> -->
+      <ng-template let-quality pTemplate="item">
+        <span
+          class="p-button p-component m-1 text-white px-3 py-2 rounded-lg"
+          [ngClass]="getQualityClass(quality.type)"
+        >
+          {{ quality.type }}
+        </span>
+      </ng-template>
+    </p-selectButton>
+  </div>
 </div>

@@ -9,8 +9,8 @@ import { ResizedImageComponent } from '../resized-image/resized-image.component'
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ItemForm } from '../models/itemForm.model';
-import { ModifiedItemData } from '../models/modifiedItem.model';
 import { TooltipModule } from 'primeng/tooltip';
+import { Item } from '../models/item.model';
 
 @Component({
   standalone: true,
@@ -25,7 +25,7 @@ import { TooltipModule } from 'primeng/tooltip';
   styleUrl: './item.component.scss'
 })
 export class ItemComponent {
-  @Input() itemData!: ModifiedItemData;
+  @Input() itemData!: Item;
   @Input() itemImgUrl = '';
   @Input() disabled = false;
   @Input() mode = '';
@@ -59,6 +59,7 @@ export class ItemComponent {
   }
 
   onRemoveItem(): void {
+    console.log(this.itemData);
     this.removeEmitter.emit(this.itemData);
   }
 
@@ -74,15 +75,15 @@ export class ItemComponent {
 
   //TODO handle refreshing item after customize
   private updateItemData(item: ItemForm): void {
-    this.itemData.name = item.name?.value;
-    this.itemData.quality = item.quality?.value;
-    this.itemData.effect = item.effect?.value;
-    this.itemData.killstreaker = item.killstreaker?.value;
-    if (item.killstreaker?.value) {
-      const killstreaker = item.killstreaker?.value;
-      this.itemData.killstreaker.killstreak = killstreaker.killstreak;
-      this.itemData.killstreaker.sheen = killstreaker.sheen;
-    }
+    // this.itemData.name = item.name?.value;
+    // this.itemData.quality = item.quality?.value;
+    // this.itemData.effect = item.effect?.value;
+    // this.itemData.killstreaker = item.killstreaker?.value;
+    // if (item.killstreaker?.value) {
+    //   const killstreaker = item.killstreaker?.value;
+    //   this.itemData.killstreaker.killstreak = killstreaker.killstreak;
+    //   this.itemData.killstreaker.sheen = killstreaker.sheen;
+    // }
   }
 
   //TODO handle dialog

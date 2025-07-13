@@ -7,3 +7,10 @@
 ::ng-deep .p-dialog-header, .p-dialog-content {
   background-color: rgba(31 41 55) !important;
 }
+::ng-deep .p-multiselect {
+  width: 100%;
+  background: rgba(31 41 55) !important;
+}
+.p-multiselect-dropdown {
+  height: 30rem;
+}

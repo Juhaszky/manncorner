@@ -15,13 +15,18 @@ export class ItemListViewComponent implements OnInit {
   @Input() selectedItems: any;
   selectedIndex = -1;
   visible = false;
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log(this.selectedItems);
+  }
   removeSelectedItem(i: number) {
     this.selectedItems.splice(i, 1);
   }
   customizeSelectedItem(i: number) {
     this.selectedIndex = i;
-    console.log(this.selectedItems[i].value);
+
+    console.log(this.selectedItems);
+    console.log(i);
+    console.log(this.selectedItems[i]);
     this.visible = true;
     const item = this.selectedItems[i];
     if (item) {

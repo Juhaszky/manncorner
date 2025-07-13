@@ -12,10 +12,8 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Tf2ItemSchema>()
-         .HasKey(x => x.Id);
+         .HasKey(x => x.Defindex);
 
-        modelBuilder.Entity<Tf2ItemSchema>()
-            .HasIndex(x => x.Defindex);
 
         modelBuilder.Entity<Tf2ItemSchema>()
             .HasMany(x => x.Styles)

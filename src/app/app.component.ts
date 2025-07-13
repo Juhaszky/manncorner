@@ -28,6 +28,6 @@ export class AppComponent implements OnInit {
   facade = inject(ItemSelectorFacade);
   constructor(private subject: ItemSelectorFacade, private itemService: ItemSelectorService) {}
   ngOnInit(): void {
-    this.facade.loadAllItems();
+    //this.facade.loadAllItems();
   }
 }

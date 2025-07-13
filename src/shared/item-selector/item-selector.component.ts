@@ -15,7 +15,6 @@ import {
 import { ItemSelectorService } from '../item-selector.service';
 import { ScrollingModule, ViewportRuler } from '@angular/cdk/scrolling';
 import { ItemComponent } from '../item/item.component';
-import { ModifiedItemData } from '../models/modifiedItem.model';
 import { SortService } from '../sort.service';
 import { ScrollerModule } from 'primeng/scroller';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -24,6 +23,7 @@ import { ItemSelectorFacade } from './item-selector.facade';
 import { fromEvent } from 'rxjs';
 import { DialogModule } from 'primeng/dialog';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
+import { Item } from '../models/item.model';
 
 @Component({
   standalone: true,
@@ -45,20 +45,20 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
   visible = false;
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems';
   @Input() filter = '';
-  @Output() itemAdd = new EventEmitter<ModifiedItemData>();
-  @Output() itemRemove = new EventEmitter<ModifiedItemData>();
+  @Output() itemAdd = new EventEmitter<Item>();
+  @Output() itemRemove = new EventEmitter<Item>();
   @ViewChild('inventorySelector') inventorySelectorEl!: ElementRef;
   @Output() lazyLoadEmitter = new EventEmitter<{
     first: number;
     row: number;
   }>();
-  @Input() items: ModifiedItemData[] = [];
-  @Input() allItems: ModifiedItemData[] = [];
+  @Input() items: Item[] = [];
+  @Input() allItems: Item[] = [];
   @HostListener('scroll', ['$event'])
   doSomething(event: any) {
     console.log(event);
   }
-  filteredItems: ModifiedItemData[] = [];
+  filteredItems: Item[] = [];
   loading = false;
   pageSize = 21;
   currentPageItems: any[] = [];
@@ -96,6 +96,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
       console.log(this.items);
     }
   }
+ 
 
   //this.loadItems();
   // this.sortService.sortCriteria$.subscribe(criteria => {
@@ -143,7 +144,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
     // });
   }
 
-  private handleSuccess(items: ModifiedItemData[]): void {
+  private handleSuccess(items: Item[]): void {
     //this.items = items;
     //this.chunkedItems = chunkItems(items, 7);
     //console.log(this.chunkedItems);
@@ -190,7 +191,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
     // });
   }
 
-  onItemSelect(item: ModifiedItemData): void {
+  onItemSelect(item: Item): void {
     this.itemAdd.emit(item);
     // console.log(idx);
     // if (this.mode === 'inventory') {

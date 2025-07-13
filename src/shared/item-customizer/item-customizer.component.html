@@ -1,30 +1,36 @@
 <div
-  class="customizer flex flex-col h-full w-full bg-slate-800 text-slate-300 p-4 overflow-y-scroll"
->
+  class="customizer flex flex-col h-full w-full bg-slate-800 text-slate-300 p-4 overflow-y-scroll">
   <div class="flex justify-center item-image">
     <div
       [ngStyle]="{ 'background-image': 'url(' + effectUrl + ')' }"
-      class="bg-no-repeat bg-cover"
-    >
-    <img [src]="details?.image_url" alt="">
-      
+      class="bg-no-repeat bg-cover">
+      <img [src]="details?.image_url" alt="" />
     </div>
   </div>
   <form
     class="flex flex-col flex-wrap items-center"
     [formGroup]="itemFormGroup"
-    (submit)="onSubmit()"
-  >
+    (submit)="onSubmit()">
     <div class="name flex flex-col items-center justify-between">
       <h2>Name</h2>
       <h3>
-        {{ itemFormGroup.controls["quality"].value.join(" ") }}
+        {{ itemFormGroup.controls['quality'].value.join(' ') }}
         {{ details?.name }}
       </h3>
     </div>
     <div
-      class="name flex flex-col items-center sm:w-1/2 w-full flex-wrap justify-between p-2"
-    >
+      class="name flex flex-col items-center sm:w-1/2 w-full flex-wrap justify-between p-2">
+      <p-accordion value="0">
+        <p-accordion-panel value="0">
+          <p-accordion-header>Quality</p-accordion-header>
+          <p-accordion-content>
+            <item-quality
+            [qualityControl]="itemFormGroup.controls['quality']"
+            (selectionChange)="onQualitySelectionChange($event)"
+          ></item-quality>
+          </p-accordion-content>
+        </p-accordion-panel>
+      </p-accordion>
       <!-- <mat-accordion>
         <mat-expansion-panel>
           <mat-expansion-panel-header>
@@ -45,9 +51,8 @@
       [ngClass]="{
         'flex flex-col items-center flex-wrap justify-between p-2 transition-all duration-300 ease-in-out': true,
         'w-full': isEffectAccordionExpanded,
-        'sm:w-1/2 w-full': !isEffectAccordionExpanded
-      }"
-    >
+        'sm:w-1/2 w-full': !isEffectAccordionExpanded,
+      }">
       <!-- <mat-accordion>
         <mat-expansion-panel [(expanded)]="isEffectAccordionExpanded">
           <mat-expansion-panel-header>
@@ -67,9 +72,8 @@
       [ngClass]="{
         'flex flex-col items-center flex-wrap justify-between p-2 transition-all duration-300 ease-in-out': true,
         'w-full': isEffectAccordionExpanded,
-        'sm:w-1/2 w-full': !isEffectAccordionExpanded
-      }"
-    >
+        'sm:w-1/2 w-full': !isEffectAccordionExpanded,
+      }">
       <!-- <mat-accordion>
         <mat-expansion-panel>
           <mat-expansion-panel-header>
@@ -89,8 +93,7 @@
     </div>
     <button
       class="border rounded-md text-slate-300 p-4 hover:bg-slate-900"
-      type="submit"
-    >
+      type="submit">
       Modify
     </button>
   </form>

@@ -3,8 +3,7 @@
     <div class="col-card mb-3">
       <item-selector 
         [items]="itemsToSell"
-        [mode]="'toTrade'"
-        (itemRemove)="handleItemRemoveFromTrade($event)">
+        [mode]="'toTrade'">
 
       </item-selector>
     </div>
@@ -33,12 +32,7 @@
     </div>
     <div class="col-card mb-3 p-1">
       <div class="inventory-box">
-        <item-selector 
-        [allItems]="itemsToBuy"
-        [mode]="'allItems'"
-        (itemRemove)="handleItemRemoveFromTrade($event)">
-
-      </item-selector>
+         <app-buy-item-panel></app-buy-item-panel>
       </div>
     </div>
   </div>
