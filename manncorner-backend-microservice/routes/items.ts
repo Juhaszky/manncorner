@@ -1,5 +1,5 @@
 import express from 'express';
-import { getItems, parseItem } from '../controllers/ItemController';
+import { getItems, parseItems } from '../controllers/ItemController';
 
 const router = express.Router();
 
@@ -10,9 +10,8 @@ router.get('/', (req, res) => {
   res.json(paginatedItems);
 });
 router.post('/parse', (req, res) => {
-  console.log(req);
   const item = req.body;
-  const parsedItem = parseItem(item);
+  const parsedItem = parseItems(item);
   res.json(parsedItem);
 });
 

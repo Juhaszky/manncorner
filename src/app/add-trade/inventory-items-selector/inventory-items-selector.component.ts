@@ -4,10 +4,11 @@ import { ItemSelectorFacade } from '../../../shared/item-selector/item-selector.
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
 import { fromEvent } from 'rxjs';
 import { Item } from '../../../shared/models/item.model';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-inventory-items-selector',
-  imports: [CommonModule, ItemContainerComponent],
+  imports: [CommonModule, ItemContainerComponent, ProgressSpinnerModule],
   templateUrl: './inventory-items-selector.component.html',
   styleUrl: './inventory-items-selector.component.scss'
 })
@@ -35,7 +36,7 @@ export class InventoryItemsSelectorComponent implements AfterViewInit {
 
       if (distanceFromBottom <= threshold) {
         console.log("Almost on bottom");
-        this.itemSelectorFacade.loadItemsLazy(this.itemSelectorFacade.itemsLength, 40);
+        this.itemSelectorFacade.loadItemsLazy(this.itemSelectorFacade.itemsLength, 50);
       }
 
     })

@@ -15,6 +15,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 );
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 var configuration = builder.Configuration;
 builder.Services.AddAuthentication(options =>

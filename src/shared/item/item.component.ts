@@ -27,6 +27,7 @@ import { Item } from '../models/item.model';
 export class ItemComponent {
   @Input() itemData!: Item;
   @Input() itemImgUrl = '';
+
   @Input() disabled = false;
   @Input() mode = '';
   @Output() customizeEmitter = new EventEmitter();
@@ -36,7 +37,7 @@ export class ItemComponent {
   canModify = false;
   showActions = false;
   @Input() borderStyle = '';
-  @Input() effectUrl = '';
+  @Input() effectUrl!:string | null;
   
   @HostListener('mouseenter') onMouseEnter() {
     this.canModify = this.mode === 'allItems';
@@ -49,7 +50,6 @@ export class ItemComponent {
   onItemSelect() {
     this.selectEmitter.emit();
   }
-
   onCustomizeItem(event: Event) {
     event.stopPropagation();
     this.customizeEmitter.emit();

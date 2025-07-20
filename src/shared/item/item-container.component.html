@@ -1,6 +1,7 @@
 <app-item 
     [itemData]="item" 
-    [itemImgUrl]="item.img" 
+    [itemImgUrl]="item.img"
+    [effectUrl]="item.effect ? `assets/images/effects/${item.effect}.png` : null"
     [mode]="mode"
     [disabled]="disabled"
     [borderStyle]="facade.getBorderStyle(item)"

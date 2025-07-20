@@ -22,27 +22,32 @@ const qualityMap: Record<number, string> = {
 };
 
 export function getItemBorderStyle(item: Item): string {
-  if (item.quality === 5) {
-    console.log(item);
+  if (item.quality === 15) {
+    return "decoratedWeapon";
+  } else if (item.quality === 14) {
+    return "Collectors"
   }
   return qualityMap[item.quality];
 }
+
 export function parseStockItemToItem(stockItem: StockTF2Item): Item {
   return {
     name: stockItem.item_name || stockItem.name || '',
-    fullName: stockItem.proper_name ? `The ${stockItem.item_name}` : stockItem.item_name || stockItem.name || '',
+    fullName: stockItem.proper_name
+      ? `The ${stockItem.item_name}`
+      : stockItem.item_name || stockItem.name || '',
     id: null,
     img: stockItem.image_url_large || stockItem.image_url || '',
-    craftable: stockItem.capabilities.can_craft_mark, 
-    tradable: true, 
+    craftable: stockItem.capabilities.can_craft_mark,
+    tradable: true,
     type: stockItem.item_type_name || 'Unknown',
     quality: stockItem.item_quality ?? 0,
     defindex: stockItem.defindex,
-    marketable: true, 
+    marketable: true,
     commodity: false,
     level: `${stockItem.min_ilevel || ''}${stockItem.max_ilevel ? `-${stockItem.max_ilevel}` : ''}`,
     classes: stockItem.used_by_classes || [],
-    parts: [], 
+    parts: [],
     spells: [],
   };
 }

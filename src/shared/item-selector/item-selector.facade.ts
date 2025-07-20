@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ModifiedItemData } from '../models/modifiedItem.model';
 import { ItemSelectorService } from '../item-selector.service';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Item } from '../models/item.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class ItemSelectorFacade {
@@ -15,6 +15,7 @@ export class ItemSelectorFacade {
   private loadedPages = new Set<string>();
 
   private dialogRef?: DynamicDialogRef;
+  loading = false;
   items$ = this._items.asObservable();
   itemsLength = 0;
   itemsToTrade$ = this._itemsToTrade.asObservable();
@@ -22,14 +23,19 @@ export class ItemSelectorFacade {
   private _customIdCounter = 0;
   constructor(
     private itemService: ItemSelectorService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private http: HttpClient
   ) {}
   private deepEqual(obj1: any, obj2: any): boolean {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
   }
   loadItemsLazy(first: number, rows: number): void {
+    this.loading = true;
     const pageKey = `${first}-${rows}`;
-    if (this.loadedPages.has(pageKey)) return;
+    if (this.loadedPages.has(pageKey)) {
+      this.loading = false;
+      return;
+    }
     this.loadedPages.add(pageKey);
     this.itemService.fetchItems(first, rows).subscribe({
       next: fetchedItems => {
@@ -38,6 +44,9 @@ export class ItemSelectorFacade {
         this.itemsLength = this._items.getValue().length;
       },
       error: err => console.error('Lazy loading failed', err),
+      complete: () => {
+        this.loading = false;
+      },
     });
   }
   loadAllItems() {
@@ -73,6 +82,9 @@ export class ItemSelectorFacade {
     this._items.next([]);
   }
   onAddItem(item: Item) {
+    this.http.post('http::/localhost:3000/api/items', {}).subscribe(res => {
+      console.log(res);
+    });
     const currentItems = this._itemsToTrade.getValue();
     const exists = currentItems.some(existingItem =>
       this.deepEqual(existingItem, item)
@@ -86,13 +98,13 @@ export class ItemSelectorFacade {
   }
   onAddDefaultItem(items: Item[]) {
     this._itemsForTrade.next(items);
-    console.log("added", this._itemsForTrade.value);
+    console.log('added', this._itemsForTrade.value);
   }
   onRemoveItem(item: Item) {
     const currentItems = this._itemsToTrade.getValue();
-    console.log("current items", currentItems);
-    const newItems = currentItems.filter((i) => i.defindex !== item.defindex);
-    console.log("newItems", newItems);
+    console.log('current items', currentItems);
+    const newItems = currentItems.filter(i => i.defindex !== item.defindex);
+    console.log('newItems', newItems);
     this._itemsToTrade.next(newItems);
   }
 }

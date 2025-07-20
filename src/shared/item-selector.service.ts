@@ -65,7 +65,7 @@ export class ItemSelectorService {
 
   fetchItems(offset: number, limit: number): Observable<Item[]> {
     return this.http.get<Item[]>(
-      `https://localhost:7221/items?offset=${offset}&limit=${limit}`
+      `https://localhost:7221/items?offset=${offset}&limit=${limit}&userId=1`
     );
   }
 

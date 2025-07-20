@@ -1,15 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { combineLatest, first, map } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 import { ItemSelectorComponent } from '../../shared/item-selector/item-selector.component';
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { TradeService } from '../home/trade.service';
 import { ActionBarComponent } from './action-bar/action-bar.component';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
 import { ButtonModule } from 'primeng/button';
 import { ItemSelectorFacade } from '../../shared/item-selector/item-selector.facade';
@@ -17,6 +14,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { InventoryItemsSelectorComponent } from './inventory-items-selector/inventory-items-selector.component';
 import { BuyItemPanelComponent } from './buy-item-panel/buy-item-panel.component';
 import { Item } from '../../shared/models/item.model';
+import { AddTradeService } from './add-trade.service';
 
 @Component({
   standalone: true,
@@ -30,7 +28,7 @@ import { Item } from '../../shared/models/item.model';
     ReactiveFormsModule,
     ButtonModule,
     InventoryItemsSelectorComponent,
-    BuyItemPanelComponent
+    BuyItemPanelComponent,
   ],
   providers: [HttpClient, DialogService],
   templateUrl: './add-trade.component.html',
@@ -38,6 +36,7 @@ import { Item } from '../../shared/models/item.model';
 })
 export class AddTradeComponent implements OnInit {
   http = inject(HttpClient);
+  addTradeService = inject(AddTradeService);
   filterText = '';
   tradeDescription = '';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,7 +63,19 @@ export class AddTradeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.itemSelectorFacade.loadItemsLazy(0, 42);
+    this.itemSelectorFacade.loadItemsLazy(0, 100);
+    combineLatest([
+      this.itemSelectorFacade.items$,
+      this.addTradeService.filterText$,
+    ]).pipe(
+      map(([items, filterText]) => {
+        if (!filterText) return items;
+        const lowerFilter = filterText.toLowerCase();
+        return items.filter(
+          item => item.name.toLowerCase().includes(lowerFilter)
+        );
+      })
+    );
     this.itemSelectorFacade.items$.subscribe(items => {
       this.inventoryItems = items;
     });
@@ -93,10 +104,7 @@ export class AddTradeComponent implements OnInit {
 
     // });
   }
-  chunkItemsIntoRows(
-    items: Item[],
-    chunkSize = 7
-  ): Item[][] {
+  chunkItemsIntoRows(items: Item[], chunkSize = 7): Item[][] {
     const result = [];
     for (let i = 0; i < items.length; i += chunkSize) {
       result.push(items.slice(i, i + chunkSize));
@@ -119,28 +127,28 @@ export class AddTradeComponent implements OnInit {
   }
 
   makeTrade() {
-
-    combineLatest([this.itemSelectorFacade.itemsToTrade$, this.itemSelectorFacade.itemsForTrade$]).subscribe(
-      ([itemIdsToTrade, itemIdsForTrade]) => {
-        console.log(itemIdsForTrade);
-        console.log(itemIdsToTrade);
-        if (itemIdsToTrade.length === 0 || itemIdsForTrade.length === 0) {
-          return alert('You must select one item from each category!');
-        }
-
-        this.tradeService
-          .postTrade({
-            itemsFrom: itemIdsToTrade,
-            itemsTo: itemIdsForTrade,
-            postDate: new Date().toISOString(),
-            owner: 'Juhaszky', //this.userDataService.getUsername(),
-            description: this.tradeDescription,
-          })
-          .subscribe();
-
-        this.emptySelectedItems();
+    combineLatest([
+      this.itemSelectorFacade.itemsToTrade$,
+      this.itemSelectorFacade.itemsForTrade$,
+    ]).subscribe(([itemIdsToTrade, itemIdsForTrade]) => {
+      console.log(itemIdsForTrade);
+      console.log(itemIdsToTrade);
+      if (itemIdsToTrade.length === 0 || itemIdsForTrade.length === 0) {
+        return alert('You must select one item from each category!');
       }
-    );
+
+      this.tradeService
+        .postTrade({
+          itemsFrom: itemIdsToTrade,
+          itemsTo: itemIdsForTrade,
+          postDate: new Date().toISOString(),
+          owner: 'Juhaszky', //this.userDataService.getUsername(),
+          description: this.tradeDescription,
+        })
+        .subscribe();
+
+      this.emptySelectedItems();
+    });
   }
 
   private emptySelectedItems() {

@@ -26,3 +26,17 @@
 .Haunted {
     border: 1px solid #38F3AB;
 }
+.decoratedWeapon {
+    border: 1px solid #fafafa;
+}
+.item-box {
+  position: relative;
+}
+.item-effect-bg {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none; 
+}
