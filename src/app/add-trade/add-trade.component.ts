@@ -84,7 +84,7 @@ export class AddTradeComponent implements OnInit {
         map(([items, filterText, sortCriteria]) => {
           const filtered = filterText
             ? items.filter(i =>
-                i.name.toLowerCase().includes(filterText.toLowerCase())
+                i.fullName.toLowerCase().includes(filterText.toLowerCase())
               )
             : [...items];
 
