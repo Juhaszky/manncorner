@@ -48,7 +48,9 @@ export class ItemComponent {
     this.canModify = false;
   }
   onItemSelect() {
-    this.selectEmitter.emit();
+    if (!this.disabled) {
+      this.selectEmitter.emit();
+    }
   }
   onCustomizeItem(event: Event) {
     event.stopPropagation();

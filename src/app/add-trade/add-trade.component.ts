@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { combineLatest, map } from 'rxjs';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, first, map } from 'rxjs';
 import { ItemSelectorComponent } from '../../shared/item-selector/item-selector.component';
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { TradeService } from '../home/trade.service';
@@ -15,6 +15,8 @@ import { InventoryItemsSelectorComponent } from './inventory-items-selector/inve
 import { BuyItemPanelComponent } from './buy-item-panel/buy-item-panel.component';
 import { Item } from '../../shared/models/item.model';
 import { AddTradeService } from './add-trade.service';
+import { UserProfileFacade } from '../user-profile/user-profile.facade';
+import { SortService } from '../../shared/sort.service';
 
 @Component({
   standalone: true,
@@ -36,11 +38,13 @@ import { AddTradeService } from './add-trade.service';
 })
 export class AddTradeComponent implements OnInit {
   http = inject(HttpClient);
+  userFacade = inject(UserProfileFacade);
   addTradeService = inject(AddTradeService);
   filterText = '';
   tradeDescription = '';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   inventoryItems: Item[] = [];
+  displayInventoryItems: Item[] = [];
   itemsToSell: Item[] = [];
   itemsToBuy: Item[] = [];
 
@@ -48,7 +52,8 @@ export class AddTradeComponent implements OnInit {
     private tradeService: TradeService,
     private itemSelectorService: ItemSelectorService,
     private cdRef: ChangeDetectorRef,
-    private itemSelectorFacade: ItemSelectorFacade
+    private itemSelectorFacade: ItemSelectorFacade,
+    private sortService: SortService
   ) {
     // afterNextRender(() => {
     //   this.AddTradeService.filterText$.subscribe(filterText => {
@@ -61,69 +66,40 @@ export class AddTradeComponent implements OnInit {
   check(description: string): void {
     this.tradeDescription = description;
   }
-
   ngOnInit(): void {
-    this.itemSelectorFacade.loadItemsLazy(0, 100);
+    this.userFacade.userData$.pipe(first()).subscribe(res => {
+      if (res?.steamid) {
+        // Pass the steamId when loading items
+        this.itemSelectorFacade.loadItemsLazy(0, 100, res.steamid);
+      } else {
+        console.error('No steamId found');
+      }
+    });
     combineLatest([
       this.itemSelectorFacade.items$,
       this.addTradeService.filterText$,
-    ]).pipe(
-      map(([items, filterText]) => {
-        if (!filterText) return items;
-        const lowerFilter = filterText.toLowerCase();
-        return items.filter(
-          item => item.name.toLowerCase().includes(lowerFilter)
-        );
-      })
-    );
-    this.itemSelectorFacade.items$.subscribe(items => {
-      this.inventoryItems = items;
-    });
+      this.sortService.sortCriteria$,
+    ])
+      .pipe(
+        map(([items, filterText, sortCriteria]) => {
+          const filtered = filterText
+            ? items.filter(i =>
+                i.name.toLowerCase().includes(filterText.toLowerCase())
+              )
+            : [...items];
+
+          return this.sortService.sortItems(filtered, sortCriteria);
+        })
+      )
+      .subscribe(filteredSorted => {
+        this.displayInventoryItems = filteredSorted;
+      });
     this.itemSelectorFacade.itemsToTrade$.subscribe(items => {
       this.itemsToSell = items;
     });
     this.itemSelectorFacade.itemsForTrade$.subscribe(items => {
-      console.log(items);
       this.itemsToBuy = items;
     });
-    // this.tradeForm.valueChanges.subscribe((value) => {
-    //   console.log(value);
-    // });
-    // this.itemSelectorService.fetchItems(0, 20).subscribe(items => {
-    //   console.log(items);
-    //   this.tradeForm.controls['inventory'].setValue(items);
-    //   const chunked = this.chunkItemsIntoRows(items, 7);
-    //   this.itemSelectorFacade.items$.
-    //   this.inventoryItems = [...this.inventoryItems, ...chunked];
-    //   console.log(this.inventoryItems);
-    // });
-    // this.itemSelectorService.fetchAllItems().subscribe((items: any) => {
-
-    // });
-    // this.tradeForm.valueChanges.subscribe((change) => {
-
-    // });
-  }
-  chunkItemsIntoRows(items: Item[], chunkSize = 7): Item[][] {
-    const result = [];
-    for (let i = 0; i < items.length; i += chunkSize) {
-      result.push(items.slice(i, i + chunkSize));
-    }
-    return result;
-  }
-
-  handleItemAddToTrade(item: Item): void {
-    // Get current items
-    console.log(item);
-    //console.log(...this.tradeForm.controls['itemsToTrade'].value);
-    // Update form control
-    // this.tradeForm.controls['itemsToTrade'].patchValue([...this.tradeForm.controls['itemsToTrade'].value, item], {
-    //   emitEvent: false,
-    // });
-
-    // Re-chunk the items to maintain the layout
-
-    //console.log(this.tradeForm);
   }
 
   makeTrade() {

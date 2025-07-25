@@ -1,4 +1,10 @@
-import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { ItemComponent } from './item.component';
 import { ItemFacade } from './item.facade';
 import { TradeServiceFacade } from '../../app/add-trade/trade-service.facade';
@@ -19,7 +25,7 @@ export class ItemContainerComponent implements OnChanges {
   tradeFacade = inject(TradeServiceFacade);
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["item"] && this.item) {
+    if (changes['item'] && this.item) {
       this.facade.checkItemExtras(this.item);
     }
   }

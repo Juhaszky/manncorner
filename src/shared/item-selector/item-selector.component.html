@@ -15,8 +15,7 @@
     <div *ngFor="let item of items" class="w-24">
       <app-item-container
         [item]="item"
-        [mode]="mode"
-        (click)="onItemSelect(item)">
+        [mode]="mode">
       </app-item-container>
     </div>
   </div>

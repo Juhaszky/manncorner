@@ -13,7 +13,7 @@ export class ItemSelectorFacade {
   private _itemsForTrade = new BehaviorSubject<Item[]>([]);
 
   private loadedPages = new Set<string>();
-
+  private selectedItemIds = new Set<string>();
   private dialogRef?: DynamicDialogRef;
   loading = false;
   items$ = this._items.asObservable();
@@ -29,7 +29,7 @@ export class ItemSelectorFacade {
   private deepEqual(obj1: any, obj2: any): boolean {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
   }
-  loadItemsLazy(first: number, rows: number): void {
+  loadItemsLazy(first: number, rows: number, steamid: string): void {
     this.loading = true;
     const pageKey = `${first}-${rows}`;
     if (this.loadedPages.has(pageKey)) {
@@ -37,7 +37,7 @@ export class ItemSelectorFacade {
       return;
     }
     this.loadedPages.add(pageKey);
-    this.itemService.fetchItems(first, rows).subscribe({
+    this.itemService.fetchItems(first, rows, steamid).subscribe({
       next: fetchedItems => {
         const currentItems = this._items.getValue();
         this._items.next([...currentItems, ...fetchedItems]);
@@ -81,10 +81,8 @@ export class ItemSelectorFacade {
   resetItems(): void {
     this._items.next([]);
   }
+  
   onAddItem(item: Item) {
-    this.http.post('http::/localhost:3000/api/items', {}).subscribe(res => {
-      console.log(res);
-    });
     const currentItems = this._itemsToTrade.getValue();
     const exists = currentItems.some(existingItem =>
       this.deepEqual(existingItem, item)
@@ -93,18 +91,22 @@ export class ItemSelectorFacade {
     if (!exists) {
       const itemWithCustomId = { ...item, customId: ++this._customIdCounter };
       this._itemsToTrade.next([...currentItems, itemWithCustomId]);
-      console.log('added', this._itemsToTrade.getValue());
+      this.selectedItemIds.add(item.id);
     }
   }
+
   onAddDefaultItem(items: Item[]) {
     this._itemsForTrade.next(items);
-    console.log('added', this._itemsForTrade.value);
   }
+
   onRemoveItem(item: Item) {
     const currentItems = this._itemsToTrade.getValue();
-    console.log('current items', currentItems);
-    const newItems = currentItems.filter(i => i.defindex !== item.defindex);
-    console.log('newItems', newItems);
+    const newItems = currentItems.filter(i => i.id !== item.id);
+    this.selectedItemIds.delete(item.id);
     this._itemsToTrade.next(newItems);
+  }
+
+  isItemSelected(item: Item): boolean {
+    return this.selectedItemIds.has(item.id);
   }
 }

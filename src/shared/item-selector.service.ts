@@ -63,9 +63,9 @@ export class ItemSelectorService {
     this.updateState({ forTradeItems: [] });
   }
 
-  fetchItems(offset: number, limit: number): Observable<Item[]> {
+  fetchItems(offset: number, limit: number, userId: string): Observable<Item[]> {
     return this.http.get<Item[]>(
-      `https://localhost:7221/items?offset=${offset}&limit=${limit}&userId=1`
+      `https://localhost:7221/items?offset=${offset}&limit=${limit}&userId=${userId}`
     );
   }
 

@@ -36,7 +36,7 @@ export function parseStockItemToItem(stockItem: StockTF2Item): Item {
     fullName: stockItem.proper_name
       ? `The ${stockItem.item_name}`
       : stockItem.item_name || stockItem.name || '',
-    id: null,
+    id: '',
     img: stockItem.image_url_large || stockItem.image_url || '',
     craftable: stockItem.capabilities.can_craft_mark,
     tradable: true,

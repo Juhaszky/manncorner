@@ -1,49 +1,91 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ItemSelectorFacade } from '../../../shared/item-selector/item-selector.facade';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
-import { fromEvent } from 'rxjs';
+import { fromEvent, map, take } from 'rxjs';
 import { Item } from '../../../shared/models/item.model';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { UserProfileFacade } from '../../user-profile/user-profile.facade';
 
 @Component({
   selector: 'app-inventory-items-selector',
   imports: [CommonModule, ItemContainerComponent, ProgressSpinnerModule],
   templateUrl: './inventory-items-selector.component.html',
-  styleUrl: './inventory-items-selector.component.scss'
+  styleUrl: './inventory-items-selector.component.scss',
 })
-export class InventoryItemsSelectorComponent implements AfterViewInit {
+export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems';
   @Input() filter = '';
   @Output() itemAdd = new EventEmitter<Item>();
   @ViewChild('inventorySelector') inventorySelectorEl!: ElementRef;
-  @Output() lazyLoadEmitter = new EventEmitter<{ first: number, row: number }>();
+  @Output() lazyLoadEmitter = new EventEmitter<{
+    first: number;
+    row: number;
+  }>();
   @Input() items: Item[] = [];
-  selectedItemIds = new Set<number>();
-
-  constructor(public itemSelectorFacade: ItemSelectorFacade) { }
+  selectedItemIds = new Set<string>();
+  disabled = false;
+  constructor(
+    public itemSelectorFacade: ItemSelectorFacade,
+    private userDataFacade: UserProfileFacade
+  ) {}
+  ngOnInit(): void {
+    this.itemSelectorFacade.itemsToTrade$.subscribe(selectedItems => {
+      selectedItems.forEach(item => {
+        if (item.id) {
+          this.selectedItemIds.add(item.id);
+        }
+      });
+    });
+  }
   ngAfterViewInit(): void {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    fromEvent(this.inventorySelectorEl.nativeElement, "scroll").subscribe((event: any) => {
-      const target = event.target;
-      const scrollTop = target.scrollTop;
-      const scrollHeight = target.scrollHeight;
-      const clientHeight = target.clientHeight;
-
-      const threshold = 50;
-
-      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-
-      if (distanceFromBottom <= threshold) {
-        console.log("Almost on bottom");
-        this.itemSelectorFacade.loadItemsLazy(this.itemSelectorFacade.itemsLength, 50);
+    this.userDataFacade.userData$.pipe(take(1)).subscribe(res => {
+      if (!res.steamid) {
+        return;
       }
+      fromEvent(this.inventorySelectorEl.nativeElement, 'scroll').subscribe(
+        (event: any) => {
+          const target = event.target;
+          const scrollTop = target.scrollTop;
+          const scrollHeight = target.scrollHeight;
+          const clientHeight = target.clientHeight;
 
-    })
+          const threshold = 50;
+
+          const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+
+          if (distanceFromBottom <= threshold) {
+            console.log('Almost on bottom');
+            this.itemSelectorFacade.loadItemsLazy(
+              this.itemSelectorFacade.itemsLength,
+              50,
+              res.steamid
+            );
+          }
+        }
+      );
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }
   onItemSelect(item: Item): void {
     this.itemAdd.emit(item);
-    this.selectedItemIds.add(item.defindex);
+    this.itemSelectorFacade.itemsToTrade$.pipe(
+      map(
+        itemsToTrade =>
+          !!itemsToTrade &&
+          itemsToTrade.some(selected => selected.id === item.id)
+      )
+    );
+    this.selectedItemIds.add(item.id);
     // console.log(idx);
     // if (this.mode === 'inventory') {
     //   let selectedItem: ModifiedItemData;
@@ -58,6 +100,9 @@ export class InventoryItemsSelectorComponent implements AfterViewInit {
     //   this.itemService.moveItemToTrade(idx);
     //   this.applyFilter();
     // }
+  }
+  isItemDisabled(item: Item): boolean {
+    return this.itemSelectorFacade.isItemSelected(item);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

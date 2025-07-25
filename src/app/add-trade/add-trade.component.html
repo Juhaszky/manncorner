@@ -52,9 +52,8 @@
     </div>
     <div class="col-card mb-3 p-1">
       <app-inventory-items-selector
-        (itemAdd)="handleItemAddToTrade($event)" 
         [mode]="'inventory'" 
-        [items]="inventoryItems" 
+        [items]="displayInventoryItems" 
         [filter]="filterText">
 
       </app-inventory-items-selector>

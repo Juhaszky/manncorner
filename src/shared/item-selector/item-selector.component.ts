@@ -4,7 +4,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -20,10 +19,10 @@ import { ScrollerModule } from 'primeng/scroller';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ItemContainerComponent } from '../item/item-container.component';
 import { ItemSelectorFacade } from './item-selector.facade';
-import { fromEvent } from 'rxjs';
 import { DialogModule } from 'primeng/dialog';
 import { ItemEditorComponent } from '../item-editor/item-editor.component';
 import { Item } from '../models/item.model';
+import { UserProfileFacade } from '../../app/user-profile/user-profile.facade';
 
 @Component({
   standalone: true,
@@ -54,10 +53,6 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
   }>();
   @Input() items: Item[] = [];
   @Input() allItems: Item[] = [];
-  @HostListener('scroll', ['$event'])
-  doSomething(event: any) {
-    console.log(event);
-  }
   filteredItems: Item[] = [];
   loading = false;
   pageSize = 21;
@@ -66,37 +61,40 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
     private itemService: ItemSelectorService,
     private sortService: SortService,
     private viewportRuler: ViewportRuler,
-    public itemSelectorFacade: ItemSelectorFacade
+    public itemSelectorFacade: ItemSelectorFacade,
+    private userDataFacade: UserProfileFacade
   ) {}
 
   ngAfterViewInit(): void {
-    fromEvent(this.inventorySelectorEl.nativeElement, 'scroll').subscribe(
-      (event: any) => {
-        const target = event.target;
-        const scrollTop = target.scrollTop;
-        const scrollHeight = target.scrollHeight;
-        const clientHeight = target.clientHeight;
+    // this.userDataFacade.userData$.pipe(take(1)).subscribe(res => {
+    //   fromEvent(this.inventorySelectorEl.nativeElement, 'scroll').subscribe(
+    //     (event: any) => {
+    //       const target = event.target;
+    //       const scrollTop = target.scrollTop;
+    //       const scrollHeight = target.scrollHeight;
+    //       const clientHeight = target.clientHeight;
 
-        const threshold = 50;
+    //       const threshold = 50;
 
-        const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+    //       const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
 
-        if (distanceFromBottom <= threshold) {
-          console.log('Almost on bottom');
-          this.itemSelectorFacade.loadItemsLazy(
-            this.itemSelectorFacade.itemsLength,
-            this.pageSize
-          );
-        }
-      }
-    );
+    //       if (distanceFromBottom <= threshold) {
+    //         console.log('Almost on bottom');
+    //         this.itemSelectorFacade.loadItemsLazy(
+    //           this.itemSelectorFacade.itemsLength,
+    //           this.pageSize,
+    //           res.steamid
+    //         );
+    //       }
+    //     }
+    //   );
+    // });
   }
   ngOnInit(): void {
     if (this.mode === 'allItems') {
       console.log(this.items);
     }
   }
- 
 
   //this.loadItems();
   // this.sortService.sortCriteria$.subscribe(criteria => {
@@ -116,13 +114,11 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
   }
   onLazyLoad(event: { query: string }) {
     const filtered = this.allItems.filter(item =>
-    item.name.toLowerCase().includes(event.query.toLowerCase())
-  );
+      item.name.toLowerCase().includes(event.query.toLowerCase())
+    );
 
-  // Optionally limit results for performance
-  this.currentPageItems = filtered.slice(0, 20);
+    this.currentPageItems = filtered.slice(0, 20);
 
-    // Update paging for next call if you want
   }
 
   private loadItems(): void {
@@ -154,7 +150,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   trackByFn(index: number, item: any) {
-    return item?.id || index; // Use unique ID if available
+    return item?.id || index;
   }
 
   private handleError(err: string): void {
@@ -178,7 +174,7 @@ export class ItemSelectorComponent implements OnInit, OnChanges, AfterViewInit {
     console.log(changes['items']);
     //if (this.mode !== 'inventory') return;
     //this.applyFilter();
-    //this.chunkedItems = this.chunkItems([...this.items], 6); // Ensure stable reference
+    //this.chunkedItems = this.chunkItems([...this.items], 6); 
   }
 
   applyFilter(): void {

@@ -3,13 +3,13 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnInit,
   Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { fromEvent } from 'rxjs';
 import { ItemSelectorFacade } from '../../../shared/item-selector/item-selector.facade';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { SortService } from '../../../shared/sort.service';
@@ -17,17 +17,22 @@ import { ModifiedItemData } from '../../../shared/models/modifiedItem.model';
 import { DialogModule } from 'primeng/dialog';
 import { ItemEditorComponent } from '../../../shared/item-editor/item-editor.component';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
-import { StockTF2Item } from '../../../shared/models/stockItem.model';
 import { CommonModule } from '@angular/common';
 import { Item } from '../../../shared/models/item.model';
+import { UserProfileFacade } from '../../user-profile/user-profile.facade';
 
 @Component({
   selector: 'app-buy-item-panel',
-  imports: [DialogModule, ItemEditorComponent, ItemContainerComponent, CommonModule],
+  imports: [
+    DialogModule,
+    ItemEditorComponent,
+    ItemContainerComponent,
+    CommonModule,
+  ],
   templateUrl: './buy-item-panel.component.html',
   styleUrl: './buy-item-panel.component.scss',
 })
-export class BuyItemPanelComponent implements  OnInit ,AfterViewInit {
+export class BuyItemPanelComponent implements OnInit, AfterViewInit {
   visible = false;
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems';
   @Input() filter = '';
@@ -39,47 +44,54 @@ export class BuyItemPanelComponent implements  OnInit ,AfterViewInit {
     row: number;
   }>();
   @Input() allItems: Item[] = [];
+  filteredItems: Item[] = [];
+  userDataFacade = inject(UserProfileFacade);
   constructor(
     private sortService: SortService,
     private viewportRuler: ViewportRuler,
     public itemSelectorFacade: ItemSelectorFacade
   ) {}
   ngOnInit(): void {
-    this.itemSelectorFacade.itemsForTrade$.subscribe((res) => {
+    this.itemSelectorFacade.itemsForTrade$.subscribe(res => {
       console.log(res);
       this.allItems = res;
-    })
+    });
   }
 
   ngAfterViewInit(): void {
-    fromEvent(this.inventorySelectorEl.nativeElement, 'scroll').subscribe(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (event: any) => {
-        const target = event.target;
-        const scrollTop = target.scrollTop;
-        const scrollHeight = target.scrollHeight;
-        const clientHeight = target.clientHeight;
-
-        const threshold = 50;
-
-        const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-
-        if (distanceFromBottom <= threshold) {
-          console.log('Almost on bottom');
-          this.itemSelectorFacade.loadItemsLazy(
-            this.itemSelectorFacade.itemsLength,
-            0
-          );
-        }
-      }
-    );
+    // this.userDataFacade.userData$.pipe(take(1)).subscribe(userData => {
+    //   if (!userData?.steamid) {
+    //     console.error('No steamId available');
+    //     return;
+    //   }
+    //   fromEvent(this.inventorySelectorEl.nativeElement, 'scroll')
+    //     .pipe(
+    //       filter((event: any) => {
+    //         const target = event.target;
+    //         const scrollTop = target.scrollTop;
+    //         const scrollHeight = target.scrollHeight;
+    //         const clientHeight = target.clientHeight;
+    //         const threshold = 50;
+    //         const distanceFromBottom =
+    //           scrollHeight - (scrollTop + clientHeight);
+    //         return distanceFromBottom <= threshold;
+    //       })
+    //     )
+    //     .subscribe(() => {
+    //       console.log('Almost on bottom - fetching more');
+    //       this.itemSelectorFacade.loadItemsLazy(
+    //         this.itemSelectorFacade.itemsLength,
+    //         0,
+    //         userData.steamid
+    //       );
+    //     });
+    // });
   }
-   onDialogClose() {
-    console.log("close ran");
+  onDialogClose() {
+    console.log('close ran');
     this.visible = false;
     console.log(this.visible);
   }
-  
 
   //this.loadItems();
   // this.sortService.sortCriteria$.subscribe(criteria => {

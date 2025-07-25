@@ -1,7 +1,7 @@
 export interface Item {
   name: string;
   fullName: string;
-  id: string | null;
+  id: string;
   img: string;
   craftable: boolean;
   tradable: boolean;

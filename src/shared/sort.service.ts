@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ModifiedItemData } from './models/modifiedItem.model';
+import { Item } from './models/item.model';
 
 @Injectable({
   providedIn: 'root',
@@ -26,43 +26,43 @@ export class SortService {
     return this.sortCriteriaSubject.value;
   }
   sortItems(
-    items: ModifiedItemData[],
+    items: Item[],
     criteria: 'quality' | 'name'
-  ): ModifiedItemData[] {
+  ): Item[] {
     if (criteria === 'name') {
       return items.sort((a, b) => a.name.localeCompare(b.name));
     } else if (criteria === 'quality') {
-      return items.sort((a, b) => {
-        const qualityA = this.getFirstQualityValue(a);
-        const qualityB = this.getFirstQualityValue(b);
+      // return items.sort((a, b) => {
+      //   const qualityA = this.getFirstQualityValue(a);
+      //   const qualityB = this.getFirstQualityValue(b);
 
-        // Handle undefined by treating it as a low quality (or customize this logic)
-        return (qualityA ?? Infinity) - (qualityB ?? Infinity);
-      });
+      //   // Handle undefined by treating it as a low quality (or customize this logic)
+      //   return (qualityA ?? Infinity) - (qualityB ?? Infinity);
+      // });
     }
 
     return items;
   }
 
-  private getFirstQualityValue(item: ModifiedItemData): number | undefined {
-    let qualityValue = item.quality;
-    if (!qualityValue) {
-      const rarity =
-        item.tags.find((tag) => tag.category === 'Rarity')
-          ?.localized_tag_name || undefined;
-      if (rarity) {
-        return this.getEffectPriority(rarity);
-      }
-      const itemQuality =
-        item.tags.find((tag) => tag.category === 'Quality')
-          ?.localized_tag_name || undefined;
-      console.log(itemQuality);
-      if (itemQuality) {
-        return this.getEffectPriority(itemQuality); // Default value if quality is undefined or empty
-      }
-    }
-    return undefined;
-  }
+  // private getFirstQualityValue(item: Item): number | undefined {
+  //   let qualityValue = item.quality;
+  //   if (!qualityValue) {
+  //     const rarity =
+  //       item.tags.find((tag) => tag.category === 'Rarity')
+  //         ?.localized_tag_name || undefined;
+  //     if (rarity) {
+  //       return this.getEffectPriority(rarity);
+  //     }
+  //     const itemQuality =
+  //       item.tags.find((tag) => tag.category === 'Quality')
+  //         ?.localized_tag_name || undefined;
+  //     console.log(itemQuality);
+  //     if (itemQuality) {
+  //       return this.getEffectPriority(itemQuality); // Default value if quality is undefined or empty
+  //     }
+  //   }
+  //   return undefined;
+  // }
   private getEffectPriority(quality?: string | undefined): number | undefined {
     let priority = undefined;
     if (quality) {
