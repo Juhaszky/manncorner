@@ -6,7 +6,7 @@ import { Item } from './models/item.model';
   providedIn: 'root',
 })
 export class SortService {
-  private sortCriteriaSubject = new BehaviorSubject<'quality' | 'name'>('name');
+  private sortCriteriaSubject = new BehaviorSubject<'quality' | 'name'>('quality');
   sortCriteria$ = this.sortCriteriaSubject.asObservable();
   private effectPriorityMap: { [key: string]: number } = {
     Unusual: 0,

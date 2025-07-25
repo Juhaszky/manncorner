@@ -52,29 +52,31 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
       if (!res.steamid) {
         return;
       }
-      fromEvent(this.inventorySelectorEl.nativeElement, 'scroll').subscribe(
-        (event: any) => {
-          const target = event.target;
-          const scrollTop = target.scrollTop;
-          const scrollHeight = target.scrollHeight;
-          const clientHeight = target.clientHeight;
-
-          const threshold = 50;
-
-          const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-
-          if (distanceFromBottom <= threshold) {
-            console.log('Almost on bottom');
-            this.itemSelectorFacade.loadItemsLazy(
-              this.itemSelectorFacade.itemsLength,
-              50,
-              res.steamid
-            );
-          }
+      fromEvent<Event>(
+        this.inventorySelectorEl.nativeElement,
+        'scroll'
+      ).subscribe((event: Event) => {
+        if (this.filter && this.filter.trim() !== '') {
+          return;
         }
-      );
+        const target = event.target as HTMLElement;
+        const scrollTop = target.scrollTop;
+        const scrollHeight = target.scrollHeight;
+        const clientHeight = target.clientHeight;
+
+        const threshold = 50;
+
+        const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+
+        if (distanceFromBottom <= threshold) {
+          this.itemSelectorFacade.loadItemsLazy(
+            this.itemSelectorFacade.itemsLength,
+            50,
+            res.steamid
+          );
+        }
+      });
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }
   onItemSelect(item: Item): void {
     this.itemAdd.emit(item);

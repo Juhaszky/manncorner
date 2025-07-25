@@ -82,6 +82,7 @@ export class AddTradeComponent implements OnInit {
     ])
       .pipe(
         map(([items, filterText, sortCriteria]) => {
+          this.filterText = filterText;
           const filtered = filterText
             ? items.filter(i =>
                 i.fullName.toLowerCase().includes(filterText.toLowerCase())
@@ -103,28 +104,29 @@ export class AddTradeComponent implements OnInit {
   }
 
   makeTrade() {
-    combineLatest([
-      this.itemSelectorFacade.itemsToTrade$,
-      this.itemSelectorFacade.itemsForTrade$,
-    ]).subscribe(([itemIdsToTrade, itemIdsForTrade]) => {
-      console.log(itemIdsForTrade);
-      console.log(itemIdsToTrade);
-      if (itemIdsToTrade.length === 0 || itemIdsForTrade.length === 0) {
-        return alert('You must select one item from each category!');
-      }
+    //TODO handle subscription error on make trade
+    // combineLatest([
+    //   this.itemSelectorFacade.itemsToTrade$,
+    //   this.itemSelectorFacade.itemsForTrade$,
+    // ]).subscribe(([itemIdsToTrade, itemIdsForTrade]) => {
+    //   console.log(itemIdsForTrade);
+    //   console.log(itemIdsToTrade);
+    //   if (itemIdsToTrade.length === 0 || itemIdsForTrade.length === 0) {
+    //     return alert('You must select one item from each category!');
+    //   }
 
-      this.tradeService
-        .postTrade({
-          itemsFrom: itemIdsToTrade,
-          itemsTo: itemIdsForTrade,
-          postDate: new Date().toISOString(),
-          owner: 'Juhaszky', //this.userDataService.getUsername(),
-          description: this.tradeDescription,
-        })
-        .subscribe();
+    //   this.tradeService
+    //     .postTrade({
+    //       itemsFrom: itemIdsToTrade,
+    //       itemsTo: itemIdsForTrade,
+    //       postDate: new Date().toISOString(),
+    //       owner: 'Juhaszky', //this.userDataService.getUsername(),
+    //       description: this.tradeDescription,
+    //     })
+    //     .subscribe();
 
-      this.emptySelectedItems();
-    });
+    //   this.emptySelectedItems();
+    // });
   }
 
   private emptySelectedItems() {
