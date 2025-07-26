@@ -1,8 +1,10 @@
 import {
   Component,
+  EventEmitter,
   inject,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { ItemComponent } from './item.component';
@@ -19,7 +21,11 @@ export class ItemContainerComponent implements OnChanges {
   @Input() item!: Item;
 
   @Input() disabled = false;
-  @Input() mode = '';
+  @Input() canDelete = false;
+  @Input() canModify = false;
+  @Output() selectEmitter: EventEmitter<Item> = new EventEmitter<Item>();
+  @Output() removeEmitter: EventEmitter<Item> = new EventEmitter<Item>();
+  @Output() customizeEmitter: EventEmitter<Item> = new EventEmitter<Item>();
   facade = inject(ItemFacade);
   itemSelectorFacade = inject(ItemSelectorFacade);
   tradeFacade = inject(TradeServiceFacade);

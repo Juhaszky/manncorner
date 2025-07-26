@@ -17,6 +17,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UserProfileFacade } from '../../user-profile/user-profile.facade';
 
 @Component({
+  standalone: true,
   selector: 'app-inventory-items-selector',
   imports: [CommonModule, ItemContainerComponent, ProgressSpinnerModule],
   templateUrl: './inventory-items-selector.component.html',
@@ -99,7 +100,6 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
     //     this.filteredItems[idx].selected = true;
     //     selectedItem = this.filteredItems[idx];
     //   }
-    //   this.itemService.moveItemToTrade(idx);
     //   this.applyFilter();
     // }
   }

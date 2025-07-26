@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
@@ -12,6 +13,8 @@ import { ItemEffectsComponent } from './item-effects/item-effects.component';
 import { ResizedImageComponent } from '../resized-image/resized-image.component';
 import { ItemKillstreakerSelectorComponent } from './item-killstreaker-selector/item-killstreaker-selector.component';
 import { AccordionModule } from 'primeng/accordion';
+import { HttpClient } from '@angular/common/http';
+import { Item } from '../models/item.model';
 
 
 @Component({
@@ -32,47 +35,39 @@ import { AccordionModule } from 'primeng/accordion';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemCustomizerComponent implements OnInit {
-  @Input() details!: any;
+  @Input() details!: Item;
   @Input() showDialog = false;
 
   itemFormGroup: FormGroup = new FormGroup({
     name: new FormControl(''),
     quality: new FormControl([]),
     effect: new FormControl(''),
-    killstreaker: new FormControl(
-      this.details?.killstreaker || {
-        killstreaker: '',
-        sheen: '',
-        killstreak: '',
-      }
-    ),
+    
     craftable: new FormControl(true),
   });
 
-  isUnusual: boolean = false;
-  effectUrl: string = '';
-  isEffectAccordionExpanded: boolean = false;
+  isUnusual = false;
+  effectUrl = '';
+  isEffectAccordionExpanded = false;
 
+  http = inject(HttpClient);
   constructor(
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     console.log(this.details);
+    
     this.setIsUnusual();
     if (this.details) {
 
     
-    this.details.name = this.details?.originalName ?? this.details?.name;
+    this.details.name = this.details?.fullName ?? this.details?.name;
     this.itemFormGroup.patchValue({
       name: this.details.name,
       quality: this.details.quality || [],
       effect: this.details.effect || '',
-      killstreaker: this.details.killstreaker || {
-        killstreaker: '',
-        sheen: '',
-        killstreak: '',
-      },
+      
     });
     }
   }
@@ -80,7 +75,7 @@ export class ItemCustomizerComponent implements OnInit {
   getImageUrl(): string {
     if (this.details) {
       console.log(this.details);
-      const itemsUrl = this.details.image_url;
+      const itemsUrl = this.details.img;
       if (!itemsUrl) {
         return '';
       }
@@ -114,8 +109,9 @@ export class ItemCustomizerComponent implements OnInit {
   }
 
   onEffectSelectionChange(event: any) {
+    console.log(event);
     if (this.effectUrl.includes(event)) {
-      this.setEffectUrl('');
+      this.setEffectUrl(-1);
       this.itemFormGroup.controls['effect'].patchValue('');
     } else {
       this.setEffectUrl(event);
@@ -135,12 +131,14 @@ export class ItemCustomizerComponent implements OnInit {
     } else {
       this.isUnusual = false;
       this.itemFormGroup.controls['effect'].patchValue('');
-      this.setEffectUrl('');
+      this.setEffectUrl(-1);
     }
     this.cdr.markForCheck();
   }
 
-  private setEffectUrl(effect: string) {
-    this.effectUrl = `/assets/images/effects/${effect}.webp`;
+  private setEffectUrl(effect: number) {
+    if (effect !== -1) {
+      this.effectUrl = `/assets/images/effects/${effect}.png`;
+    }
   }
 }

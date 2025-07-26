@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { combineLatest, first, map } from 'rxjs';
-import { ItemSelectorComponent } from '../../shared/item-selector/item-selector.component';
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { TradeService } from '../home/trade.service';
 import { ActionBarComponent } from './action-bar/action-bar.component';
@@ -17,13 +16,13 @@ import { Item } from '../../shared/models/item.model';
 import { AddTradeService } from './add-trade.service';
 import { UserProfileFacade } from '../user-profile/user-profile.facade';
 import { SortService } from '../../shared/sort.service';
+import { SellItemPanelComponent } from './sell-item-panel/sell-item-panel.component';
 
 @Component({
   standalone: true,
   selector: 'app-dashboard',
   imports: [
     CommonModule,
-    ItemSelectorComponent,
     ActionBarComponent,
     FormsModule,
     DescrpitionComponent,
@@ -31,6 +30,7 @@ import { SortService } from '../../shared/sort.service';
     ButtonModule,
     InventoryItemsSelectorComponent,
     BuyItemPanelComponent,
+    SellItemPanelComponent
   ],
   providers: [HttpClient, DialogService],
   templateUrl: './add-trade.component.html',

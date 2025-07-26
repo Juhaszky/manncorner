@@ -3,17 +3,18 @@ import {
   EventEmitter,
   inject,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { ItemSelectorService } from '../item-selector.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ItemListViewComponent } from './item-list-view/item-list-view.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { HttpClient } from '@angular/common/http';
-import { StockTF2Item } from '../models/stockItem.model';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ItemSelectorFacade } from '../item-selector/item-selector.facade';
 import { Item } from '../models/item.model';
@@ -25,7 +26,6 @@ import { Item } from '../models/item.model';
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    AsyncPipe,
     CommonModule,
     ItemListViewComponent,
     AutoCompleteModule,
@@ -33,60 +33,44 @@ import { Item } from '../models/item.model';
     MultiSelectModule,
   ],
 })
-export class ItemEditorComponent implements OnInit {
-  tooltip = '';
-  left = 0;
-  top = 0;
+export class ItemEditorComponent implements OnInit, OnChanges {
   http = inject(HttpClient);
   facade = inject(ItemSelectorFacade);
   @Input() options: Item[] = [];
-  @Output() lazyLoad = new EventEmitter<{
-    query: string;
-  }>();
   @Output() confirmSelecion = new EventEmitter();
   @Output() closeDialog = new EventEmitter();
-  selectedItems: Item[] = [];
 
   myControl = new FormControl<Item[]>([]);
   filteredOptions: Item[] = [];
 
-  constructor(private itemService: ItemSelectorService) {}
+  constructor(
+    private itemService: ItemSelectorService,
+    private itemSelectorFacade: ItemSelectorFacade
+  ) {}
 
   ngOnInit(): void {
-    console.log('ran');
-    console.trace();
-    this.myControl.valueChanges.subscribe((items: Item[] | null) => {
-      console.log(items);
-      if (items) {
-        this.selectedItems = items;
-      }
-    });
-    this.loadItemsLazy('');
+    this.itemSelectorFacade.itemsForTrade$.subscribe((items) => {
+      this.myControl.setValue(items);
+    })
+    this.filteredOptions = this.options;
   }
-  loadItemsLazy(queryString: string): void {
-    this.http
-      .get<Item[]>(`http://localhost:3000/api/items?searchTerm=${queryString}`)
-      .subscribe((res: Item[]) => {
-        this.filteredOptions = res;
-      });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['options']) {
+      this.filteredOptions = this.options ?? [];
+    }
   }
-
   filter(query: string): void {
     const lower = query?.toLowerCase() || '';
-    this.filteredOptions = this.options.filter((o: any) =>
+    this.filteredOptions = this.options.filter((o: Item) =>
       o.name.toLowerCase().includes(lower)
     );
   }
 
   onConfirmSelection() {
-    this.facade.onAddDefaultItem(this.selectedItems);
+    this.facade.onAddDefaultItem(this.myControl.value ?? []);
     this.closeDialog.emit(null);
-    this.clearSelection();
   }
-  clearSelection() {
-    this.myControl.setValue([]);
-    this.selectedItems = [];
+  onClose() {
+    this.closeDialog.emit(null);
   }
-
-  onClose(): void {}
 }

@@ -1,20 +1,23 @@
 <div
-  class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
+  class="col-card inventory-box flex flex-wrap flex-row relative h-full"
   #inventorySelector>
   <div
     class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20 w-20 border border-slate-700"
-    matTooltip="Add items..."
+    pTooltip="Add items..."
+    tooltipPosition="bottom"
     (click)="onOpenItemEditor()"
-    tabindex="1"
+    tabindex="0"
     (keydown)="onOpenItemEditor()">
     <img src="/assets/images/8333955.png" alt="" class="img-fluid" />
   </div>
   <div class="flex flex-row flex-wrap w-full gap-2 p-2" *ngIf="allItems">
-    <div *ngFor="let item of allItems" class="w-24">
+    <div *ngFor="let item of selectedItems" class="w-24">
       <app-item-container
         [item]="item"
-        [mode]="mode"
-        (removeEmitter)="onRemoveItem(0)">
+        [canDelete]="true"
+        [canModify]="true"
+        (removeEmitter)="onRemoveItem(item)"
+        (customizeEmitter)="onCustomizeItem(item)">
       </app-item-container>
     </div>
   </div>
@@ -24,5 +27,12 @@
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '80%', height: '80%' }">
-  <app-item-editor (closeDialog)="onDialogClose()"></app-item-editor>
+
+  <app-item-editor *ngIf="editorVisible" 
+    [options]="allItems" 
+    (closeDialog)="onDialogClose()">
+  </app-item-editor>
+  <item-customizer *ngIf="customizableItem"
+    [details]="customizableItem">
+  </item-customizer>
 </p-dialog>

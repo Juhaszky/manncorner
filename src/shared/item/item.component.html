@@ -2,7 +2,7 @@
   [class.disabled]="disabled" [class]="borderStyle" (click)="onItemSelect()" (keydown)="onItemSelect()"
   [pTooltip]="itemData.fullName" tooltipPosition="bottom" tabindex="0" data="effectUrl">
   <img *ngIf="effectUrl" [src]="effectUrl" class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none">
-  <resized-image [imageUrl]="itemImgUrl" class="relative z-10"></resized-image>
+  <resized-image [imageUrl]="itemData.img" class="relative z-10"></resized-image>
   <div class="top-1 flex gap-1 absolute z-10" *ngIf="itemData">
     <p class="sm:h-4 h-3 sm:w-4 w-3" *ngIf="itemData.spells && itemData.spells.length > 0">
       <img src="/icons/spell.svg" alt="spell-icon" />
@@ -15,11 +15,11 @@
       <img src="assets/icons/part.svg" alt="part-icon" />
     </p>
     <span class="flex w-full justify-between" *ngIf="showActions">
-      <p class="sm:h-4 h-3 sm:w-4 w-3" (click)="onRemoveItem()" (keydown)="onRemoveItem()" tabindex="1">
+      <p *ngIf="canDelete" class="sm:h-4 h-3 sm:w-4 w-3" (click)="removeEmitter.emit(this.itemData)" (keydown)="removeEmitter.emit(this.itemData)" tabindex="1" >
         <img src="assets/icons/trash.svg" alt="trash-icon" />
       </p>
-      <p tabindex="2" (keydown)="customizeEmitter.emit($event)" (click)="customizeEmitter.emit()"
-        class="sm:h-4 h-3 sm:w-4 w-3" *ngIf="canModify">
+      <p *ngIf="canModify" tabindex="1" (keydown)="customizeEmitter.emit()" (click)="customizeEmitter.emit()"
+        class="sm:h-4 h-3 sm:w-4 w-3" >
         <img src="assets/icons/modify.svg" alt="modify-icon" />
       </p>
     </span>

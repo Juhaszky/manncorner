@@ -3,8 +3,7 @@
     (input)="onSearch($event)"
     matInput
     placeholder="Search effect..."
-    class="bg-slate-800 mb-4 p-2 border border-slate-700 rounded"
-  />
+    class="bg-slate-800 mb-4 p-2 border border-slate-700 rounded" />
   <!-- <mat-chip-listbox
     class="mat-mdc-chip-set-stacked w-full"
     aria-label="Color selection"
@@ -20,4 +19,21 @@
     >
     }
   </mat-chip-listbox> -->
+  <div class="w-full flex justify-center">
+    <div class="w-full">
+      <p-selectButton
+        [options]="filteredEffects"
+        optionLabel="label"
+        multiple="false"
+        ariaLabel="Color selection"
+        class="w-full flex flex-wrap"
+        (onChange)="onSelect($event.value)"
+        [ngClass]="{ 'chip-container': true }"
+        [style.flexWrap]="'wrap'">
+        <ng-template let-effect pTemplate="effect">
+          <span>{{ effect }}</span>
+        </ng-template>
+      </p-selectButton>
+    </div>
+  </div>
 </div>

@@ -105,6 +105,12 @@ export class ItemSelectorFacade {
     this.selectedItemIds.delete(item.id);
     this._itemsToTrade.next(newItems);
   }
+  onRemoveBaseItem(item: Item) {
+    const currentItems = this._itemsForTrade.getValue();
+    const newItems = currentItems.filter(i => i.name !== item.name);
+    this.selectedItemIds.delete(item.name);
+    this._itemsForTrade.next(newItems);
+  }
 
   isItemSelected(item: Item): boolean {
     return this.selectedItemIds.has(item.id);

@@ -1,14 +1,19 @@
 <div
-  class="customizer flex flex-col h-full w-full bg-slate-800 text-slate-300 p-4 overflow-y-scroll">
-  <div class="flex justify-center item-image">
-    <div
-      [ngStyle]="{ 'background-image': 'url(' + effectUrl + ')' }"
-      class="bg-no-repeat bg-cover">
-      <img [src]="details?.image_url" alt="" />
-    </div>
+  class="customizer flex flex-col h-full w-full bg-slate-800 text-slate-300 p-4 overflow-y-scroll p-2">
+  <div class="relative w-20 h-20">
+    <img
+      *ngIf="effectUrl"
+      [src]="effectUrl"
+      alt="Effect"
+      class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none" />
+
+    <resized-image
+      *ngIf="details"
+      [imageUrl]="details.img"
+      class="relative z-10 w-full h-full"></resized-image>
   </div>
   <form
-    class="flex flex-col flex-wrap items-center"
+    class="flex flex-col flex-wrap items-center p-2"
     [formGroup]="itemFormGroup"
     (submit)="onSubmit()">
     <div class="name flex flex-col items-center justify-between">
@@ -25,26 +30,13 @@
           <p-accordion-header>Quality</p-accordion-header>
           <p-accordion-content>
             <item-quality
-            [qualityControl]="itemFormGroup.controls['quality']"
-            (selectionChange)="onQualitySelectionChange($event)"
-          ></item-quality>
+              [qualityControl]="itemFormGroup.controls['quality']"
+              (selectionChange)="
+                onQualitySelectionChange($event)
+              "></item-quality>
           </p-accordion-content>
         </p-accordion-panel>
       </p-accordion>
-      <!-- <mat-accordion>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="text-slate-300"> Quality </mat-panel-title>
-            <mat-panel-description>
-              You can select item's quality
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <item-quality
-            [qualityControl]="itemFormGroup.controls['quality']"
-            (selectionChange)="onQualitySelectionChange($event)"
-          ></item-quality>
-        </mat-expansion-panel>
-      </mat-accordion> -->
     </div>
     <div
       *ngIf="isUnusual"
@@ -53,6 +45,21 @@
         'w-full': isEffectAccordionExpanded,
         'sm:w-1/2 w-full': !isEffectAccordionExpanded,
       }">
+      <div
+        class="name flex flex-col items-center sm:w-1/2 w-full flex-wrap justify-between p-2">
+        <p-accordion value="0">
+          <p-accordion-panel value="0">
+            <p-accordion-header>Effects</p-accordion-header>
+            <p-accordion-content>
+              <app-item-effects
+                [effectControl]="itemFormGroup.controls['effect']"
+                (selectionChange)="
+                  onEffectSelectionChange($event)
+                "></app-item-effects>
+            </p-accordion-content>
+          </p-accordion-panel>
+        </p-accordion>
+      </div>
       <!-- <mat-accordion>
         <mat-expansion-panel [(expanded)]="isEffectAccordionExpanded">
           <mat-expansion-panel-header>
@@ -61,10 +68,7 @@
               You can select item's unusual effect
             </mat-panel-description>
           </mat-expansion-panel-header>
-          <app-item-effects
-            [effectControl]="itemFormGroup.controls['effect']"
-            (selectionChange)="onEffectSelectionChange($event)"
-          ></app-item-effects>
+        
         </mat-expansion-panel>
       </mat-accordion> -->
     </div>

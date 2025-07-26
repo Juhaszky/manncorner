@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
 import { StockTF2Item } from './models/stockItem.model';
 import { ItemState } from './models/itemState.model';
 import { ItemData } from './models/itemData.model';
 import { Item } from './models/item.model';
+import { environment } from '../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -65,87 +66,23 @@ export class ItemSelectorService {
 
   fetchItems(offset: number, limit: number, userId: string): Observable<Item[]> {
     return this.http.get<Item[]>(
-      `https://localhost:7221/items?offset=${offset}&limit=${limit}&userId=${userId}`
-    );
+      `${environment.API_URL}/items?offset=${offset}&limit=${limit}&userId=${userId}`
+    ).pipe(
+    catchError(error => {
+      console.error('Error fetching items:', error);
+
+      return throwError(() => new Error('Failed to load items from the server.'));
+    })
+  );
   }
 
   fetchAllItems(): Observable<any> {
     return this.http.get("/assets/items.json");
   }
+  fetchAllEffects() {
 
-  moveItemToTrade(index: number) {
-    const state = this.stateSubject.value;
-
-    // Clone the current state arrays
-    const inventoryItems = [...state.inventoryItems];
-    const filteredInventoryItems = [...state.filteredInventoryItems];
-    const toTradeItems = [...state.toTradeItems];
-
-    // Find and remove the item from inventoryItems
-    const itemToMove = filteredInventoryItems[index];
-    const originalIndex = inventoryItems.findIndex(
-      item => item.idx === itemToMove.idx
-    );
-    inventoryItems.splice(originalIndex, 1);
-    // Remove the item from filteredInventoryItems
-    filteredInventoryItems.splice(index, 1);
-
-    // Add the item to toTradeItems
-    toTradeItems.push(itemToMove);
-
-    // Update the state with the modified arrays
-    this.updateState({
-      inventoryItems,
-      filteredInventoryItems,
-      toTradeItems,
-    });
-    this.updateFilteredItems(state.filterText);
   }
-
-  moveItemToInventory(index: number) {
-    const state = this.stateSubject.value;
-    console.log(state.filterText);
-    // Clone the current state arrays
-    const inventoryItems = [...state.inventoryItems];
-    const toTradeItems = [...state.toTradeItems];
-
-    // Find and remove the item from toTradeItems
-    const itemToMove = toTradeItems.splice(index, 1)[0];
-    itemToMove.selected = false;
-    console.log(itemToMove);
-
-    // Insert the item back into inventoryItems at its original position
-    inventoryItems.splice(itemToMove.idx, 0, itemToMove);
-
-    // Update the state with the modified arrays
-    this.updateState({
-      inventoryItems,
-      toTradeItems,
-    });
-  }
-  moveItemToFilteredInventory(index: number) {
-    const state = this.stateSubject.value;
-    console.log(state.filterText);
-    // Clone the current state arrays
-    const filteredInventoryItems = [...state.filteredInventoryItems];
-    const toTradeItems = [...state.toTradeItems];
-
-    // Find and remove the item from toTradeItems
-    const itemToMove = toTradeItems.splice(index, 1)[0];
-    itemToMove.selected = false;
-    console.log(itemToMove);
-
-    // Insert the item back into inventoryItems at its original position
-    filteredInventoryItems.splice(itemToMove.idx, 0, itemToMove);
-    console.log(filteredInventoryItems);
-
-    // Update the state with the modified arrays
-    this.updateState({
-      filteredInventoryItems,
-      toTradeItems,
-    });
-  }
-
+  
   filterItems(items: ItemData[], filterText: string): ItemData[] {
     return items.filter(item =>
       item.name.toLowerCase().includes(filterText.toLowerCase())
