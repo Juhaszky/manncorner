@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using System.Net;
 using System.Text.Json;
 
 [ApiController]
@@ -25,11 +26,11 @@ public class ItemsController : ControllerBase
       var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
       var items = await GetFullSteamInventory(userId);
 
-      if (items == null) return StatusCode(500, "Failed to parse items.");
+      if (items == null || items.Error != null) return StatusCode(500, "Internal Server Error");
 
-      var mergedItems = items.Assets.Select(asset =>
+      var mergedItems = items.Response.Assets.Select(asset =>
                {
-                 var matchingDesc = items.Descriptions.FirstOrDefault(d =>
+                 var matchingDesc = items.Response.Descriptions.FirstOrDefault(d =>
                  d.Classid == asset.classId &&
                  (d.Instanceid ?? "0") == (asset.instanceId ?? "0")
              );
@@ -97,7 +98,7 @@ public class ItemsController : ControllerBase
 
     return Ok(page);
   }
-  private async Task<ItemResponse> GetFullSteamInventory(string userId)
+  private async Task<InventoryResult> GetFullSteamInventory(string userId)
   {
     string lastAssetId = null;
     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -113,6 +114,15 @@ public class ItemsController : ControllerBase
         url += $"?start_assetid={lastAssetId}";
 
       var response = await _http.GetAsync(url);
+      if (response.StatusCode == HttpStatusCode.InternalServerError)
+      {
+        return new InventoryResult
+        {
+          Error = response.ReasonPhrase
+
+          // 
+        };
+      }
       var json = await response.Content.ReadAsStringAsync();
       var page = JsonSerializer.Deserialize<ItemResponse>(json, options);
       if (page == null)
@@ -124,10 +134,14 @@ public class ItemsController : ControllerBase
       lastAssetId = page.LastAssetId;
     }
 
-    return new ItemResponse
+    var items = new ItemResponse
     {
       Assets = allAssets,
       Descriptions = allDescriptions
+    };
+    return new InventoryResult
+    {
+      Response = items
     };
   }
 
