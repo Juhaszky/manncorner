@@ -4,7 +4,11 @@
     class="list-item flex w-100 justify-between items-center p-4 mb-2 list-none"
   >
     <div class="w-100 flex justify-between">
-      <div class="flex items-center w-auto">{{ item.name }}</div>
+      <div class="flex items-center w-auto">
+        <span *ngIf="item.quality > -1 && item.quality !== 0">
+          {{ getQualityString(item.quality) }}
+        </span>{{ item.name }}
+      </div>
       <div class="flex items-center w-auto">
         <img
           src="{{ item.img }}"
@@ -23,6 +27,13 @@
     </div>
   </div>
 </div>
-<p-dialog header="Customize Item" [modal]="true" [(visible)]="visible" [style]="{ width: '100%', height: '100%' }">
-  <item-customizer [details]="selectedItems[selectedIndex]"></item-customizer>
+<p-dialog header="Customize Item" 
+  [modal]="true" 
+  [(visible)]="visible" 
+  [style]="{ width: '100%', height: '100%' }" 
+  (onHide)="onHide($event)">
+
+    <item-customizer 
+      [details]="selectedItems[selectedIndex]" 
+      (itemModified)="onItemModified($event)"></item-customizer>
 </p-dialog>

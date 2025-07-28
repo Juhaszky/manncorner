@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ItemCustomizerComponent } from '../../item-customizer/item-customizer.component';
-import { FormControl } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
+import { Item } from '../../models/item.model';
+import { getQualityString } from '../../../app/common/utils';
 
 @Component({
   standalone: true,
-    selector: 'item-list-view',
-    imports: [CommonModule, DialogModule, ItemCustomizerComponent],
-    templateUrl: './item-list-view.component.html',
-    styleUrl: './item-list-view.component.scss'
+  selector: 'item-list-view',
+  imports: [CommonModule, DialogModule, ItemCustomizerComponent],
+  templateUrl: './item-list-view.component.html',
+  styleUrl: './item-list-view.component.scss',
 })
 export class ItemListViewComponent implements OnInit {
-  @Input() selectedItems: any;
+  @Input() selectedItems: Item[] = [];
+  qualityToDisplay = '';
   selectedIndex = -1;
   visible = false;
   ngOnInit(): void {
@@ -21,6 +23,9 @@ export class ItemListViewComponent implements OnInit {
   removeSelectedItem(i: number) {
     this.selectedItems.splice(i, 1);
   }
+  getQualityString(quality: number) {
+    return getQualityString(quality);
+  }
   customizeSelectedItem(i: number) {
     this.selectedIndex = i;
 
@@ -28,33 +33,21 @@ export class ItemListViewComponent implements OnInit {
     console.log(i);
     console.log(this.selectedItems[i]);
     this.visible = true;
-    const item = this.selectedItems[i];
-    if (item) {
-      // const dialogRef = this.dialog.open(ItemCustomizerComponent, {
-      //   data: { ...item },
-      //   height: '70vh',
-      //   width: '85vw',
-      // });
-      // dialogRef
-      //   .afterClosed()
-      //   .subscribe((modifiedData: { [key: string]: FormControl }) => {
-      //     if (modifiedData) {
-      //       const qualityControl = modifiedData['quality'];
-      //       const effectControl = modifiedData['effect'];
-      //       const nameControl = modifiedData['name'];
-      //       const killstreakerControl = modifiedData['killstreaker'];
+    if (i >= 0 && i < this.selectedItems.length) {
+    const itemCopy = { ...this.selectedItems[i] };
+    this.selectedItems[i] = itemCopy;
+  }
+  }
 
-      //         const quality = qualityControl.value;
-      //         const effect = effectControl.value;
-      //         const itemName = nameControl.value;
-      //         const killstreaker = killstreakerControl.value;
-      //         item.quality = quality;
-      //         item.effect = effect;
-      //         item.killstreaker = killstreaker;
-      //         item.originalName = item.name;
-      //         item.name = `${itemName}`;
-      //     }
-      //   });
+  onItemModified(item: Item) {
+    if (this.selectedIndex !== null && this.selectedIndex >= 0) {
+      this.selectedItems[this.selectedIndex] = { ...item };
     }
+    this.visible = false;
+    console.log(this.visible);
+  }
+
+  onHide(event: any) {
+    console.log(event);
   }
 }

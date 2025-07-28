@@ -41,6 +41,7 @@ export class ItemEditorComponent implements OnInit, OnChanges {
   @Output() closeDialog = new EventEmitter();
 
   myControl = new FormControl<Item[]>([]);
+  selectedItems: Item[] = [];
   filteredOptions: Item[] = [];
 
   constructor(
@@ -49,10 +50,20 @@ export class ItemEditorComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.itemSelectorFacade.itemsForTrade$.subscribe((items) => {
-      this.myControl.setValue(items);
-    })
+    this.myControl.valueChanges.subscribe(values => {
+      if (values) {
+        this.selectedItems = [...values];
+      }
+    });
+    this.itemSelectorFacade.itemsForTrade$.subscribe(items => {
+      const clonedItems = items.map(item => ({ ...item }));
+      this.myControl.setValue(clonedItems);
+    });
     this.filteredOptions = this.options;
+  }
+  onSelection(event:any) {
+    //this.selectedItems = [...this.selectedItems, ...event.value];
+    console.log(event);
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['options']) {
@@ -67,7 +78,7 @@ export class ItemEditorComponent implements OnInit, OnChanges {
   }
 
   onConfirmSelection() {
-    this.facade.onAddDefaultItem(this.myControl.value ?? []);
+    this.facade.onAddDefaultItem(this.selectedItems);
     this.closeDialog.emit(null);
   }
   onClose() {

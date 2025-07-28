@@ -1,38 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Quality, QualityType } from './models/quality.model';
+import { QualityMap, QualityType } from './models/quality.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ItemExtrasService {
-  qualities: Quality[] = [
-    { type: 'Normal', color: '' },
-    { type: 'Unique', color: '' },
-    { type: 'Vintage', color: '' },
-    { type: 'Genuine', color: '' },
-    { type: 'Strange', color: '' },
-    { type: 'Unusual', color: '' },
-    { type: 'Haunted', color: '' },
-    { type: "Collector's", color: '' },
-  ];
-  qualityMap: { [key in QualityType]: string } = {
-    [QualityType.Normal]: 'normal',
-    [QualityType.Unique]: 'unique',
-    [QualityType.Vintage]: 'vintage',
-    [QualityType.Genuine]: 'genuine',
-    [QualityType.Strange]: 'strange',
-    [QualityType.Unusual]: 'unusual',
-    [QualityType.Haunted]: 'haunted',
-    [QualityType.Collectors]: 'collectors',
+  qualities: QualityMap = {
+    Normal: 0,
+    Genuine: 1,
+    rarity2: 2,
+    Vintage: 3,
+    rarity3: 4,
+    Unusual: 5,
+    Unique: 6,
+    Community: 7,
+    Valve: 8,
+    'Self-Made': 9,
+    Customized: 10,
+    Strange: 11,
+    Completed: 12,
+    Haunted: 13,
+    "Collector's": 14,
+    'Decorated Weapon': 15,
   };
 
-  getAllQualities(): Quality[] {
+  getAllQualities(): QualityMap {
     return this.qualities;
   }
 
   getClassByQuality(qualityType: string): string {
-    const key = qualityType as QualityType;
-    return this.qualityMap[key] || '';
+    if (qualityType === "Collector's") {
+      return "Collectors";
+    }
+    return qualityType;
   }
   getItemEffectUrl(effect: string): string {
     return `/assets/images/effects/${effect}.webp`;

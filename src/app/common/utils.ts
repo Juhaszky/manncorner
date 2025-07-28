@@ -30,6 +30,10 @@ export function getItemBorderStyle(item: Item): string {
   return qualityMap[item.quality];
 }
 
+export function getQualityString(quality: number): string {
+  return qualityMap[quality];
+}
+
 export function parseStockItemToItem(stockItem: StockTF2Item): Item {
   return {
     name: stockItem.item_name || stockItem.name || '',

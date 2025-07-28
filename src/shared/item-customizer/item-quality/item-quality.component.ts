@@ -1,53 +1,55 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Quality } from '../../models/quality.model';
+import { QualityMap } from '../../models/quality.model';
 import { ItemExtrasService } from '../../item-extras.service';
 import { CommonModule } from '@angular/common';
-import { AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChipModule } from 'primeng/chip';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 
-
 @Component({
   standalone: true,
-    selector: 'item-quality',
-    imports: [CommonModule, ReactiveFormsModule, ChipModule, ToggleButtonModule, FormsModule, SelectButtonModule],
-    templateUrl: './item-quality.component.html',
-    styleUrl: './item-quality.component.scss'
+  selector: 'item-quality',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ChipModule,
+    ToggleButtonModule,
+    FormsModule,
+    SelectButtonModule,
+  ],
+  templateUrl: './item-quality.component.html',
+  styleUrl: './item-quality.component.scss',
 })
 export class ItemQualityComponent implements OnInit {
-  @Input() qualityControl!: AbstractControl;
-  @Output() selectionChange = new EventEmitter<string[]>();
-  qualities: Quality[] = [];
+  @Input() qualityControl!: FormControl<number>;
+  @Output() selectionChange = new EventEmitter<number>();
+  qualities: QualityMap = {};
+  qualityOptions: { type: string; value: number }[] = [];
   selectedQualities: string[] = [];
   constructor(private itemExtrasService: ItemExtrasService) {}
 
   ngOnInit(): void {
-    this.initDefaultValues(this.qualityControl.value);
     this.qualities = this.itemExtrasService.getAllQualities();
+    this.qualityOptions = Object.entries(this.qualities).map(
+      ([key, value]) => ({
+        type: key,
+        value: value,
+      })
+    );
   }
 
   getQualityClass(qualityType: string): string {
     return this.itemExtrasService.getClassByQuality(qualityType);
   }
-  initDefaultValues(quality: string): void {
-    //this.selectedQualities = this.qualityControl.value;
-    return this.qualityControl?.value.includes(quality);
-  }
-  
-  onSelect(quality: {type: string; color: string}[]): void {
-    console.log(quality);
-    console.log(this.selectedQualities);
-    const qualityIndex = this.selectedQualities.indexOf(quality[quality.length - 1].type);
-    console.log(qualityIndex);
-    if (qualityIndex >= 0) {
-      this.selectedQualities.splice(qualityIndex, 1);
+
+  onSelect(quality: { type: string; value: number }): void {
+    if (quality) {
+      this.qualityControl.patchValue(quality.value);
+      this.selectionChange.emit(quality.value);
     } else {
-      this.selectedQualities.push(quality[quality.length - 1].type);
+      this.qualityControl.patchValue(-1);
+      this.selectionChange.emit(-1);
     }
-    console.log(this.qualityControl);
-    console.log(this.selectedQualities);
-    this.qualityControl.patchValue([...this.selectedQualities]);
-    this.selectionChange.emit([...this.selectedQualities]);
   }
 }

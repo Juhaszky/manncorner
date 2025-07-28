@@ -1,14 +1,19 @@
-export interface Quality {
-  type: string;
-  color: string;
-}
-export enum QualityType {
-  Normal = 'Normal',
-  Unique = 'Unique',
-  Vintage = 'Vintage',
-  Genuine = 'Genuine',
-  Strange = 'Strange',
-  Unusual = 'Unusual',
-  Haunted = 'Haunted',
-  Collectors = "Collector's",
-}
+export type QualityMap = Record<string, number>;
+
+export type QualityType =
+  | 'Normal'
+  | 'Genuine'
+  | 'rarity2'
+  | 'Vintage'
+  | 'rarity3'
+  | 'Unusual'
+  | 'Unique'
+  | 'Community'
+  | 'Valve'
+  | 'Self-Made'
+  | 'Customized'
+  | 'Strange'
+  | 'Completed'
+  | 'Haunted'
+  | "Collector's"
+  | 'Decorated Weapon';

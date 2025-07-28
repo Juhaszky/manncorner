@@ -1,9 +1,8 @@
 <div class="w-full flex justify-center">
   <div class="w-full">
     <p-selectButton
-      [options]="qualities"
+      [options]="qualityOptions"
       optionLabel="type"
-      multiple="true"
       ariaLabel="Color selection"
       class="w-full flex flex-wrap"
       (onChange)="onSelect($event.value)"
