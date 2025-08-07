@@ -11,7 +11,7 @@ export class UserProfileService {
 
   httpClient = inject(HttpClient);
   saveTradeUrl(steamId: string, tradeUrl: string): Observable<string> {
-    const url = `${environment.API_URL}/user/${steamId}/tradeurl`;
+    const url = `${environment.API_URL}/api/user/${steamId}/tradeurl`;
     const params = { tradeUrl };
 
     return this.httpClient.put(url, null, {
@@ -20,7 +20,7 @@ export class UserProfileService {
     });
   }
   getTradeUrl(steamId: string) {
-    const url = `${environment.API_URL}/User/${steamId}`;
+    const url = `${environment.API_URL}/api/User/${steamId}`;
     return this.httpClient.get<ProfileData>(url);
   }
 }
