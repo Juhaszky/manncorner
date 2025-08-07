@@ -2,10 +2,11 @@
   <div class="w-full">
     <p-selectButton
       [options]="qualityOptions"
+      [formControl]="selectedQuality"
+      optionValue="value"
       optionLabel="type"
       ariaLabel="Color selection"
       class="w-full flex flex-wrap"
-      (onChange)="onSelect($event.value)"
       [ngClass]="{ 'chip-container': true }"
       [style.flexWrap]="'wrap'"
     >

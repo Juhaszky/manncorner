@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { QualityMap } from '../../models/quality.model';
 import { ItemExtrasService } from '../../item-extras.service';
 import { CommonModule } from '@angular/common';
@@ -9,6 +16,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'item-quality',
   imports: [
     CommonModule,
@@ -22,11 +30,12 @@ import { SelectButtonModule } from 'primeng/selectbutton';
   styleUrl: './item-quality.component.scss',
 })
 export class ItemQualityComponent implements OnInit {
-  @Input() qualityControl!: FormControl<number>;
   @Output() selectionChange = new EventEmitter<number>();
   qualities: QualityMap = {};
   qualityOptions: { type: string; value: number }[] = [];
-  selectedQualities: string[] = [];
+
+  @Input() selectedQuality!: FormControl<number>;
+
   constructor(private itemExtrasService: ItemExtrasService) {}
 
   ngOnInit(): void {
@@ -34,22 +43,12 @@ export class ItemQualityComponent implements OnInit {
     this.qualityOptions = Object.entries(this.qualities).map(
       ([key, value]) => ({
         type: key,
-        value: value,
+        value,
       })
     );
   }
 
   getQualityClass(qualityType: string): string {
     return this.itemExtrasService.getClassByQuality(qualityType);
-  }
-
-  onSelect(quality: { type: string; value: number }): void {
-    if (quality) {
-      this.qualityControl.patchValue(quality.value);
-      this.selectionChange.emit(quality.value);
-    } else {
-      this.qualityControl.patchValue(-1);
-      this.selectionChange.emit(-1);
-    }
   }
 }

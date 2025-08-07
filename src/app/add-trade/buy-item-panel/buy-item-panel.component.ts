@@ -65,11 +65,13 @@ export class BuyItemPanelComponent implements OnInit {
   }
   onRemoveItem(item: Item) {
     this.itemSelectorFacade.onRemoveBaseItem(item);
-    
   }
   onCustomizeItem(item: Item) {
     this.customizableItem = item;
     this.customizeVisible = true;
     this.visible = true;
+  }
+  closeOnModification() {
+    this.visible = false;
   }
 }

@@ -33,6 +33,7 @@
     (closeDialog)="onDialogClose()">
   </app-item-editor>
   <item-customizer *ngIf="customizableItem"
+    (itemModified)="closeOnModification()"
     [details]="customizableItem">
   </item-customizer>
 </p-dialog>

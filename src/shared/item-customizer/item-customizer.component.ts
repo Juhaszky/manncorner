@@ -47,11 +47,13 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
     quality: FormControl<number>;
     effect: FormControl<number>;
     craftable: FormControl<boolean>;
+    imgUrl: FormControl<string>;
   }>({
     name: new FormControl('', { nonNullable: true }),
     quality: new FormControl(-1, { nonNullable: true }),
     effect: new FormControl(-1, { nonNullable: true }),
     craftable: new FormControl(true, { nonNullable: true }),
+    imgUrl: new FormControl('', { nonNullable: true }),
   });
 
   isUnusual = false;
@@ -63,8 +65,6 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    console.log(this.details);
-
     this.setIsUnusual();
     if (this.details) {
       this.details.name = this.details?.fullName ?? this.details?.name;
@@ -72,52 +72,37 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
         name: this.details.name,
         quality: this.details.quality,
         effect: this.details.effect,
+        imgUrl: this.details.img
       });
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-  }
-
-  getImageUrl(): string {
-    if (this.details) {
-      console.log(this.details);
-      const itemsUrl = this.details.img;
-      if (!itemsUrl) {
-        return '';
-      }
-      return itemsUrl
-        ? itemsUrl.startsWith('http')
-          ? itemsUrl
-          : `https://steamcommunity-a.akamaihd.net/economy/image/${itemsUrl}`
-        : '';
+    if (changes['details'] && changes['details'].currentValue) {
+      const newDetails = changes['details'].currentValue;
+      this.itemFormGroup.patchValue({
+        name: newDetails.fullName ?? newDetails.name,
+        quality: newDetails.quality,
+        effect: newDetails.effect,
+        imgUrl: newDetails.img,
+      });
     }
-    return '';
   }
 
   onSubmit(): void {
-    const itemName = this.itemFormGroup.controls['name'].value;
-    const qualityValues = this.itemFormGroup.controls['quality'].value;
-
-    this.itemFormGroup.controls['name'].patchValue(
-      `${qualityValues} ${itemName}`
-    );
     this.details.effect = this.itemFormGroup.controls['effect'].value;
     this.details.quality = this.itemFormGroup.controls['quality'].value;
-    console.log(this.details);
     this.itemModified.emit(this.details);
-    // this.dialogRef.close(this.itemFormGroup.controls);
   }
 
   onQualitySelectionChange(quality: number): void {
-    this.itemFormGroup.controls['quality'].patchValue(quality);
-    this.qualityToDisplay = getQualityString(quality);
-
-    if (quality === 5) {
-      this.isUnusual = true;
-    } else {
-      this.isUnusual = false;
-    }
+    //this.itemFormGroup.controls['quality'].patchValue(quality);
+    //this.qualityToDisplay = getQualityString(quality);
+    //
+    //if (quality === 5) {
+    //  this.isUnusual = true;
+    //} else {
+    //  this.isUnusual = false;
+    //}
   }
   returnQualityString(quality: number | null) {
     return getQualityString(quality ?? -1);
