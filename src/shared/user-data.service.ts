@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class UserDataService {
   currentUsername = '';
+  currentUserId = '';
   private userDataSubject: BehaviorSubject<UserData | null> =
     new BehaviorSubject<UserData | null>(null);
   userData$ = this.userDataSubject.asObservable();
@@ -17,6 +18,12 @@ export class UserDataService {
   }
   setUsername(username: string) {
     this.currentUsername = username;
+  }
+  getUserId(): string {
+    return this.currentUserId;
+  }
+  setUserId(userId: string) {
+    this.currentUserId = userId;
   }
   setUserData(data: UserData) {
     this.userDataSubject.next(data);

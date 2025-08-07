@@ -71,6 +71,7 @@ export class UserDataComponent implements OnInit {
       .pipe(map((info: Response) => info.response.players[0]))
       .subscribe(data => {
         this.userDataService.setUsername(data.personaname);
+        this.userDataService.setUserId(data.steamid);
         this.userDataService.setUserData(data);
       });
   }

@@ -9,6 +9,8 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Tf2ItemSchema> schemaItems { get; set; }
+    public DbSet<Trade> Trades { get; set; }
+    public DbSet<TradeItem> Items { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Tf2ItemSchema>()
@@ -27,6 +29,18 @@ public class AppDbContext : DbContext
             .HasForeignKey(a => a.Tf2ItemSchemaId)
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Tf2ItemSchema>().ToTable("Tf2ItemSchemas");
+
+        modelBuilder.Entity<ParsedItem>()
+    .Property(e => e.classes)
+    .HasColumnType("text[]");
+
+        modelBuilder.Entity<ParsedItem>()
+            .Property(e => e.parts)
+            .HasColumnType("text[]");
+
+        modelBuilder.Entity<ParsedItem>()
+            .Property(e => e.spells)
+            .HasColumnType("text[]");
     }
     // public DbSet<Item> Items { get; set; }
     // public DbSet<Trade> Trades { get; set; }

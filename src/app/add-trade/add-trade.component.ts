@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { combineLatest, first, map } from 'rxjs';
+import { combineLatest, first, forkJoin, map, take } from 'rxjs';
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { TradeService } from '../home/trade.service';
 import { ActionBarComponent } from './action-bar/action-bar.component';
@@ -17,6 +17,8 @@ import { AddTradeService } from './add-trade.service';
 import { UserProfileFacade } from '../user-profile/user-profile.facade';
 import { SortService } from '../../shared/sort.service';
 import { SellItemPanelComponent } from './sell-item-panel/sell-item-panel.component';
+import { UserDataService } from '../../shared/user-data.service';
+import { UserProfileService } from '../user-profile/user-profile.service';
 
 @Component({
   standalone: true,
@@ -30,7 +32,7 @@ import { SellItemPanelComponent } from './sell-item-panel/sell-item-panel.compon
     ButtonModule,
     InventoryItemsSelectorComponent,
     BuyItemPanelComponent,
-    SellItemPanelComponent
+    SellItemPanelComponent,
   ],
   providers: [HttpClient, DialogService],
   templateUrl: './add-trade.component.html',
@@ -39,6 +41,7 @@ import { SellItemPanelComponent } from './sell-item-panel/sell-item-panel.compon
 export class AddTradeComponent implements OnInit {
   http = inject(HttpClient);
   userFacade = inject(UserProfileFacade);
+  userDataService = inject(UserDataService);
   addTradeService = inject(AddTradeService);
   filterText = '';
   tradeDescription = '';
@@ -53,7 +56,8 @@ export class AddTradeComponent implements OnInit {
     private itemSelectorService: ItemSelectorService,
     private cdRef: ChangeDetectorRef,
     private itemSelectorFacade: ItemSelectorFacade,
-    private sortService: SortService
+    private sortService: SortService,
+    private userService: UserProfileService
   ) {
     // afterNextRender(() => {
     //   this.AddTradeService.filterText$.subscribe(filterText => {
@@ -104,29 +108,48 @@ export class AddTradeComponent implements OnInit {
   }
 
   makeTrade() {
-    //TODO handle subscription error on make trade
-    // combineLatest([
-    //   this.itemSelectorFacade.itemsToTrade$,
-    //   this.itemSelectorFacade.itemsForTrade$,
-    // ]).subscribe(([itemIdsToTrade, itemIdsForTrade]) => {
-    //   console.log(itemIdsForTrade);
-    //   console.log(itemIdsToTrade);
-    //   if (itemIdsToTrade.length === 0 || itemIdsForTrade.length === 0) {
-    //     return alert('You must select one item from each category!');
-    //   }
+    combineLatest([
+      this.itemSelectorFacade.itemsToTrade$,
+      this.itemSelectorFacade.itemsForTrade$,
+      this.userFacade.userData$.pipe(take(1)),
+    ])
+      .pipe(take(1))
+      .subscribe(([itemsToTrade, itemsForTrade, userData]) => {
+        console.log('Items to trade:', itemsToTrade);
+        console.log('Items for trade:', itemsForTrade);
+        console.log(userData);
+        if (itemsToTrade.length === 0 || itemsForTrade.length === 0) {
+          return alert('You must select one item from each category!');
+        }
+        const items = [
+          ...itemsToTrade.map(item => ({ ...item, isSelling: true })),
+          ...itemsForTrade.map(item => ({
+            ...item,
+            isSelling: false,
+            level: 1,
+            id: item.defindex,
+          })),
+        ];
 
-    //   this.tradeService
-    //     .postTrade({
-    //       itemsFrom: itemIdsToTrade,
-    //       itemsTo: itemIdsForTrade,
-    //       postDate: new Date().toISOString(),
-    //       owner: 'Juhaszky', //this.userDataService.getUsername(),
-    //       description: this.tradeDescription,
-    //     })
-    //     .subscribe();
+        const tradePayload = {
+          userId: userData.steamid,
+          createdAt: new Date().toISOString(),
+          status: 'open',
+          description: this.tradeDescription,
+          items: items,
+        };
 
-    //   this.emptySelectedItems();
-    // });
+        this.tradeService.postTrade(tradePayload).subscribe({
+          next: () => {
+            this.emptySelectedItems();
+            alert('Trade posted successfully');
+          },
+          error: err => {
+            console.error('Trade failed: ', err);
+            alert('Trade failed, please try again');
+          },
+        });
+      });
   }
 
   private emptySelectedItems() {

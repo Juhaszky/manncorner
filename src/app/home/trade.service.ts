@@ -47,8 +47,8 @@ export class TradeService {
         return trade;
       })
     );
+    
   }
-
   getTotalTradesCount(): Observable<number> {
     return this.http.get<number>('http://localhost:3000/trades/amount');
   }
@@ -57,6 +57,6 @@ export class TradeService {
     return this.trades$;
   }
   postTrade(tradeData: any): Observable<any> {
-    return this.http.post('http://localhost:3000/trades', tradeData);
+    return this.http.post('http://localhost:5268/api/Trade', tradeData);
   }
 }
