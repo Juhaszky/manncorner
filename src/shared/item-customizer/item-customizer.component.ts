@@ -10,7 +10,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormControlName, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ItemQualityComponent } from './item-quality/item-quality.component';
 import { ItemEffectsComponent } from './item-effects/item-effects.component';
@@ -42,16 +42,22 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
   @Input() showDialog = false;
   @Output() itemModified = new EventEmitter<Item>();
 
+  effectFormGroup = new FormGroup<{ effects: FormControl<{ value: number, label: string }[]> }>({
+    effects: new FormControl([{ value: 1, label: '' }], { nonNullable: true }),
+  });
+
   itemFormGroup = new FormGroup<{
     name: FormControl<string>;
     quality: FormControl<number>;
     effect: FormControl<number>;
+    killstreak: FormControl<string>;
     craftable: FormControl<boolean>;
     imgUrl: FormControl<string>;
   }>({
     name: new FormControl('', { nonNullable: true }),
     quality: new FormControl(-1, { nonNullable: true }),
     effect: new FormControl(-1, { nonNullable: true }),
+    killstreak: new FormControl('None', { nonNullable: true }),
     craftable: new FormControl(true, { nonNullable: true }),
     imgUrl: new FormControl('', { nonNullable: true }),
   });
@@ -62,10 +68,9 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
   isEffectAccordionExpanded = false;
 
   http = inject(HttpClient);
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.setIsUnusual();
     if (this.details) {
       this.details.name = this.details?.fullName ?? this.details?.name;
       this.itemFormGroup.patchValue({
@@ -76,6 +81,7 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
       });
     }
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['details'] && changes['details'].currentValue) {
       const newDetails = changes['details'].currentValue;
@@ -91,53 +97,20 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
   onSubmit(): void {
     this.details.effect = this.itemFormGroup.controls['effect'].value;
     this.details.quality = this.itemFormGroup.controls['quality'].value;
+    const selectedEffect = this.effectFormGroup.controls['effects'].value.find((effectRecord) => effectRecord.value === this.itemFormGroup.controls['effect'].value);
+    if (selectedEffect) {
+      this.details.fullName = `${selectedEffect.label} ${this.details.name}`;
+    } else {
+      this.details.fullName = this.details.name;
+    }
     this.itemModified.emit(this.details);
   }
 
-  onQualitySelectionChange(quality: number): void {
-    //this.itemFormGroup.controls['quality'].patchValue(quality);
-    //this.qualityToDisplay = getQualityString(quality);
-    //
-    //if (quality === 5) {
-    //  this.isUnusual = true;
-    //} else {
-    //  this.isUnusual = false;
-    //}
-  }
   returnQualityString(quality: number | null) {
     return getQualityString(quality ?? -1);
   }
 
-  onEffectSelectionChange(event: any) {
-    console.log(event);
-    if (this.effectUrl.includes(event)) {
-      this.setEffectUrl(-1);
-      this.itemFormGroup.controls['effect'].patchValue(-1);
-    } else {
-      this.setEffectUrl(event);
-      this.itemFormGroup.controls['effect'].patchValue(event);
-    }
-  }
-
   onKillstreakSelectionChange(event: any) {
     //this.itemFormGroup.controls['killstreaker'].patchValue(event);
-  }
-
-  private setIsUnusual() {
-    const quality = this.itemFormGroup.controls['quality'].value;
-    if (quality === 5) {
-      this.isUnusual = true;
-    } else {
-      this.isUnusual = false;
-      this.itemFormGroup.controls['effect'].patchValue(-1);
-      this.setEffectUrl(-1);
-    }
-    this.cdr.markForCheck();
-  }
-
-  private setEffectUrl(effect: number) {
-    if (effect !== -1) {
-      this.effectUrl = `/assets/images/effects/${effect}.png`;
-    }
   }
 }

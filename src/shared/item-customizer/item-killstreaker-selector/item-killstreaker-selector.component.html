@@ -1,5 +1,24 @@
 <div class="flex flex-col w-full justify-center">
   <h2>Killstreak</h2>
+  <div class="flex flex-col w-full justify-center">
+  <div class="w-full flex justify-center">
+    <div class="w-full">
+      <p-selectButton
+        [options]="killstreaks"
+        [formControl]="killstreakControl"
+        multiple="false"
+        ariaLabel="Color selection"
+        class="w-full flex flex-wrap"
+        [ngClass]="{ 'chip-container': true }"
+        [style.flexWrap]="'wrap'">
+        <ng-template let-effect pTemplate="Killstreak">
+          <span>{{ effect }}</span>
+        </ng-template>
+      </p-selectButton>
+    </div>
+  </div>
+</div>
+
   <!-- <mat-chip-listbox
     class="mat-mdc-chip-set-stacked w-full mb-4"
     aria-label="Color selection"

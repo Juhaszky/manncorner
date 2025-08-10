@@ -30,20 +30,17 @@
           <p-accordion-header>Quality</p-accordion-header>
           <p-accordion-content>
             <item-quality
-              [selectedQuality]="itemFormGroup.controls['quality']"
-              (selectionChange)="
-                onQualitySelectionChange($event)
-              "></item-quality>
+              [selectedQuality]="itemFormGroup.controls['quality']">
+            </item-quality>
           </p-accordion-content>
         </p-accordion-panel>
       </p-accordion>
     </div>
     <div
-      *ngIf="isUnusual"
+      *ngIf="itemFormGroup.controls['quality'].value === 5"
       [ngClass]="{
         'flex flex-col items-center flex-wrap justify-between transition-all duration-300 ease-in-out': true,
-        'w-full': isEffectAccordionExpanded,
-        'sm:w-1/2 w-full': !isEffectAccordionExpanded,
+        'w-full': true,
       }">
       <div
         class="name flex flex-col items-center max-w-xl w-full flex-wrap justify-between p-2">
@@ -53,47 +50,32 @@
             <p-accordion-content>
               <app-item-effects
                 [effectControl]="itemFormGroup.controls['effect']"
-                (selectionChange)="
-                  onEffectSelectionChange($event)
-                "></app-item-effects>
+                [effectsControl]="effectFormGroup.controls['effects']">
+              </app-item-effects>
             </p-accordion-content>
           </p-accordion-panel>
         </p-accordion>
       </div>
-      <!-- <mat-accordion>
-        <mat-expansion-panel [(expanded)]="isEffectAccordionExpanded">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="text-slate-300"> Effect </mat-panel-title>
-            <mat-panel-description class="p-4">
-              You can select item's unusual effect
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-        
-        </mat-expansion-panel>
-      </mat-accordion> -->
     </div>
+    
     <div
       [ngClass]="{
-        'flex flex-col items-center flex-wrap justify-between p-2 transition-all duration-300 ease-in-out': true,
-        'w-full': isEffectAccordionExpanded,
-        'sm:w-1/2 w-full': !isEffectAccordionExpanded,
+        'flex flex-col items-center flex-wrap justify-between transition-all duration-300 ease-in-out': true,
+        'w-full': true,
       }">
-      <!-- <mat-accordion>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="text-slate-300">
-              Killstreak
-            </mat-panel-title>
-            <mat-panel-description class="p-4">
-              You can select item's killstreaks
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <item-killstreak
-            [killstreakerControl]="itemFormGroup.controls['killstreaker']"
-            (selectionChange)="onKillstreakSelectionChange($event)"
-          ></item-killstreak>
-        </mat-expansion-panel>
-      </mat-accordion> -->
+      <div
+        class="name flex flex-col items-center max-w-xl w-full flex-wrap justify-between p-2">
+        <p-accordion value="0">
+          <p-accordion-panel value="0">
+            <p-accordion-header>Killstreak</p-accordion-header>
+            <p-accordion-content>
+              <item-killstreak
+                [killstreakControl]="itemFormGroup.controls['killstreak']">
+              </item-killstreak>
+            </p-accordion-content>
+          </p-accordion-panel>
+        </p-accordion>
+      </div>
     </div>
     <button
       class="border rounded-md text-slate-300 p-4 hover:bg-slate-900"

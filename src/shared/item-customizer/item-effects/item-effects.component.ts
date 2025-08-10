@@ -8,14 +8,14 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectButton } from 'primeng/selectbutton';
-import { filter, map } from 'rxjs';
+import { map } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'app-item-effects',
-  imports: [CommonModule, SelectButton],
+  imports: [CommonModule, SelectButton, FormsModule, ReactiveFormsModule],
   templateUrl: './item-effects.component.html',
   styleUrl: './item-effects.component.scss',
 })
@@ -23,7 +23,8 @@ export class ItemEffectsComponent implements OnInit {
   effects: { value: number, label: string }[] = [];
   filteredEffects: { value: number , label: string }[] = [];
   selectedEffect = -1;
-  @Input() effectControl!: AbstractControl;
+  @Input() effectControl!: FormControl<number>;
+  @Input() effectsControl!: FormControl<{ value: number , label: string }[]>;
   @Output() selectionChange = new EventEmitter<number>();
   http = inject(HttpClient);
   ngOnInit(): void {
@@ -33,17 +34,15 @@ export class ItemEffectsComponent implements OnInit {
         map(
           effectsObj =>
             Object.entries(effectsObj)
-              .filter(([key, value]) => /^[0-9]+$/.test(key))
+              .filter(([key]) => /^[0-9]+$/.test(key))
               .map(([key, label]) => ({ value: Number(key), label}))
         )
       )
       .subscribe(filteredEffects => {
         this.effects = filteredEffects;
+        this.effectsControl.setValue(filteredEffects);
         this.filteredEffects = [...filteredEffects];
       });
-  }
-  isSelected(effect: string): boolean {
-    return this.effectControl?.value.includes(effect);
   }
   canSelect() {
     return this.effects.length === 1;
@@ -58,11 +57,11 @@ export class ItemEffectsComponent implements OnInit {
   onSelect(effect: {value: number; label: string}) {
     console.log(effect);
     if (effect) {
-      this.effectControl.patchValue([effect]);
+      this.effectControl.patchValue(effect.value);
       this.selectedEffect = effect.value;
       this.selectionChange.emit(this.selectedEffect);
     } else {
-      this.effectControl.patchValue([]);
+      this.effectControl.patchValue(-1);
       this.selectedEffect = -1
       this.selectionChange.emit(-1);
     }

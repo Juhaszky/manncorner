@@ -7,19 +7,20 @@ import {
   EventEmitter,
   OnInit,
 } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Killstreaker } from '../../models/killstreaker.model';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
   standalone: true,
     selector: 'item-killstreak',
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, SelectButtonModule],
     templateUrl: './item-killstreaker-selector.component.html',
     styleUrls: ['./item-killstreaker-selector.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemKillstreakerSelectorComponent implements OnInit {
-  @Input() killstreakerControl!: AbstractControl;
+  @Input() killstreakControl!: FormControl<string>;
   @Output() selectionChange = new EventEmitter<{
     killstreaker: string;
     sheen: string;
@@ -56,12 +57,12 @@ export class ItemKillstreakerSelectorComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.currentKillstreakData = this.killstreakerControl.value;
+    //this.currentKillstreakData = this.killstreakerControl.value;
     this.emitUpdatedKillstreakObject();
   }
 
   emitUpdatedKillstreakObject() {
-    this.killstreakerControl.patchValue(this.currentKillstreakData);
+    //this.killstreakerControl.patchValue(this.currentKillstreakData);
     this.selectionChange.emit(this.currentKillstreakData);
   }
 
@@ -80,20 +81,8 @@ export class ItemKillstreakerSelectorComponent implements OnInit {
   }
 
   emitSheenValue(sheen: string) {
-    this.killstreakerControl.value.sheen =
-      this.currentKillstreakData.sheen === sheen ? '' : sheen;
+    
     this.emitUpdatedKillstreakObject();
   }
-
-  isKillstreakSelected(killstreak: string): boolean {
-    return this.killstreakerControl.value?.killstreak.includes(killstreak);
-  }
-
-  isKillstreakerSelected(killstreaker: string): boolean {
-    return this.killstreakerControl.value?.killstreaker.includes(killstreaker);
-  }
-
-  isSheenSelected(sheen: string): boolean {
-    return this.killstreakerControl.value.sheen.includes(sheen);
-  }
+  
 }
