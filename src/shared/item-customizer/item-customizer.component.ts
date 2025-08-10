@@ -20,6 +20,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { HttpClient } from '@angular/common/http';
 import { Item } from '../models/item.model';
 import { getQualityString } from '../../app/common/utils';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   standalone: true,
@@ -32,6 +33,7 @@ import { getQualityString } from '../../app/common/utils';
     ResizedImageComponent,
     ItemKillstreakerSelectorComponent,
     AccordionModule,
+    ButtonModule
   ],
   templateUrl: './item-customizer.component.html',
   styleUrl: './item-customizer.component.scss',

@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/elements-content -->
 <div class="item-editor bg-gray-800 h-full w-full flex flex-col overflow-auto p-4">
   <p-multiselect 
       [(ngModel)]="selectedItems"
@@ -32,14 +33,14 @@
         label="Ok"
         class="p-button-success w-24"
         (click)="onConfirmSelection()"
-      >d</button>
+      ></button>
       <button
         pButton
         type="button"
         label="No Thanks"
         class="p-button-danger w-32"
         (click)="onClose()"
-      >s</button>
+      ></button>
     </div>
   </div>
 </div>

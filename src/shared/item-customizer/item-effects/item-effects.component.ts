@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   inject,
@@ -16,6 +18,7 @@ import { map } from 'rxjs';
   standalone: true,
   selector: 'app-item-effects',
   imports: [CommonModule, SelectButton, FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './item-effects.component.html',
   styleUrl: './item-effects.component.scss',
 })
@@ -27,6 +30,7 @@ export class ItemEffectsComponent implements OnInit {
   @Input() effectsControl!: FormControl<{ value: number , label: string }[]>;
   @Output() selectionChange = new EventEmitter<number>();
   http = inject(HttpClient);
+  cdr = inject(ChangeDetectorRef);
   ngOnInit(): void {
     this.http
       .get<Record<number, string>>(`http://localhost:3000/api/effects`)
@@ -42,6 +46,7 @@ export class ItemEffectsComponent implements OnInit {
         this.effects = filteredEffects;
         this.effectsControl.setValue(filteredEffects);
         this.filteredEffects = [...filteredEffects];
+        this.cdr.detectChanges();
       });
   }
   canSelect() {

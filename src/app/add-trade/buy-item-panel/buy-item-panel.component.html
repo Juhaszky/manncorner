@@ -1,16 +1,16 @@
 <div
-  class="col-card inventory-box flex flex-wrap flex-row relative h-full"
+  class="col-card inventory-box flex flex-wrap flex-row items-start gap-2"
   #inventorySelector>
   <div
-    class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20 w-20 border border-slate-700"
+    class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20 border border-slate-700"
     pTooltip="Add items..."
     tooltipPosition="bottom"
     (click)="onOpenItemEditor()"
     tabindex="0"
     (keydown)="onOpenItemEditor()">
-    <img src="/assets/images/8333955.png" alt="" class="img-fluid" />
+    <img src="/assets/images/8333955.png" alt="" class="w-full h-full" />
   </div>
-  <div class="flex flex-row flex-wrap w-full gap-2 p-2" *ngIf="allItems">
+  <div class="flex flex-row flex-wrap gap-2 p-2" *ngIf="allItems">
     <div *ngFor="let item of selectedItems" class="w-24">
       <app-item-container
         [item]="item"

@@ -1,5 +1,5 @@
 <div
-  class="customizer flex flex-col items-center h-full w-full bg-slate-800 text-slate-300 p-4 overflow-y-scroll p-2">
+  class="customizer flex flex-col items-center h-full w-full bg-slate-800 text-slate-300 p-4 overflow-y-scroll p-2 gap-2">
   <div class="relative w-25 h-25 flex items-center justify-center">
     <img
       *ngIf="effectUrl && itemFormGroup.controls['effect'].value !== -1"
@@ -77,10 +77,8 @@
         </p-accordion>
       </div>
     </div>
-    <button
-      class="border rounded-md text-slate-300 p-4 hover:bg-slate-900"
-      type="submit">
-      Modify
-    </button>
+    <p-button [type]="'submit'" class="mt-4">
+            Modify
+    </p-button>
   </form>
 </div>

@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ItemCustomizerComponent } from '../../item-customizer/item-customizer.component';
 import { DialogModule } from 'primeng/dialog';
 import { Item } from '../../models/item.model';
 import { getQualityString } from '../../../app/common/utils';
+import { ItemFacade } from '../../item/item.facade';
 
 @Component({
   standalone: true,
@@ -17,6 +18,7 @@ export class ItemListViewComponent implements OnInit {
   qualityToDisplay = '';
   selectedIndex = -1;
   visible = false;
+  itemFacade = inject(ItemFacade);
   ngOnInit(): void {
     console.log(this.selectedItems);
   }
@@ -28,10 +30,6 @@ export class ItemListViewComponent implements OnInit {
   }
   customizeSelectedItem(i: number) {
     this.selectedIndex = i;
-
-    console.log(this.selectedItems);
-    console.log(i);
-    console.log(this.selectedItems[i]);
     this.visible = true;
     if (i >= 0 && i < this.selectedItems.length) {
     const itemCopy = { ...this.selectedItems[i] };
@@ -44,7 +42,6 @@ export class ItemListViewComponent implements OnInit {
       this.selectedItems[this.selectedIndex] = { ...item };
     }
     this.visible = false;
-    console.log(this.visible);
   }
 
   onHide(event: any) {

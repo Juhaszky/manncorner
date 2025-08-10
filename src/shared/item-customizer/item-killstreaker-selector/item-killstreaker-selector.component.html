@@ -1,5 +1,4 @@
 <div class="flex flex-col w-full justify-center">
-  <h2>Killstreak</h2>
   <div class="flex flex-col w-full justify-center">
   <div class="w-full flex justify-center">
     <div class="w-full">
@@ -11,7 +10,7 @@
         class="w-full flex flex-wrap"
         [ngClass]="{ 'chip-container': true }"
         [style.flexWrap]="'wrap'">
-        <ng-template let-effect pTemplate="Killstreak">
+        <ng-template let-effect>
           <span>{{ effect }}</span>
         </ng-template>
       </p-selectButton>

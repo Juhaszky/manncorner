@@ -1,9 +1,9 @@
 <div *ngIf="selectedItems.length > 0" class="selected-items-list overflow-auto p-4 ">
   <div
     *ngFor="let item; let i = index; of: selectedItems"
-    class="list-item flex w-100 justify-between items-center p-4 mb-2 list-none"
+    class="list-item flex w-100 justify-between items-center p-4 mb-2 list-none" [class]="itemFacade.getBorderStyle(item)"
   >
-    <div class="w-100 flex justify-between">
+    <div class="w-100 flex justify-between" >
       <div class="flex items-center w-auto">
         <span *ngIf="item.quality > -1 && item.quality !== 0">
           ({{ getQualityString(item.quality) }})
