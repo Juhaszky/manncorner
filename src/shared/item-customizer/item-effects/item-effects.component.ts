@@ -4,11 +4,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   inject,
   Input,
   OnInit,
-  Output,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectButton } from 'primeng/selectbutton';
@@ -25,10 +23,8 @@ import { map } from 'rxjs';
 export class ItemEffectsComponent implements OnInit {
   effects: { value: number, label: string }[] = [];
   filteredEffects: { value: number , label: string }[] = [];
-  selectedEffect = -1;
   @Input() effectControl!: FormControl<number>;
   @Input() effectsControl!: FormControl<{ value: number , label: string }[]>;
-  @Output() selectionChange = new EventEmitter<number>();
   http = inject(HttpClient);
   cdr = inject(ChangeDetectorRef);
   ngOnInit(): void {
@@ -58,17 +54,5 @@ export class ItemEffectsComponent implements OnInit {
     this.filteredEffects = this.effects.filter(effect => {
       return effect.label.toLowerCase().includes(value);
     });
-  }
-  onSelect(effect: {value: number; label: string}) {
-    console.log(effect);
-    if (effect) {
-      this.effectControl.patchValue(effect.value);
-      this.selectedEffect = effect.value;
-      this.selectionChange.emit(this.selectedEffect);
-    } else {
-      this.effectControl.patchValue(-1);
-      this.selectedEffect = -1
-      this.selectionChange.emit(-1);
-    }
   }
 }

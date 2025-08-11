@@ -9,6 +9,9 @@ export interface Item {
   effect?: number;
   quality: number;
   defindex: number;
+  killstreak: number;
+  killstreaker: string;
+  sheen: string;
   //econitem attributes
   marketable?: boolean;
   commodity?: boolean;

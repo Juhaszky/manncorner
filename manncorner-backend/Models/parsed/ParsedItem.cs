@@ -12,6 +12,9 @@ public class ParsedItem
     public int? effect { get; set; }
     public int quality { get; set; }
     public int defindex { get; set; }
+    public int? killstreak { get; set; }
+    public string? killstreaker { get; set; }
+    public string? sheen { get; set; }
     public int level { get; set; }
     public string[] classes { get; set; }
     public string[]? parts { get; set; }

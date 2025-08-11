@@ -10,6 +10,7 @@ import {
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Killstreaker } from '../../models/killstreaker.model';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { KillstreakFormGroup } from '../item-customizer.component';
 
 @Component({
   standalone: true,
@@ -20,7 +21,9 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemKillstreakerSelectorComponent implements OnInit {
-  @Input() killstreakControl!: FormControl<string>;
+  @Input() killstreakFormGroup!: KillstreakFormGroup;
+  @Input() sheenControl!: FormControl<string>;
+  @Input() killstreakerControl!: FormControl<string>;
   @Output() selectionChange = new EventEmitter<{
     killstreaker: string;
     sheen: string;

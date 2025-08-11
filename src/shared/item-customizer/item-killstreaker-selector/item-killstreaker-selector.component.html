@@ -4,7 +4,7 @@
     <div class="w-full">
       <p-selectButton
         [options]="killstreaks"
-        [formControl]="killstreakControl"
+        [formControl]="killstreakFormGroup.killstreak"
         multiple="false"
         ariaLabel="Color selection"
         class="w-full flex flex-wrap"
@@ -16,6 +16,36 @@
       </p-selectButton>
     </div>
   </div>
+  <div class="w-full mt-6" *ngIf="killstreakFormGroup.killstreak.value === 1">
+    <h3>Sheen</h3>
+      <p-selectButton
+        [options]="sheens"
+        [formControl]="sheenControl"
+        multiple="false"
+        ariaLabel="Color selection"
+        class="w-full flex flex-wrap"
+        [ngClass]="{ 'chip-container': true }"
+        [style.flexWrap]="'wrap'">
+        <ng-template let-effect>
+          <span>{{ effect }}</span>
+        </ng-template>
+      </p-selectButton>
+    </div>
+  <div class="w-full mt-6" *ngIf="killstreakFormGroup.killstreak.value === 2">
+    <h3>Sheen</h3>
+      <p-selectButton
+        [options]="killstreakers"
+        [formControl]="killstreakFormGroup.killstreak"
+        multiple="false"
+        ariaLabel="Color selection"
+        class="w-full flex flex-wrap"
+        [ngClass]="{ 'chip-container': true }"
+        [style.flexWrap]="'wrap'">
+        <ng-template let-effect>
+          <span>{{ effect }}</span>
+        </ng-template>
+      </p-selectButton>
+    </div>
 </div>
 
   <!-- <mat-chip-listbox

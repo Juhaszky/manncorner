@@ -7,6 +7,9 @@ export interface Item {
   tradable: boolean;
   type: string;
   effect?: number;
+  killstreak?: number;
+  sheen?: string;
+  killstreaker?: string;
   quality: number;
   defindex: number;
   //econitem attributes
