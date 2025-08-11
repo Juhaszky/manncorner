@@ -1,98 +1,50 @@
 <div class="flex flex-col w-full justify-center">
   <div class="flex flex-col w-full justify-center">
-  <div class="w-full flex justify-center">
-    <div class="w-full">
+    <div class="w-full flex justify-center">
+      <div class="w-full">
+        <p-selectButton
+          [options]="killstreaks"
+          [formControl]="killstreakFormGroup.killstreak"
+          multiple="false"
+          ariaLabel="Color selection"
+          class="w-full flex flex-wrap"
+          [ngClass]="{ 'chip-container': true }"
+          [style.flexWrap]="'wrap'">
+          <ng-template let-killstreak>
+            <span>{{ killstreak }}</span>
+          </ng-template>
+        </p-selectButton>
+      </div>
+    </div>
+    <div class="w-full mt-6" *ngIf="killstreakFormGroup.killstreak.value === 2">
+      <h3>Sheen</h3>
       <p-selectButton
-        [options]="killstreaks"
-        [formControl]="killstreakFormGroup.killstreak"
+        [options]="sheens"
+        [formControl]="killstreakFormGroup.sheen"
         multiple="false"
         ariaLabel="Color selection"
         class="w-full flex flex-wrap"
         [ngClass]="{ 'chip-container': true }"
         [style.flexWrap]="'wrap'">
-        <ng-template let-effect>
-          <span>{{ effect }}</span>
+        <ng-template let-sheen>
+          <span>{{ sheen }}</span>
+        </ng-template>
+      </p-selectButton>
+    </div>
+    <div class="w-full mt-6" *ngIf="killstreakFormGroup.killstreak.value === 3">
+      <h3>Killstreakers</h3>
+      <p-selectButton
+        [options]="killstreakers"
+        [formControl]="killstreakFormGroup.killstreaker"
+        multiple="false"
+        ariaLabel="Color selection"
+        class="w-full flex flex-wrap"
+        [ngClass]="{ 'chip-container': true }"
+        [style.flexWrap]="'wrap'">
+        <ng-template let-killstreaker>
+          <span>{{ killstreaker }}</span>
         </ng-template>
       </p-selectButton>
     </div>
   </div>
-  <div class="w-full mt-6" *ngIf="killstreakFormGroup.killstreak.value === 1">
-    <h3>Sheen</h3>
-      <p-selectButton
-        [options]="sheens"
-        [formControl]="sheenControl"
-        multiple="false"
-        ariaLabel="Color selection"
-        class="w-full flex flex-wrap"
-        [ngClass]="{ 'chip-container': true }"
-        [style.flexWrap]="'wrap'">
-        <ng-template let-effect>
-          <span>{{ effect }}</span>
-        </ng-template>
-      </p-selectButton>
-    </div>
-  <div class="w-full mt-6" *ngIf="killstreakFormGroup.killstreak.value === 2">
-    <h3>Sheen</h3>
-      <p-selectButton
-        [options]="killstreakers"
-        [formControl]="killstreakFormGroup.killstreak"
-        multiple="false"
-        ariaLabel="Color selection"
-        class="w-full flex flex-wrap"
-        [ngClass]="{ 'chip-container': true }"
-        [style.flexWrap]="'wrap'">
-        <ng-template let-effect>
-          <span>{{ effect }}</span>
-        </ng-template>
-      </p-selectButton>
-    </div>
-</div>
-
-  <!-- <mat-chip-listbox
-    class="mat-mdc-chip-set-stacked w-full mb-4"
-    aria-label="Color selection"
-  >
-    @for (killstreak of killstreaks; track killstreaks) {
-    <mat-chip-option
-      [selected]="isKillstreakSelected(killstreak)"
-      (click)="emitKillstreakValue(killstreak)"
-      class="bg-slate-800 text-slate-300 text-sm flex-1 p-0"
-      [ngClass]="'bg-late-800'"
-      style="margin-right: 8px; flex-basis: 0; text-align: center"
-      >{{ killstreak }}</mat-chip-option
-    >
-    }
-  </mat-chip-listbox>
-  <h2>Sheen</h2>
-  <mat-chip-listbox
-    class="mat-mdc-chip-set-stacked w-full"
-    aria-label="Color selection"
-  >
-    @for (sheen of sheens; track sheens) {
-    <mat-chip-option
-      [selected]="isSheenSelected(sheen)"
-      (click)="emitSheenValue(sheen)"
-      class="bg-slate-800 text-slate-300 text-sm flex-1 p-0"
-      [ngClass]="'bg-late-800'"
-      style="margin-right: 8px; flex-basis: 0; text-align: center"
-      >{{ sheen }}</mat-chip-option
-    >
-    }
-  </mat-chip-listbox>
-  <h2>Killstreaker</h2>
-  <mat-chip-listbox
-    class="mat-mdc-chip-set-stacked w-full"
-    aria-label="Color selection"
-  >
-    @for (killstreaker of killstreakers; track killstreakers) {
-    <mat-chip-option
-      [selected]="isKillstreakerSelected(killstreaker)"
-      (click)="emitKillstreakerValue(killstreaker)"
-      class="bg-slate-800 text-slate-300 text-sm flex-1 p-0"
-      [ngClass]="'bg-late-800'"
-      style="margin-right: 8px; flex-basis: 0; text-align: center"
-      >{{ killstreaker }}</mat-chip-option
-    >
-    }
-  </mat-chip-listbox> -->
 </div>

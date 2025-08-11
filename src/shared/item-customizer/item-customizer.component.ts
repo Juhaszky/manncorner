@@ -100,7 +100,7 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
       this.patchForms(changes['details'].currentValue);
     }
   }
-  
+
   private patchForms(details: Item): void {
     this.itemFormGroup.patchValue({
       name: details.fullName ?? details.name,
