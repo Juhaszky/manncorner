@@ -1,5 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
 public class Item
 {
+    [Key]
+    public int dbId { get; set; }
     public string Name { get; set; }
     public string FullName { get; set; }
     public string? Id { get; set; }
@@ -15,6 +19,8 @@ public class Item
     public bool? Marketable { get; set; } // optional
     public bool? Commodity { get; set; }  // optional
     public int? Level { get; set; }    // optional
+    public string? paint { get; set; }
+    public int? paintDefindex { get; set; }
     public List<string>? Classes { get; set; } // optional
     public List<string>? Parts { get; set; }   // optional
     public List<string>? Spells { get; set; }  // optional

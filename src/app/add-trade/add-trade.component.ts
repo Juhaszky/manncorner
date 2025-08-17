@@ -131,7 +131,6 @@ export class AddTradeComponent implements OnInit {
             ...item,
             isSelling: false,
             level: 1,
-            id: item.defindex,
           })),
         ];
 
