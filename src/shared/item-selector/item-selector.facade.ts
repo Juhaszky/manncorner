@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ItemSelectorService } from '../item-selector.service';
-import { ItemEditorComponent } from '../item-editor/item-editor.component';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Item } from '../models/item.model';
 import { HttpClient } from '@angular/common/http';
 
@@ -14,7 +12,6 @@ export class ItemSelectorFacade {
 
   private loadedPages = new Set<string>();
   private selectedItemIds = new Set<string>();
-  private dialogRef?: DynamicDialogRef;
   loading = false;
   items$ = this._items.asObservable();
   itemsLength = 0;
@@ -23,10 +20,9 @@ export class ItemSelectorFacade {
   private _customIdCounter = 0;
   constructor(
     private itemService: ItemSelectorService,
-    private dialogService: DialogService,
     private http: HttpClient
   ) {}
-  private deepEqual(obj1: any, obj2: any): boolean {
+  private deepEqual(obj1: unknown, obj2: unknown): boolean {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
   }
   loadItemsLazy(first: number, rows: number, steamid: string): void {
@@ -49,37 +45,11 @@ export class ItemSelectorFacade {
       },
     });
   }
+
   loadAllItems() {
     this.itemService.fetchAllItems().subscribe(items => {
       this._itemsForTrade.next(items);
     });
-  }
-  onOpenItemEditor() {
-    this.dialogRef = this.dialogService.open(ItemEditorComponent, {
-      header: 'Select a Product',
-      width: '70%',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
-      maximizable: true,
-    });
-
-    this.dialogRef?.onClose.subscribe((selectedItems: Item[]) => {
-      //   if (selectedItems) {
-      //     this.itemService.itemState$
-      //       .pipe(
-      //         first(),
-      //         map((state) => state.forTradeItems)
-      //       )
-      //       .subscribe((forTradeItems) => {
-      //         const updatedItems = [...forTradeItems, ...selectedItems];
-      //         this.itemService.updateState({ forTradeItems: updatedItems });
-      //       });
-      //   }
-    });
-  }
-
-  resetItems(): void {
-    this._items.next([]);
   }
   
   onAddItem(item: Item) {
@@ -111,8 +81,14 @@ export class ItemSelectorFacade {
     this.selectedItemIds.delete(item.name);
     this._itemsForTrade.next(newItems);
   }
+  emptyTradeItems() {
+    this.selectedItemIds.clear();
+    this._itemsForTrade.next([]);
+    this._itemsToTrade.next([]);
+  }
 
   isItemSelected(item: Item): boolean {
     return this.selectedItemIds.has(item.id);
   }
+
 }

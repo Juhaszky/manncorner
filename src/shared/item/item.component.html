@@ -5,10 +5,10 @@
   <resized-image [imageUrl]="itemData.img" class="relative z-10"></resized-image>
   <div class="top-1 flex gap-1 absolute z-10" *ngIf="itemData">
     <p class="sm:h-4 h-3 sm:w-4 w-3" *ngIf="itemData.spells && itemData.spells.length > 0">
-      <img src="/icons/spell.svg" alt="spell-icon" />
+      <img src="assets/icons/spell.svg" alt="spell-icon" />
     </p>
     <p class="sm:h-4 h-3 sm:w-4 w-3"
-      *ngIf="itemData.parts && itemData.parts.length > 0">
+      *ngIf="itemData.killstreak">
       <img src="assets/icons/killstreak.svg" alt="killstreak-icon" />
     </p>
     <p class="sm:h-4 h-3 sm:w-4 w-3" *ngIf="itemData.parts && itemData.parts.length > 0">

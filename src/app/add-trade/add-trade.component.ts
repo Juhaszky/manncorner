@@ -70,6 +70,7 @@ export class AddTradeComponent implements OnInit {
     // });
   }
   check(description: string): void {
+    
     this.tradeDescription = description;
   }
   ngOnInit(): void {
@@ -117,9 +118,6 @@ export class AddTradeComponent implements OnInit {
     ])
       .pipe(take(1))
       .subscribe(([itemsToTrade, itemsForTrade, userData]) => {
-        console.log('Items to trade:', itemsToTrade);
-        console.log('Items for trade:', itemsForTrade);
-        console.log(userData);
         if (itemsToTrade.length === 0 || itemsForTrade.length === 0) {
           return this.messageService.add({
             severity: 'error',
@@ -167,8 +165,7 @@ export class AddTradeComponent implements OnInit {
   }
 
   private emptySelectedItems() {
-    //this.html = '';
-    this.itemSelectorService.emptyItemForTrade();
-    this.itemSelectorService.emptyItemsToTrade();
+    this.tradeDescription = '';
+    this.itemSelectorFacade.emptyTradeItems();
   }
 }

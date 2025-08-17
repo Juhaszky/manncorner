@@ -3,46 +3,36 @@ import {
   Component,
   Input,
   OnInit,
-  OnChanges,
-  SimpleChanges,
-  OnDestroy,
   Output,
   EventEmitter,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { EditorModule } from 'primeng/editor';
+
 
 @Component({
   standalone: true,
     selector: 'descrpition',
-    imports: [FormsModule, CommonModule],
+    imports: [FormsModule, CommonModule, EditorModule],
     templateUrl: './descrpition.component.html',
     styleUrl: './descrpition.component.scss'
 })
-export class DescrpitionComponent implements OnInit, OnChanges, OnDestroy {
-  description: string = '';
+export class DescrpitionComponent implements OnInit {
+  description = '';
   @Input() html!: string | null;
   @Output() descriptionData = new EventEmitter<string>();
-  @Input() canEdit: boolean = false;
+  @Input() canEdit = false;
   safeHtml!: SafeHtml; // Property to store the sanitized HTML
 
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
-    this.updateHtmlContent();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['html'] && !this.canEdit) {
-      this.updateHtmlContent();
-    }
-  }
-
-  ngOnDestroy(): void {
+    //this.updateHtmlContent();
   }
 
   onChange(event: any) {
-    this.descriptionData.emit(event);
+    this.descriptionData.emit(event.htmlValue);
     this.html = event;
   }
 

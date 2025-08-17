@@ -69,3 +69,16 @@ p {
 .decoratedWeapon {
     border: 1px solid #fafafa;
 }
+:root {
+  --p-editor-toolbar-background: #111827 !important;
+  --p-editor-toolbar-border-color: #283244 !important;
+  --p-editor-toolbar-border-radius: 8px;
+  --p-editor-toolbar-item-color: #cbd5e1 !important;
+  --p-editor-toolbar-item-hover-color: #94a3b8 !important;
+  --p-editor-toolbar-item-active-color: #26A69A !important;
+
+  --p-editor-content-background: #1e293b !important;
+  --p-editor-content-color: #e2e8f0;
+  --p-editor-content-border-color: #334155;
+  --p-editor-content-border-radius: 10px;
+}
