@@ -21,7 +21,8 @@ import { HttpClient } from '@angular/common/http';
 import { Item } from '../models/item.model';
 import { getQualityString } from '../../app/common/utils';
 import { ButtonModule } from 'primeng/button';
-import { KillstreakTier } from '../models/enums/item-customization.enum';
+import { KillstreakTier, Spell } from '../models/enums/item-customization.enum';
+import { ItemSpellsComponent } from "./item-spells/item-spells.component";
 
 export interface ItemFormGroup {
   name: FormControl<string>;
@@ -35,6 +36,9 @@ export interface KillstreakFormGroup {
   sheen: FormControl<string>;
   killstreaker: FormControl<string>;
 }
+export interface SpellFormGroup {
+  spell: FormControl<Spell[]>;
+}
 @Component({
   standalone: true,
   selector: 'item-customizer',
@@ -47,7 +51,8 @@ export interface KillstreakFormGroup {
     ItemKillstreakerSelectorComponent,
     AccordionModule,
     ButtonModule,
-  ],
+    ItemSpellsComponent
+],
   templateUrl: './item-customizer.component.html',
   styleUrl: './item-customizer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,6 +80,9 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
     killstreak: new FormControl(KillstreakTier.None, { nonNullable: true }),
     sheen: new FormControl('', { nonNullable: true }),
     killstreaker: new FormControl('', { nonNullable: true }),
+  });
+  spellFormGroup = new FormGroup<SpellFormGroup>({
+    spell: new FormControl([], { nonNullable: true }),
   });
 
   effectUrl = '';
@@ -124,6 +132,7 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
     this.details.sheen = this.killstreakFormGroup.controls['sheen'].value;
     this.details.killstreaker =
       this.killstreakFormGroup.controls['killstreaker'].value;
+      this.details.spells = this.spellFormGroup.controls['spell'].value;
     const selectedEffect = this.effectFormGroup.controls['effects'].value.find(
       effectRecord =>
         effectRecord.value === this.itemFormGroup.controls['effect'].value
@@ -132,6 +141,9 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
       this.details.fullName = `${selectedEffect.label} ${this.details.name}`;
     } else {
       this.details.fullName = this.details.name;
+    }
+    if (this.killstreakFormGroup.controls['killstreak'].value !== 3 && this.killstreakFormGroup.controls['killstreaker'].value != "") {
+      this.details.killstreaker = '';
     }
     this.itemModified.emit(this.details);
   }

@@ -4,6 +4,7 @@ import cors from 'cors';
 
 import itemsRoutes from '../routes/items';
 import effectsRoutes from '../routes/effects';
+import spellsRoutes from '../routes/spells';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,7 +17,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use('/api/items', itemsRoutes);
 app.use('/api/effects', effectsRoutes);
-
+app.use('/api/spells', spellsRoutes)
 
 
 app.listen(PORT, () => {

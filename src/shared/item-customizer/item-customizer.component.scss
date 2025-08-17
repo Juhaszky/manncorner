@@ -40,3 +40,24 @@ p-accordion p-accordion-panel p-accordion-header {
 
     background-color: rgb(30 41 59 / 1);
 }
+:host ::ng-deep .chip-container .p-button.p-component {
+  flex: 1 1 120px;
+  min-width: 120px;
+  max-width: 1fr;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+:host ::ng-deep .chip-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;     
+  justify-content: center;
+}
+
+:host ::ng-deep .chip-container .p-button.p-component span {
+  width: 100%;
+  display: block;
+}

@@ -11,6 +11,7 @@ import {
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectButton } from 'primeng/selectbutton';
 import { map } from 'rxjs';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   standalone: true,
@@ -29,7 +30,7 @@ export class ItemEffectsComponent implements OnInit {
   cdr = inject(ChangeDetectorRef);
   ngOnInit(): void {
     this.http
-      .get<Record<number, string>>(`http://localhost:3000/api/effects`)
+      .get<Record<number, string>>(`${environment.MICROSERVICE_URL}/api/effects`)
       .pipe(
         map(
           effectsObj =>
