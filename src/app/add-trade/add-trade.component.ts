@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { combineLatest, first, forkJoin, map, take } from 'rxjs';
+import { combineLatest, first, map, take } from 'rxjs';
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { TradeService } from '../home/trade.service';
 import { ActionBarComponent } from './action-bar/action-bar.component';
@@ -19,6 +19,7 @@ import { SortService } from '../../shared/sort.service';
 import { SellItemPanelComponent } from './sell-item-panel/sell-item-panel.component';
 import { UserDataService } from '../../shared/user-data.service';
 import { UserProfileService } from '../user-profile/user-profile.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   standalone: true,
@@ -43,6 +44,7 @@ export class AddTradeComponent implements OnInit {
   userFacade = inject(UserProfileFacade);
   userDataService = inject(UserDataService);
   addTradeService = inject(AddTradeService);
+  messageService = inject(MessageService);
   filterText = '';
   tradeDescription = '';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,7 +121,11 @@ export class AddTradeComponent implements OnInit {
         console.log('Items for trade:', itemsForTrade);
         console.log(userData);
         if (itemsToTrade.length === 0 || itemsForTrade.length === 0) {
-          return alert('You must select one item from each category!');
+          return this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'You must select one item from each category!'
+          })
         }
         const items = [
           ...itemsToTrade.map(item => ({ ...item, isSelling: true })),
@@ -142,12 +148,20 @@ export class AddTradeComponent implements OnInit {
         this.tradeService.postTrade(tradePayload).subscribe({
           next: () => {
             this.emptySelectedItems();
-            alert('Trade posted successfully');
+            this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: `Trade posted successfully`,
+                });
           },
           error: err => {
-            console.error('Trade failed: ', err);
-            alert('Trade failed, please try again');
-          },
+            console.log(err);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: `Trade failed, please try again.`,
+                });
+            },
         });
       });
   }

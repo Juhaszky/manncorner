@@ -1,10 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
   OnInit,
-  Output,
 } from '@angular/core';
 import { QualityMap } from '../../models/quality.model';
 import { ItemExtrasService } from '../../item-extras.service';
@@ -30,7 +28,6 @@ import { SelectButtonModule } from 'primeng/selectbutton';
   styleUrl: './item-quality.component.scss',
 })
 export class ItemQualityComponent implements OnInit {
-  @Output() selectionChange = new EventEmitter<number>();
   qualities: QualityMap = {};
   qualityOptions: { type: string; value: number }[] = [];
 
