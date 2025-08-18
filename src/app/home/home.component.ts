@@ -12,10 +12,12 @@ import { PostDatePipe } from './post-date.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TradeService } from './trade.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { ResizedImageComponent } from '../../shared/resized-image/resized-image.component';
 import { ItemComponent } from '../../shared/item/item.component';
 import { ItemContainerComponent } from '../../shared/item/item-container.component';
+import { Trade } from '../../shared/models/trade.model';
+import { Item } from '../../shared/models/item.model';
 
 
 @Component({
@@ -35,8 +37,9 @@ import { ItemContainerComponent } from '../../shared/item/item-container.compone
 export class HomeComponent implements OnInit {
   data$: Observable<any> = this.fetchData();
   page = 1;
-  inventoryLength: number = 0;
-  trades$!: Observable<any[]>;
+  inventoryLength= 0;
+  trades$!: Observable<Trade[]>;
+  trades: {itemsToSell: Item[], itemsToBuy: Item[], id: string, username: string }[] = [];
   loading = false;
   totalTrades$!: Observable<number>;
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {
@@ -61,6 +64,15 @@ export class HomeComponent implements OnInit {
     this.tradeService
       .loadTrades(page)
       .pipe(
+        switchMap((trades) => {
+          trades.map((trade) => {
+            const itemsForSale = trade.items.filter((i) => i.isSelling === true);
+            const itemsToBuy = trade.items.filter((i) => i.isSelling === false);
+            this.trades = [...this.trades, {itemsToSell: itemsForSale, itemsToBuy: itemsToBuy, id: trade.id, username: trade.username}]
+          })
+          
+          return trades;
+        }),
         catchError((err) => {
           this.loading = false;
           this.cdr.detectChanges();
@@ -68,7 +80,9 @@ export class HomeComponent implements OnInit {
           return [];
         })
       )
-      .subscribe(() => {
+      .subscribe((res) => {
+        console.log(res);
+        console.log(this.trades);
         this.cdr.detectChanges();
         this.loading = false;
       });

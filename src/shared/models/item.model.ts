@@ -20,4 +20,5 @@ export interface Item {
   classes?: string[];
   parts?: string[];
   spells?: string[];
+  isSelling?: boolean;
 }

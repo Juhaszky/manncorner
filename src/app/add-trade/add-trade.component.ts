@@ -140,6 +140,7 @@ export class AddTradeComponent implements OnInit {
           status: 'open',
           description: this.tradeDescription,
           items: items,
+          username: userData.personaname
         };
 
         this.tradeService.postTrade(tradePayload).subscribe({

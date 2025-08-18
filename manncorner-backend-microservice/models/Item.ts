@@ -9,13 +9,15 @@ export interface Item {
   effect?: number;
   quality: number;
   defindex: number;
-  killstreak: number;
-  killstreaker: string;
-  sheen: string;
+  killstreak?: number;
+  killstreaker?: string;
+  sheen?: string;
   //econitem attributes
   marketable?: boolean;
   commodity?: boolean;
   level?: string;
+  paint?: string;
+  paintDefindex?:number;
   classes?: string[];
   parts?: string[];
   spells?: string[];
