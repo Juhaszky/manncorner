@@ -3,7 +3,7 @@
     <div class="trade-details">
       <div class="flex flex-row justify-between">
         <p class="w-50 p-0 m-0">
-          <span class="user-name-text">{{ tradeData.owner }}</span> wants to
+          <span class="user-name-text">{{ tradeData.username }}</span> wants to
           trade...
           <!-- <span matTooltip="{{ tradeData.postDate | date }}">{{
             tradeData.postDate | postDate
@@ -42,6 +42,6 @@
       <app-item-container *ngFor="let item of tradeData.itemsTo" [item]="item"></app-item-container>
       </div>
     </div>
-    <descrpition [canEdit]="false" [html]="description | async"></descrpition>
+    <descrpition [canEdit]="false" [html]="description"></descrpition>
   </div>
 </div>

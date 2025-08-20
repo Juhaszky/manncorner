@@ -43,15 +43,7 @@ export class TradeService {
   }
 
   getTradeById(id: string): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/trades/${id}`).pipe(
-      map((trade) => {
-        // Parse the postDate field using JSON.parse
-        if (typeof trade.postDate === 'string') {
-          trade.postDate = JSON.parse(trade.postDate);
-        }
-        return trade;
-      })
-    );
+    return this.http.get<any>(`http://localhost:5268/api/Trade/${id}`)
     
   }
   getTotalTradesCount(): Observable<number> {

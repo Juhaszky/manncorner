@@ -18,6 +18,8 @@ import { ItemComponent } from '../../shared/item/item.component';
 import { ItemContainerComponent } from '../../shared/item/item-container.component';
 import { Trade } from '../../shared/models/trade.model';
 import { Item } from '../../shared/models/item.model';
+import { PaginatorModule } from 'primeng/paginator';
+
 
 
 @Component({
@@ -29,6 +31,7 @@ import { Item } from '../../shared/models/item.model';
         PaginatorComponent,
         ResizedImageComponent,
         ItemComponent,
+        PaginatorModule,
         ItemContainerComponent
     ],
     templateUrl: './home.component.html',
@@ -37,6 +40,9 @@ import { Item } from '../../shared/models/item.model';
 export class HomeComponent implements OnInit {
   data$: Observable<any> = this.fetchData();
   page = 1;
+   first: number = 0;
+
+  rows: number = 10;
   inventoryLength= 0;
   trades$!: Observable<Trade[]>;
   trades: {itemsToSell: Item[], itemsToBuy: Item[], id: string, username: string }[] = [];
@@ -64,14 +70,12 @@ export class HomeComponent implements OnInit {
     this.tradeService
       .loadTrades(page)
       .pipe(
-        switchMap((trades) => {
-          trades.map((trade) => {
+        map((trades) => {
+          return trades.map((trade) => {
             const itemsForSale = trade.items.filter((i) => i.isSelling === true);
             const itemsToBuy = trade.items.filter((i) => i.isSelling === false);
-            this.trades = [...this.trades, {itemsToSell: itemsForSale, itemsToBuy: itemsToBuy, id: trade.id, username: trade.username}]
+            return {itemsToSell: itemsForSale, itemsToBuy: itemsToBuy, id: trade.id, username: trade.username};
           })
-          
-          return trades;
         }),
         catchError((err) => {
           this.loading = false;
@@ -80,29 +84,11 @@ export class HomeComponent implements OnInit {
           return [];
         })
       )
-      .subscribe((res) => {
-        console.log(res);
-        console.log(this.trades);
+      .subscribe((tradesTransformed) => {
+        this.trades = tradesTransformed;
         this.cdr.detectChanges();
         this.loading = false;
       });
-  }
-
-  getItemBorderStyle(item: any): string {
-    if (item?.name?.includes('Unusual')) {
-      return 'unusual';
-    } else if (item?.name?.includes('Strange')) {
-      return 'strange';
-    } else if (item?.name?.includes('Vintage')) {
-      return 'vintage';
-    } else if (
-      (item?.descriptions && item?.descriptions[0]?.value?.includes('Elite')) ||
-      item?.descriptions?.value?.includes('Elite')
-    ) {
-      return 'elite';
-    } else {
-      return 'unique';
-    }
   }
 
   fetchData(): Observable<any> {

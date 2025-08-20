@@ -19,6 +19,15 @@ public class TradeController : ControllerBase
 
         return Ok(trade);
     }
+    [HttpGet("user/{userId}")]
+    public async Task<ActionResult<Trade>> GetTradesByUserId(string userId)
+    {
+        var trade = await _tradeService.GetAllTradesByUserAsync(userId);
+        if (trade == null)
+            return NotFound();
+
+        return Ok(trade);
+    }
     [HttpGet]
     public async Task<ActionResult<Trade>> GetTrades()
     {

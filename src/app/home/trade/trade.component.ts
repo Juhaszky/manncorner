@@ -10,10 +10,11 @@ import { TradeService } from '../trade.service';
 import { ResizedImageComponent } from '../../../shared/resized-image/resized-image.component';
 import { PostDatePipe } from '../post-date.pipe';
 import { CommonModule, DatePipe } from '@angular/common';
-import { map, Observable, Subject } from 'rxjs';
+import { catchError, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { ItemComponent } from '../../../shared/item/item.component';
 import { DescrpitionComponent } from '../../../shared/descrpition/descrpition.component';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
+import { BuyItemPanelComponent } from '../../add-trade/buy-item-panel/buy-item-panel.component';
 
 @Component({
   standalone: true,
@@ -24,6 +25,7 @@ import { ItemContainerComponent } from '../../../shared/item/item-container.comp
         DatePipe,
         CommonModule,
         ItemComponent,
+        BuyItemPanelComponent,
         ItemContainerComponent,
         DescrpitionComponent,
     ],
@@ -33,7 +35,7 @@ import { ItemContainerComponent } from '../../../shared/item/item-container.comp
 export class TradeComponent implements OnInit {
   tradeId!: string;
   tradeData: any = {};
-  description: Subject<string> = new Subject<string>();
+  description = '';
   route = inject(ActivatedRoute);
   tradeService = inject(TradeService);
   ngOnInit(): void {
@@ -42,16 +44,24 @@ export class TradeComponent implements OnInit {
       this.tradeService
         .getTradeById(this.tradeId)
         .pipe(
-          map((data) => {
-            data.itemsFrom = JSON.parse(data.itemsFrom);
-            data.itemsTo = JSON.parse(data.itemsTo);
-            data.owner = JSON.parse(data.owner);
-            return data;
-          })
-        )
+                switchMap((trade) => {
+                  console.log(trade);
+                    const itemsForSale = trade.items.filter((i: any) => i.isSelling);
+                    const itemsToBuy = trade.items.filter((i: any) => !i.isSelling);
+                    const tradeData ={itemsFrom: itemsForSale, itemsTo: itemsToBuy, id: trade.id, username: trade.username, description: trade.description};
+                    return of( tradeData)
+                  
+                }),
+                catchError((err) => {
+                  console.log(err);
+                  return [];
+                })
+              )
         .subscribe((data) => {
           this.tradeData = data;
-          this.description.next(this.tradeData.description);
+          console.log(this.tradeData);
+          this.description = this.tradeData.description;
+          console.log(this.description);
         });
     }
   }
