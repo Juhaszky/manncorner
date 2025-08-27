@@ -1,24 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   inject,
   OnInit,
 } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PostDatePipe } from './post-date.pipe';
-import { PaginatorComponent } from './paginator/paginator.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TradeService } from './trade.service';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { ResizedImageComponent } from '../../shared/resized-image/resized-image.component';
 import { ItemComponent } from '../../shared/item/item.component';
 import { ItemContainerComponent } from '../../shared/item/item-container.component';
-import { Trade } from '../../shared/models/trade.model';
 import { Item } from '../../shared/models/item.model';
 import { PaginatorModule } from 'primeng/paginator';
+import { TooltipModule } from 'primeng/tooltip';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 
@@ -28,28 +27,25 @@ import { PaginatorModule } from 'primeng/paginator';
     imports: [
         CommonModule,
         PostDatePipe,
-        PaginatorComponent,
         ResizedImageComponent,
         ItemComponent,
         PaginatorModule,
+        ProgressSpinnerModule,
+        TooltipModule,
         ItemContainerComponent
     ],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-  data$: Observable<any> = this.fetchData();
   page = 1;
-   first: number = 0;
+  first = 0;
 
-  rows: number = 10;
-  inventoryLength= 0;
-  trades$!: Observable<Trade[]>;
-  trades: {itemsToSell: Item[], itemsToBuy: Item[], id: string, username: string }[] = [];
+  rows = 10;
+  allPage = 0;
+  trades: {itemsToSell: Item[], itemsToBuy: Item[], id: string, username: string, createdAt: Date}[] = [];
   loading = false;
-  totalTrades$!: Observable<number>;
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {
-    //this.trades$ = this.http.get('http://localhost:3000/trades');
   }
   activatedRoute = inject(ActivatedRoute);
   router = inject(Router);
@@ -57,12 +53,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      this.page = params.page || 1;
+      this.page = params.page ? +params.page : 1;
+      this.first = (this.page - 1) * this.rows;
       this.loadTrades(this.page);
     });
-    this.trades$ = this.tradeService.getTrades();
-    this.totalTrades$ = this.tradeService.getTotalTradesCount();
-    //this.totalTrades$ = this.getTotalTradesCount();
   }
 
   private loadTrades(page: number): void {
@@ -71,10 +65,11 @@ export class HomeComponent implements OnInit {
       .loadTrades(page)
       .pipe(
         map((trades) => {
-          return trades.map((trade) => {
+          this.allPage = trades.totalCount;
+          return trades.trades.map((trade) => {
             const itemsForSale = trade.items.filter((i) => i.isSelling === true);
             const itemsToBuy = trade.items.filter((i) => i.isSelling === false);
-            return {itemsToSell: itemsForSale, itemsToBuy: itemsToBuy, id: trade.id, username: trade.username};
+            return {itemsToSell: itemsForSale, itemsToBuy: itemsToBuy, id: trade.id, username: trade.username, createdAt: trade.createdAt};
           })
         }),
         catchError((err) => {
@@ -91,17 +86,13 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  fetchData(): Observable<any> {
-    return this.http.get<Observable<any>>('http://localhost:3000/alma').pipe(
-      map((data: any) => {
-        this.inventoryLength = data.total_inventory_count;
-        this.cdr.detectChanges();
-        return data;
-      })
-    );
-  }
-
   selectTrade(tradeId: string): void {
     this.router.navigate(['/trade', tradeId]);
+  }
+  onPageChange(event: any) {
+     this.first = event.first;
+     this.page = Math.floor(event.first / this.rows) + 1;
+     this.loadTrades(this.page);
+    this.loadTrades(event.page + 1);
   }
 }

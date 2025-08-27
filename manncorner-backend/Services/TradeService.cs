@@ -26,11 +26,24 @@ public class TradeService : ITradeService
         return trade;
     }
 
-    public async Task<IEnumerable<Trade>> GetAllTradesAsync()
+    public async Task<object> GetAllTradesAsync(int page, int pageSize = 10)
     {
-        return await _db.Trades
+        if (page < 1) page = 1;
+        if (pageSize < 1 || pageSize > 100) pageSize = 10;
+        var totalCount = await _db.Trades.CountAsync();
+        var trades = await _db.Trades
             .Include(t => t.Items)
+            .OrderByDescending(t => t.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+        return new
+        {
+            Trades = trades,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<List<Trade>> GetAllTradesByUserAsync(string userId)

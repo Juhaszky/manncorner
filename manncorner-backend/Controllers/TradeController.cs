@@ -29,9 +29,11 @@ public class TradeController : ControllerBase
         return Ok(trade);
     }
     [HttpGet]
-    public async Task<ActionResult<Trade>> GetTrades()
+    public async Task<ActionResult<Trade>> GetTrades(int page = 1, int pageSize = 10)
     {
-        var trades = await _tradeService.GetAllTradesAsync();
+        if (page < 1 || pageSize < 1 || pageSize > 10000)
+        return BadRequest("Invalid pagination parameters.");
+        var trades = await _tradeService.GetAllTradesAsync(page, pageSize);
         if (trades == null)
             return NotFound();
 
