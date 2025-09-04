@@ -3,6 +3,7 @@ import { Item } from "./item.model";
 export interface Trade {
     id: string;
     description: string;
+    bumpDate: Date;
     createdAt: Date;
     items: Item[];
     status: string;

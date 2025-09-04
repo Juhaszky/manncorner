@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {  Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import { TradeResult } from '../../shared/models/trade.model';
+import { Trade, TradeResult } from '../../shared/models/trade.model';
+import { Item } from '../../shared/models/item.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TradeService {
-
   constructor(private http: HttpClient) {}
 
   loadTrades(page: number): Observable<TradeResult> {
@@ -16,11 +16,23 @@ export class TradeService {
     return this.http.get<TradeResult>(url);
   }
 
-  getTradeById(id: string): Observable<any> {
-    return this.http.get<any>(`http://localhost:5268/api/Trade/${id}`)
-    
+  getTradeById(id: string): Observable<Trade> {
+    return this.http.get<Trade>(`${environment.API_URL}/api/Trade/${id}`);
   }
-  postTrade(tradeData: any): Observable<any> {
-    return this.http.post('http://localhost:5268/api/Trade', tradeData);
+  postTrade(tradeData: {
+    userId: string;
+    createdAt: string;
+    status: string;
+    description: string;
+    items: Item[];
+    username: string;
+  }): Observable<Trade> {
+    return this.http.post<Trade>(`${environment.API_URL}/api/Trade`, tradeData);
+  }
+  bumpTrade(userId: string, tradeId: number) {
+    return this.http.post(`${environment.API_URL}/api/Trade/bump`, {
+      userId,
+      tradeId,
+    });
   }
 }

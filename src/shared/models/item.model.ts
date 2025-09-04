@@ -16,7 +16,7 @@ export interface Item {
   australium?: boolean;
   marketable?: boolean;
   commodity?: boolean;
-  level?: string;
+  level?: string | number;
   classes?: string[];
   parts?: string[];
   spells?: string[];

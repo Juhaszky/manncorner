@@ -9,16 +9,19 @@
     <div class="trade-details">
       <div class="flex flex-row justify-between">
         <p class="w-50 p-0 m-0">
-          <span class="user-name-text">{{ trade.username }}</span> wants to
-          trade...
-          <span pTooltip="{{ trade.createdAt | date }}">{{
-            trade.createdAt | postDate
-          }}</span>
+          <span 
+            class="user-name-text">
+            {{ trade.username }}
+          </span> 
+          wants to trade...
+          <span pTooltip="{{ trade.bumpedAt | date }}">
+            {{ trade.bumpedAt | postDate }}
+          </span>
         </p>
         <p
           class="w-50 text-end p-0 m-0 sm:text-sm text-xs font-black text-gray-700"
         >
-          {{ trade.id }}
+          <!-- <button *ngIf="userService.currentUsername === trade.username"><img class="h-6 w-6" src="/assets/icons/refresh.svg" alt="" (click)="onBump(trade.id, $event)"></button> -->
         </p>
       </div>
     </div>

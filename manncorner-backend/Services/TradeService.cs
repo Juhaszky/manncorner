@@ -21,6 +21,8 @@ public class TradeService : ITradeService
     }
     public async Task<Trade> CreateTradeAsync(Trade trade)
     {
+        trade.CreatedAt = DateTime.UtcNow;
+        trade.BumpDate = trade.CreatedAt;
         _db.Trades.Add(trade);
         await _db.SaveChangesAsync();
         return trade;
@@ -33,7 +35,7 @@ public class TradeService : ITradeService
         var totalCount = await _db.Trades.CountAsync();
         var trades = await _db.Trades
             .Include(t => t.Items)
-            .OrderByDescending(t => t.CreatedAt)
+            .OrderByDescending(t => t.BumpDate)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -59,6 +61,15 @@ public class TradeService : ITradeService
         var trade = await _db.Trades
             .Include(t => t.Items)
             .FirstOrDefaultAsync(t => t.Id == tradeId);
+        return trade;
+    }
+    public async Task<Trade> BumpTrade(string userId, int tradeId)
+    {
+        var trade = await _db.Trades.FirstOrDefaultAsync(t => t.Id == tradeId);
+        trade.BumpDate = DateTime.UtcNow;
+
+        await _db.SaveChangesAsync();
+
         return trade;
     }
 }

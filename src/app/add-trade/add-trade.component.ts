@@ -125,7 +125,7 @@ export class AddTradeComponent implements OnInit {
             detail: 'You must select one item from each category!'
           })
         }
-        const items = [
+        const items: Item[] = [
           ...itemsToTrade.map(item => ({ ...item, isSelling: true })),
           ...itemsForTrade.map(item => ({
             ...item,
