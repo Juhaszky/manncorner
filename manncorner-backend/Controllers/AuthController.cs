@@ -13,11 +13,13 @@ public class AuthController : Controller
     private readonly IConfiguration _configuration;
     private readonly AuthService _authService;
     private readonly UserService _userService;
-    public AuthController(IConfiguration configuration, AuthService authService, UserService userService)
+    private readonly SteamApiService _steamService;
+    public AuthController(IConfiguration configuration, AuthService authService, UserService userService, SteamApiService steamService)
     {
         _configuration = configuration;
         _authService = authService;
         _userService = userService;
+        _steamService = steamService;
     }
     [HttpGet("login")]
     public IActionResult Login()
@@ -50,7 +52,9 @@ public class AuthController : Controller
         var existingUser = await _userService.GetUserBySteamIdAsync(steamId);
         if (existingUser == null)
         {
-            await _userService.CreateUserAsync(steamId, "");
+            var externalData = await _steamService.GetPlayerSummary(steamId);
+            
+            await _userService.CreateUserAsync(steamId, "", externalData.response.players[0].personaname, externalData.response.players[0].avatarmedium);
         }
         var token = _authService.GenerateJwtToken(steamId);
 

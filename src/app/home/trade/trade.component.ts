@@ -6,23 +6,36 @@ import { catchError, of, switchMap } from 'rxjs';
 import { DescrpitionComponent } from '../../../shared/descrpition/descrpition.component';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
 import { Item } from '../../../shared/models/item.model';
+import { CommentsComponent } from './comments/comments.component';
+import { Comment } from '../../../shared/models/comment.model';
 
 @Component({
   standalone: true,
   selector: 'app-trade',
-  imports: [CommonModule, ItemContainerComponent, DescrpitionComponent],
+  imports: [
+    CommonModule,
+    ItemContainerComponent,
+    DescrpitionComponent,
+    CommentsComponent
+    // InventoryItemsSelectorComponent,
+    // OfferItemPanelComponent,
+    // OfferItemSelectorComponent
+  ],
   templateUrl: './trade.component.html',
   styleUrl: './trade.component.scss',
 })
 export class TradeComponent implements OnInit {
   tradeId!: string;
-  tradeData: {
-    itemsFrom: Item[];
-    itemsTo: Item[];
-    id: string;
-    username: string;
-    description: string;
-  } | undefined;
+  tradeData:
+    | {
+        itemsFrom: Item[];
+        itemsTo: Item[];
+        id: string;
+        username: string;
+        description: string;
+        comments: Comment[]
+      }
+    | undefined;
   description = '';
   route = inject(ActivatedRoute);
   tradeService = inject(TradeService);
@@ -42,6 +55,7 @@ export class TradeComponent implements OnInit {
               id: trade.id,
               username: trade.username,
               description: trade.description,
+              comments: trade.comments
             };
             return of(tradeData);
           }),

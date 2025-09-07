@@ -92,6 +92,7 @@ builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<SteamApiService>();
 builder.Services.AddScoped<Tf2SchemaItemService>();
 builder.Services.AddScoped<ITradeService, TradeService>();
+builder.Services.AddScoped<CommentService>();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())

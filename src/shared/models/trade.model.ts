@@ -1,3 +1,4 @@
+import { Comment } from "./comment.model";
 import { Item } from "./item.model";
 
 export interface Trade {
@@ -9,6 +10,7 @@ export interface Trade {
     status: string;
     username: string;
     userId: string;
+    comments: Comment[]
 }
 export interface TradeResult {
     page: number;

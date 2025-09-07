@@ -14,11 +14,13 @@ public class UserService
         _serviceProvider = serviceProvider;
     }
 
-    public async Task CreateUserAsync(string steamId, string tradeUrl)
+    public async Task CreateUserAsync(string steamId, string tradeUrl, string username, string avatarPath)
     {
         var user = new User
         {
             SteamId = steamId,
+            Username = username,
+            avatarPath = avatarPath,
             TradeUrl = null
         };
         await _context.Users.AddAsync(user);

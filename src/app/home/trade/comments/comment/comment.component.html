@@ -1,0 +1,31 @@
+<div class="flex flex-col w-full bg-slate-800 rounded border border-slate-700 p-4 mb-4">
+  <div class="flex items-start w-full">
+    <img [src]="comment.owner.avatarPath" alt="Avatar" class="w-10 h-10 rounded-full mr-3 bg-slate-700" />
+    <div class="flex flex-col flex-1">
+      <div class="flex flex-col sm:flex-row sm:items-center">
+        <span class="text-lg font-semibold text-slate-50">{{ comment.owner.username }}</span>
+        <span class="text-xs text-slate-400 ml-0 sm:ml-2 mt-1 sm:mt-0">{{ comment.createdAt | date:'medium' }}</span>
+      </div>
+      <div class="mt-1 text-slate-200 break-words">{{ comment.commentData }}</div>
+      <div class="mt-2 flex gap-3">
+        <button class="px-3 py-1 text-xs text-blue-400 hover:underline bg-slate-700 rounded" (click)="toggleReplyForm()">Reply</button>
+      </div>
+      <div *ngIf="showReplyForm" class="mt-2">
+        <form (ngSubmit)="submitReply()">
+          <textarea [(ngModel)]="replyText" name="replyText" placeholder="Write a reply..." rows="2"
+            class="bg-slate-900 border border-slate-700 rounded w-full p-2 text-slate-100 mb-2 resize-none"></textarea>
+          <div class="flex gap-2">
+            <p-button type="submit" [disabled]="!replyText" label="Post Reply" />
+            <button type="button" class="px-3 py-1 bg-slate-700 text-slate-300 rounded" (click)="toggleReplyForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="comment.replies?.length" class="pl-6 mt-4 border-l-2 border-slate-600">
+    <ng-container *ngFor="let reply of comment.replies">
+      <app-comment [comment]="reply"></app-comment>
+    </ng-container>
+  </div>
+</div>

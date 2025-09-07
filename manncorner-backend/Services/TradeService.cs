@@ -60,6 +60,8 @@ public class TradeService : ITradeService
     {
         var trade = await _db.Trades
             .Include(t => t.Items)
+            .Include(t => t.Comments)
+                .ThenInclude(c => c.Owner)
             .FirstOrDefaultAsync(t => t.Id == tradeId);
         return trade;
     }

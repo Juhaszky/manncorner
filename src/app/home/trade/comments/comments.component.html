@@ -1,0 +1,50 @@
+<div class="flex flex-col text-gray-700">
+  <div class="w-4/5 rounded-xl border-blue-500 p-2 border-solid">
+    <p-tabs value="0" class="rounded-xl">
+      <p-tablist>
+        <p-tab value="0">Comments</p-tab>
+        <p-tab value="1">Offers</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <div class="comments flex flex-col gap-2 row w-full">
+            <textarea
+              [(ngModel)]="commentData"
+              id="message"
+              rows="4"
+              class="w-full block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              [placeholder]="'Write your thoughts here...'"></textarea>
+            <p-button (onClick)="makeComment()" label="Make offer" />
+          </div>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+          <div class="row mt-4">
+            <div class="flex flex-row flex-wrap gap-2 p-2" >
+              <div *ngFor="let item of selectedItems" class="w-24">
+                <app-item-container
+                  [item]="item"
+                  [canDelete]="true"
+                  (removeEmitter)="itemSelectorFacade.onRemoveOfferItem(item)">
+                </app-item-container>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="grid-cols-6">
+              <h2 [style.color]="'white'">Your backpack:</h2>
+            </div>
+            <div class="flex flex-row-reverse p-2">
+              <app-action-bar></app-action-bar>
+            </div>
+            <div class="col-card mb-3 p-1">
+              <app-offer-item-selector [mode]="'offer'"></app-offer-item-selector>
+            </div>
+          </div>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+    <div class="row" *ngFor="let comment of rootComments">
+      <app-comment [comment]="comment" (replyEmitter)="handleReplyEmitter($event)"></app-comment>
+    </div>
+  </div>
+</div>

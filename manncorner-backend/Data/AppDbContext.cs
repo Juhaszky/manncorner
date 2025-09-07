@@ -16,7 +16,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Tf2ItemSchema>()
          .HasKey(x => x.Defindex);
 
-
         modelBuilder.Entity<Tf2ItemSchema>()
             .HasMany(x => x.Styles)
             .WithOne(s => s.Tf2ItemSchema)
@@ -28,11 +27,13 @@ public class AppDbContext : DbContext
             .WithOne(a => a.Tf2ItemSchema)
             .HasForeignKey(a => a.Tf2ItemSchemaId)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Tf2ItemSchema>().ToTable("Tf2ItemSchemas");
+
+        modelBuilder.Entity<Tf2ItemSchema>()
+            .ToTable("Tf2ItemSchemas");
 
         modelBuilder.Entity<ParsedItem>()
-    .Property(e => e.classes)
-    .HasColumnType("text[]");
+            .Property(e => e.classes)
+            .HasColumnType("text[]");
 
         modelBuilder.Entity<ParsedItem>()
             .Property(e => e.parts)
@@ -41,7 +42,25 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<ParsedItem>()
             .Property(e => e.spells)
             .HasColumnType("text[]");
+
+        modelBuilder.Entity<Trade>()
+            .HasMany(t => t.Comments)
+            .WithOne(c => c.Trade)
+            .HasForeignKey(c => c.TradeId);
+
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.Owner)
+            .WithMany()
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.Trade)
+            .WithMany(t => t.Comments)
+            .HasForeignKey(c => c.TradeId);
+        modelBuilder.Entity<Comment>()
+            .HasMany(c => c.Replies)
+            .WithOne()
+            .HasForeignKey("ParentCommentId");
     }
-    // public DbSet<Item> Items { get; set; }
-    // public DbSet<Trade> Trades { get; set; }
 }

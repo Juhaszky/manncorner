@@ -9,16 +9,19 @@ using Microsoft.AspNetCore.Mvc;
 public class UserController : ControllerBase
 {
     private readonly UserService _userService;
-    public UserController(UserService userService)
+    private readonly SteamApiService _steamService;
+    public UserController(UserService userService, SteamApiService steamService)
     {
         _userService = userService;
+        _steamService = steamService;
     }
     [HttpPost]
     public async Task<IActionResult> CreateUser(string steamId, string tradeUrl)
     {
         try
         {
-            await _userService.CreateUserAsync(steamId, tradeUrl);
+            var externalData = await _steamService.GetPlayerSummary(steamId);
+            await _userService.CreateUserAsync(steamId, tradeUrl, externalData.response.players[0].personaname, externalData.response.players[0].avatarmedium);
             return Ok("User Created");
         }
         catch (Exception ex)

@@ -9,14 +9,16 @@ export class ItemSelectorFacade {
   private _items = new BehaviorSubject<Item[]>([]);
   private _itemsToTrade = new BehaviorSubject<Item[]>([]);
   private _itemsForTrade = new BehaviorSubject<Item[]>([]);
-
+  private _itemsOffer = new BehaviorSubject<Item[]>([]);
   private loadedPages = new Set<string>();
   private selectedItemIds = new Set<string>();
+  private selectedOfferItemIds = new Set<string>();
   loading = false;
   items$ = this._items.asObservable();
   itemsLength = 0;
   itemsToTrade$ = this._itemsToTrade.asObservable();
   itemsForTrade$ = this._itemsForTrade.asObservable();
+  itemsOfferTrade$ = this._itemsOffer.asObservable();
   private _customIdCounter = 0;
   constructor(
     private itemService: ItemSelectorService,
@@ -51,7 +53,7 @@ export class ItemSelectorFacade {
       this._itemsForTrade.next(items);
     });
   }
-  
+
   onAddItem(item: Item) {
     const currentItems = this._itemsToTrade.getValue();
     const exists = currentItems.some(existingItem =>
@@ -64,6 +66,18 @@ export class ItemSelectorFacade {
       this.selectedItemIds.add(item.id);
     }
   }
+  onOfferItem(item: Item) {
+    const currentItems = this._itemsOffer.getValue();
+    const exists = currentItems.some(existingItem =>
+      this.deepEqual(existingItem, item)
+    );
+
+    if (!exists) {
+      const itemWithCustomId = { ...item, customId: ++this._customIdCounter };
+      this._itemsOffer.next([...currentItems, itemWithCustomId]);
+      this.selectedOfferItemIds.add(item.id);
+    }
+  }
 
   onAddDefaultItem(items: Item[]) {
     this._itemsForTrade.next(items);
@@ -74,6 +88,12 @@ export class ItemSelectorFacade {
     const newItems = currentItems.filter(i => i.id !== item.id);
     this.selectedItemIds.delete(item.id);
     this._itemsToTrade.next(newItems);
+  }
+  onRemoveOfferItem(item: Item) {
+    const currentItems = this._itemsOffer.getValue();
+    const newItems = currentItems.filter(i => i.id !== item.id);
+    this.selectedOfferItemIds.delete(item.id);
+    this._itemsOffer.next(newItems);
   }
   onRemoveBaseItem(item: Item) {
     const currentItems = this._itemsForTrade.getValue();
@@ -90,5 +110,7 @@ export class ItemSelectorFacade {
   isItemSelected(item: Item): boolean {
     return this.selectedItemIds.has(item.id);
   }
-
+  isOfferItemSelected(item: Item): boolean {
+    return this.selectedOfferItemIds.has(item.id);
+  }
 }

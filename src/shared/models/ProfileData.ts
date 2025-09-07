@@ -5,4 +5,6 @@ export interface ProfileData {
     steamId: string;
     tradeUrl: string;
     xp: number;
+    username: string;
+    avatarPath: string;
 }

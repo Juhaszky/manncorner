@@ -1,34 +1,27 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  Input,
-  OnInit,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { EditorModule } from 'primeng/editor';
 
-
 @Component({
   standalone: true,
-    selector: 'descrpition',
-    imports: [FormsModule, CommonModule, EditorModule],
-    templateUrl: './descrpition.component.html',
-    styleUrl: './descrpition.component.scss'
+  selector: 'descrpition',
+  imports: [FormsModule, CommonModule, EditorModule],
+  templateUrl: './descrpition.component.html',
+  styleUrl: './descrpition.component.scss',
 })
 export class DescrpitionComponent implements OnInit {
   description = '';
   @Input() html!: string | null;
   @Output() descriptionData = new EventEmitter<string>();
   @Input() canEdit = false;
-  safeHtml!: SafeHtml; // Property to store the sanitized HTML
+  safeHtml!: SafeHtml;
 
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
-    //this.updateHtmlContent();
+    this.updateHtmlContent();
   }
 
   onChange(event: any) {
@@ -37,13 +30,12 @@ export class DescrpitionComponent implements OnInit {
   }
 
   private updateHtmlContent(): void {
-    // if (this.html && !this.canEdit) {
-    //   try {
-    //     const parsedHtml = toHTML(JSON.parse(this.html));
-    //     this.safeHtml = this.sanitizer.bypassSecurityTrustHtml(parsedHtml);
-    //   } catch (e) {
-    //     console.error('Failed to parse HTML:', e);
-    //   }
-    // }
+    if (this.html && !this.canEdit) {
+      try {
+        this.safeHtml = this.sanitizer.bypassSecurityTrustHtml(this.html);
+      } catch (e) {
+        console.error('Failed to parse HTML:', e);
+      }
+    }
   }
 }

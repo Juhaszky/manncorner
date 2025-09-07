@@ -1,4 +1,6 @@
 
+using System.Text.Json;
+
 public class SteamApiService : ISteamApiService
 {
     private readonly HttpClient _httpClient;
@@ -8,7 +10,7 @@ public class SteamApiService : ISteamApiService
         _httpClient = httpClientFactory.CreateClient();
         _apiKey = configuration["Steam:ApiKey"];
     }
-    public async Task<string> GetPlayerSummary(string steamId)
+    public async Task<SteamPlayerSummary> GetPlayerSummary(string steamId)
     {
         try
         {
@@ -37,7 +39,8 @@ public class SteamApiService : ISteamApiService
                 ]
             }
         }";
-        return mockResponse;
+        var playerSummary = JsonSerializer.Deserialize<SteamPlayerSummary>(mockResponse);
+        return playerSummary;
             // if (response.IsSuccessStatusCode)
             // {
             //     return await response.Content.ReadAsStringAsync();

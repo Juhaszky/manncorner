@@ -1,31 +1,30 @@
-import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
   Input,
-  OnInit,
-  Output,
   ViewChild,
+  Output,
+  OnInit,
+  AfterViewInit,
 } from '@angular/core';
+import { combineLatest, map, take, fromEvent, first } from 'rxjs';
 import { ItemSelectorFacade } from '../../../shared/item-selector/item-selector.facade';
-import { ItemContainerComponent } from '../../../shared/item/item-container.component';
-import { fromEvent, map, take, combineLatest, first, BehaviorSubject } from 'rxjs';
 import { Item } from '../../../shared/models/item.model';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SortService } from '../../../shared/sort.service';
 import { UserProfileFacade } from '../../user-profile/user-profile.facade';
 import { AddTradeService } from '../add-trade.service';
-import { SortService } from '../../../shared/sort.service';
+import { CommonModule } from '@angular/common';
+import { ItemContainerComponent } from '../../../shared/item/item-container.component';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
-  standalone: true,
-  selector: 'app-inventory-items-selector',
-  imports: [CommonModule, ItemContainerComponent, ProgressSpinnerModule],
-  templateUrl: './inventory-items-selector.component.html',
-  styleUrl: './inventory-items-selector.component.scss',
+  selector: 'app-offer-item-selector',
+  imports: [CommonModule, ItemContainerComponent, ProgressSpinner],
+  templateUrl: './offer-item-selector.component.html',
+  styleUrl: './offer-item-selector.component.scss',
 })
-export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
+export class OfferItemSelectorComponent implements OnInit, AfterViewInit {
   @Input() mode!: 'inventory' | 'toTrade' | 'allItems' | 'offer';
   @Input() filter = '';
   @Output() itemAdd = new EventEmitter<Item>();
@@ -34,7 +33,6 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
     first: number;
     row: number;
   }>();
-  filterText$: BehaviorSubject<string> = new BehaviorSubject<string>(localStorage.getItem('filterText') || '');
   items: Item[] = [];
   selectedItemIds = new Set<string>();
   disabled = false;
@@ -45,14 +43,13 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
     private userDataFacade: UserProfileFacade
   ) {}
   ngOnInit(): void {
-     this.userDataFacade.userData$.pipe(first()).subscribe(res => {
-          if (res?.steamid) {
-            // Pass the steamId when loading items
-            this.itemSelectorFacade.loadItemsLazy(0, 100, res.steamid);
-          } else {
-            console.error('No steamId found');
-          }
-        });
+    this.userDataFacade.userData$.pipe(first()).subscribe(res => {
+      if (res?.steamid) {
+        this.itemSelectorFacade.loadItemsLazy(0, 100, res.steamid);
+      } else {
+        console.error('No steamId found');
+      }
+    });
     this.itemSelectorFacade.itemsToTrade$.subscribe(selectedItems => {
       selectedItems.forEach(item => {
         if (item.id) {
@@ -62,7 +59,7 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
     });
     combineLatest([
       this.itemSelectorFacade.items$,
-      this.filterText$,
+      this.addTradeService.filterText$,
       this.sortService.sortCriteria$,
     ])
       .pipe(
@@ -123,7 +120,7 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
     this.selectedItemIds.add(item.id);
   }
   isItemDisabled(item: Item): boolean {
-    return this.itemSelectorFacade.isItemSelected(item);
+    return this.itemSelectorFacade.isOfferItemSelected(item);
   }
   handleSelectEmitter(item: Item) {
     if (this.mode === 'inventory') {
