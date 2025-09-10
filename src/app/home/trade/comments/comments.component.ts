@@ -1,68 +1,74 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { TabsModule } from 'primeng/tabs';
+import { Component, Input, OnInit } from '@angular/core';
+import { Comment } from '../../../../shared/models/comment.model';
+import { CommentService } from './comment.service';
+import { Item } from '../../../../shared/models/item.model';
+import { ItemSelectorFacade } from '../../../../shared/item-selector/item-selector.facade';
 import { ButtonModule } from 'primeng/button';
-import { ActionBarComponent } from '../../../add-trade/action-bar/action-bar.component';
-import { InventoryItemsSelectorComponent } from '../../../add-trade/inventory-items-selector/inventory-items-selector.component';
+import { TabsModule } from 'primeng/tabs';
+import { CommentComponent } from './comment/comment.component';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ItemContainerComponent } from '../../../../shared/item/item-container.component';
-import { ItemSelectorFacade } from '../../../../shared/item-selector/item-selector.facade';
+import { ActionBarComponent } from '../../../add-trade/action-bar/action-bar.component';
 import { OfferItemSelectorComponent } from '../../../add-trade/offer-item-selector/offer-item-selector.component';
-import { Item } from '../../../../shared/models/item.model';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { Comment } from '../../../../shared/models/comment.model';
-import { CommentComponent } from './comment/comment.component';
-import { CommentService } from './comment.service';
+
+
 @Component({
   selector: 'app-comments',
-  imports: [
-    CommonModule,
-    TabsModule,
-    ButtonModule,
-    FormsModule,
-    ActionBarComponent,
-    InventoryItemsSelectorComponent,
-    CommonModule,
-    ItemContainerComponent,
-    OfferItemSelectorComponent,
-    CommentComponent,
-  ],
+  imports: [ButtonModule, TabsModule, CommentComponent, FormsModule, CommonModule, ItemContainerComponent, ActionBarComponent, OfferItemSelectorComponent],
   templateUrl: './comments.component.html',
-  styleUrl: './comments.component.scss',
+  styleUrls: ['./comments.component.scss']
 })
 export class CommentsComponent implements OnInit {
+  tabsValue = 0
   @Input() tradeId!: string;
   @Input() comments: Comment[] = [];
-  commentData!: string;
+  commentData = '';
   selectedItems: Item[] = [];
 
-  http = inject(HttpClient);
-  commentService = inject(CommentService);
-  itemSelectorFacade = inject(ItemSelectorFacade);
+  constructor(
+    private commentService: CommentService,
+    public itemSelectorFacade: ItemSelectorFacade
+  ) {}
 
   get rootComments(): Comment[] {
-    return this.comments.filter((c) => !c.parentCommentId);
+    return this.comments.filter(c => !c.parentCommentId);
   }
 
-  ngOnInit(): void {
-    this.itemSelectorFacade.itemsOfferTrade$.subscribe(i => {
-      this.selectedItems = i;
-      console.log(i);
+  ngOnInit() {
+    this.itemSelectorFacade.itemsOfferTrade$.subscribe(items => {
+      this.selectedItems = items;
     });
   }
 
-  makeComment() {
+  handleCommentSubmit({ text, parentId }: { text: string; parentId?: number }) {
+    if (!text?.trim()) return;
+    
     this.commentService.makeComment({
       tradeId: this.tradeId,
-      commentData: this.commentData,
+      commentData: text.trim(),
+      parentId: parentId ?? undefined,
+      itemsOffer: this.selectedItems
+    }).subscribe(newComment => {
+      if (newComment.parentCommentId) {
+        const parentIndex = this.comments.findIndex(c => c.id === newComment.parentCommentId);
+        if (parentIndex > -1) {
+          const parent = this.comments[parentIndex];
+          const updatedReplies = [...(parent.replies || []), newComment];
+          const updatedParent = { ...parent, replies: updatedReplies };
+          this.comments = [
+            ...this.comments.slice(0, parentIndex),
+            updatedParent,
+            ...this.comments.slice(parentIndex + 1),
+          ];
+        }
+      } else {
+        this.comments = [...this.comments, newComment];
+      }
+      this.itemSelectorFacade.emptyOfferItems();
     });
-  }
-  handleReplyEmitter(event: { replyText: string; parentCommentId: number }) {
-    console.log('emitter ran');
-    this.commentService.makeComment({
-      tradeId: this.tradeId,
-      commentData: event.replyText,
-      parentId: event.parentCommentId,
-    });
+    if (!parentId) {
+      this.commentData = '';
+    }
   }
 }

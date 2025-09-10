@@ -5,5 +5,4 @@ public interface ITradeService
     Task<Trade> BumpTrade(string userId, int tradeId);
     Task<Trade> CreateTradeAsync(Trade trade);
     Task<List<Trade>> GetAllTradesByUserAsync(string userId);
-    Task MakeTrade(Item itemToTrade, Item itemForTrade);
 }

@@ -10,15 +10,6 @@ public class TradeService : ITradeService
     {
         _db = db;
     }
-    public Task<string> GetTrades(string steamId)
-    {
-        throw new NotImplementedException();
-    }
-    public Task MakeTrade(Item itemToTrade, Item itemForTrade)
-    {
-
-        return null;
-    }
     public async Task<Trade> CreateTradeAsync(Trade trade)
     {
         trade.CreatedAt = DateTime.UtcNow;
@@ -62,6 +53,8 @@ public class TradeService : ITradeService
             .Include(t => t.Items)
             .Include(t => t.Comments)
                 .ThenInclude(c => c.Owner)
+            .Include(t => t.Comments)
+                .ThenInclude(c => c.ItemsOffer)
             .FirstOrDefaultAsync(t => t.Id == tradeId);
         return trade;
     }

@@ -8,7 +8,7 @@ public class CommentService : ICommentService
     {
         _context = db;
     }
-    public async Task MakeComment(int tradeId, string commentData, string userId, int? parentId)
+    public async Task<Comment> MakeComment(int tradeId, string commentData, string userId, int? parentId, ICollection<CommentOfferItem>? itemsOffer)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.SteamId == userId);
         var comment = new Comment
@@ -17,10 +17,12 @@ public class CommentService : ICommentService
             TradeId = tradeId,
             CreatedAt = DateTime.UtcNow,
             Owner = user,
-            ParentCommentId = parentId ?? null
-            
+            ParentCommentId = parentId ?? null,
+            ItemsOffer = itemsOffer ?? new List<CommentOfferItem>()
+
         };
         _context.Add(comment);
         await _context.SaveChangesAsync();
+        return comment;
     }
 }

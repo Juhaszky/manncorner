@@ -106,6 +106,10 @@ export class ItemSelectorFacade {
     this._itemsForTrade.next([]);
     this._itemsToTrade.next([]);
   }
+  emptyOfferItems() {
+    this.selectedOfferItemIds.clear();
+    this._itemsOffer.next([]);
+  }
 
   isItemSelected(item: Item): boolean {
     return this.selectedItemIds.has(item.id);

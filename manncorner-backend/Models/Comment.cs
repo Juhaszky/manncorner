@@ -10,5 +10,5 @@ public class Comment
     public int? ParentCommentId { get; set; }
     public ICollection<Comment> Replies { get; set; }
     //TODO also be able to offer items!
-    // public ICollection<Item> ItemsOffer { get; set; }
+    public ICollection<CommentOfferItem>? ItemsOffer { get; set; }
 }

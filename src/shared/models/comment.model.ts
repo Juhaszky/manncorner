@@ -1,3 +1,4 @@
+import { Item } from "./item.model";
 import { ProfileData } from "./ProfileData";
 
 export interface Comment {
@@ -8,5 +9,6 @@ export interface Comment {
     createdAt: Date;
     owner: ProfileData
     parentCommentId?: number;
-    replies: Comment[]
+    replies: Comment[];
+    itemsOffer: Item[]
 }

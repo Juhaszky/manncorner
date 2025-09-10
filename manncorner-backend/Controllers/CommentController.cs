@@ -14,13 +14,13 @@ public class CommentController : ControllerBase
     }
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost]
-    async public Task<ActionResult> MakeComment([FromBody] CommentRequest request)
+    async public Task<ActionResult<Comment>> MakeComment([FromBody] CommentRequest request)
     {
         string userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         int? parentId = request.ParentId ?? null;
         if (userId == null) return Unauthorized();
 
-        await _commentService.MakeComment(request.TradeId, request.CommentData, userId, parentId);
-        return Ok();
+        var comment = await _commentService.MakeComment(request.TradeId, request.CommentData, userId, parentId, request.ItemsOffer);
+        return Ok(comment);
     }
 }
