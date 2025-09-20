@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { Trade, TradeResult } from '../../shared/models/trade.model';
 import { Item } from '../../shared/models/item.model';
+import { TradeBumpResult } from '../../shared/models/tradeBumpResult.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,8 +33,8 @@ export class TradeService {
   }): Observable<Trade> {
     return this.http.post<Trade>(`${environment.API_URL}/api/Trade`, tradeData);
   }
-  bumpTrade(userId: string, tradeId: number) {
-    return this.http.post(`${environment.API_URL}/api/Trade/bump`, {
+  bumpTrade(userId: string, tradeId: number): Observable<TradeBumpResult> {
+    return this.http.post<TradeBumpResult>(`${environment.API_URL}/api/Trade/bump`, {
       userId,
       tradeId,
     });

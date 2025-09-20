@@ -59,8 +59,8 @@ public class TradeController : ControllerBase
 
         string userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) return Unauthorized();
-        var trade = await _tradeService.BumpTrade(tradeData.userId, tradeData.tradeId);
-        if (trade == null) return NotFound();
-        return CreatedAtAction(nameof(GetTrade), new { id = trade.Id }, trade);
+        var bumpResult = await _tradeService.BumpTrade(tradeData.userId, tradeData.tradeId);
+        if (bumpResult == null) return NotFound();
+        return Ok(bumpResult);
     }
 }

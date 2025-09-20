@@ -59,13 +59,35 @@ public class TradeService : ITradeService
             .FirstOrDefaultAsync(t => t.Id == tradeId);
         return trade;
     }
-    public async Task<Trade> BumpTrade(string userId, int tradeId)
+    public async Task<TradeBumpResult> BumpTrade(string userId, int tradeId)
     {
         var trade = await _db.Trades.FirstOrDefaultAsync(t => t.Id == tradeId);
-        trade.BumpDate = DateTime.UtcNow;
 
+        if (trade == null)
+        {
+            return new TradeBumpResult
+            {
+                Status = 404,
+                Error = "Trade not found"
+            };
+        }
+
+        if (trade.BumpDate.AddMinutes(5) > DateTime.UtcNow)
+        {
+            return new TradeBumpResult
+            {
+                Status = 200,
+                Error = "Cannot bump yet"
+            };
+        }
+
+        trade.BumpDate = DateTime.UtcNow;
         await _db.SaveChangesAsync();
 
-        return trade;
+        return new TradeBumpResult
+        {
+            Status = 200,
+            Trade = trade
+        };
     }
 }
