@@ -28,8 +28,8 @@
 .paginator-wrapper {
   flex-shrink: 0;
   position: sticky;
-  bottom: 0;
-  background: white;
+  bottom: 0;  
+  border: 1px solid black;
   z-index: 10;
-  width: 100%;
+  width: 100vw;
 }

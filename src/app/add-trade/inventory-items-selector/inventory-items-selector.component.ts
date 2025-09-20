@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnInit,
   Output,
@@ -11,12 +12,25 @@ import {
 } from '@angular/core';
 import { ItemSelectorFacade } from '../../../shared/item-selector/item-selector.facade';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
-import { fromEvent, map, take, combineLatest, first, BehaviorSubject } from 'rxjs';
+import {
+  fromEvent,
+  map,
+  take,
+  combineLatest,
+  first,
+  BehaviorSubject,
+  switchMap,
+  catchError,
+  of,
+  debounceTime,
+} from 'rxjs';
 import { Item } from '../../../shared/models/item.model';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UserProfileFacade } from '../../user-profile/user-profile.facade';
 import { AddTradeService } from '../add-trade.service';
 import { SortService } from '../../../shared/sort.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   standalone: true,
@@ -34,8 +48,12 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
     first: number;
     row: number;
   }>();
-  filterText$: BehaviorSubject<string> = new BehaviorSubject<string>(localStorage.getItem('filterText') || '');
+  filterText$: BehaviorSubject<string> = new BehaviorSubject<string>(
+    localStorage.getItem('filterText') || ''
+  );
+  http = inject(HttpClient);
   items: Item[] = [];
+  allItems: Item[] = [];
   selectedItemIds = new Set<string>();
   disabled = false;
   constructor(
@@ -45,14 +63,13 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
     private userDataFacade: UserProfileFacade
   ) {}
   ngOnInit(): void {
-     this.userDataFacade.userData$.pipe(first()).subscribe(res => {
-          if (res?.steamid) {
-            // Pass the steamId when loading items
-            this.itemSelectorFacade.loadItemsLazy(0, 100, res.steamid);
-          } else {
-            console.error('No steamId found');
-          }
-        });
+    this.userDataFacade.userData$.pipe(first()).subscribe(res => {
+      if (res?.steamid) {
+        this.itemSelectorFacade.loadItemsLazy(0, 100, res.steamid);
+      } else {
+        console.error('No steamId found');
+      }
+    });
     this.itemSelectorFacade.itemsToTrade$.subscribe(selectedItems => {
       selectedItems.forEach(item => {
         if (item.id) {
@@ -60,20 +77,30 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
         }
       });
     });
+    this.itemSelectorFacade.items$.subscribe(items => {
+      this.items = items;
+    });
     combineLatest([
-      this.itemSelectorFacade.items$,
-      this.filterText$,
+      this.addTradeService.filterText$,
       this.sortService.sortCriteria$,
     ])
       .pipe(
-        map(([items, filterText, sortCriteria]) => {
-          const filtered = filterText
-            ? items.filter(i =>
-                i.fullName.toLowerCase().includes(filterText.toLowerCase())
-              )
-            : [...items];
-
-          return this.sortService.sortItems(filtered, sortCriteria);
+        debounceTime(500),
+        switchMap(([filterText, sortCriteria]) => {
+          const trimmed = filterText.trim();
+          if (trimmed.length === 0) {
+            return this.itemSelectorFacade.items$.pipe(
+              map(items => this.sortService.sortItems(items, sortCriteria))
+            );
+          }
+          return this.http
+            .get<
+              Item[]
+            >(`${environment.API_URL}/items/search?searchString=${filterText}&userId=76561198027857565`)
+            .pipe(
+              catchError(() => of([])),
+              map(items => this.sortService.sortItems(items, sortCriteria))
+            );
         })
       )
       .subscribe(filteredSorted => {

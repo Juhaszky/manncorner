@@ -19,6 +19,9 @@ export class TradeService {
   getTradeById(id: string): Observable<Trade> {
     return this.http.get<Trade>(`${environment.API_URL}/api/Trade/${id}`);
   }
+  getUserTrades(id: string): Observable<Trade[]> {
+    return this.http.get<Trade[]>(`${environment.API_URL}/api/Trade/user/${id}`);
+  }
   postTrade(tradeData: {
     userId: string;
     createdAt: string;

@@ -12,6 +12,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UserDataService } from '../../shared/user-data.service';
+import { CardModule } from 'primeng/card';
+
 
 @Component({
   standalone: true,
@@ -23,6 +25,7 @@ import { UserDataService } from '../../shared/user-data.service';
     ProgressSpinnerModule,
     TooltipModule,
     ItemContainerComponent,
+    CardModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

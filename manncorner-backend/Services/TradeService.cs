@@ -43,6 +43,7 @@ public class TradeService : ITradeService
     {
         return await _db.Trades
             .Include(t => t.Items)
+            .OrderByDescending(t => t.BumpDate)
             .Where(t => t.UserId == userId)
             .ToListAsync();
     }

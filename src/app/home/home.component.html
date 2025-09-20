@@ -1,6 +1,6 @@
-<div class="container flex flex-col w-full pb-12 h-94">
-  <div
-    class="trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow"
+<div class="container flex flex-col w-full h-94">
+  <p-card
+    class="trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow bg-slate-800"
     *ngFor="let trade of trades"
     (click)="selectTrade(trade.id)"
     (keydown)="selectTrade(trade.id)"
@@ -52,7 +52,7 @@
       <app-item-container *ngFor="let item of trade.itemsToBuy" [item]="item"></app-item-container>
       </div>
     </div>
-  </div>
+  </p-card>
   <div class="paginator-wrapper">
     <p-paginator 
       [first]="first" 
