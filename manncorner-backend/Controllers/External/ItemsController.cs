@@ -21,12 +21,99 @@ public class ItemsController : ControllerBase
   [HttpGet("/items")]
   public async Task<IActionResult> GetUserItems([FromQuery] string userId, int offset = 0, [FromQuery] int limit = 40)
   {
+
+    var fullEnrichedList = await GetOrFetchEnrichedInventory(userId);
+
+    if (fullEnrichedList == null)
+    {
+      return StatusCode(500, "Failed to parse items.");
+    }
+    var page = fullEnrichedList
+        .Skip(offset)
+        .Take(limit)
+        .ToList();
+
+    return Ok(page);
+  }
+  [HttpGet("/items/search")]
+  public async Task<IActionResult> SearchUserItems([FromQuery] string searchString, [FromQuery] string userId)
+  {
+    var fullEnrichedList = await GetOrFetchEnrichedInventory(userId);
+
+    if (fullEnrichedList == null)
+    {
+      return StatusCode(500, "Failed to parse items.");
+    }
+
+    if (fullEnrichedList == null)
+      return StatusCode(500, "Failed to parse items.");
+
+    // Null-safe property checks for Contains to avoid ArgumentNullException
+    var matched = fullEnrichedList
+        .Where(item =>
+            (!string.IsNullOrEmpty(item.name) && item.name.Contains(searchString, StringComparison.OrdinalIgnoreCase)) ||
+            (!string.IsNullOrEmpty(item.fullName) && item.fullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        )
+        .Take(15)
+        .ToList();
+
+    return Ok(matched);
+  }
+  private async Task<InventoryResult> GetFullSteamInventory(string userId)
+  {
+    string lastAssetId = null;
+    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+    var allAssets = new List<Asset>();
+    var allDescriptions = new List<ItemDescription>();
+
+    bool moreItems = true;
+    while (moreItems)
+    {
+      string url = $"https://steamcommunity.com/inventory/{userId}/440/2";
+      if (lastAssetId != null)
+        url += $"?start_assetid={lastAssetId}";
+
+      var response = await _http.GetAsync(url);
+      if (response.StatusCode == HttpStatusCode.InternalServerError)
+      {
+        return new InventoryResult
+        {
+          Error = response.ReasonPhrase
+
+          // 
+        };
+      }
+      var json = await response.Content.ReadAsStringAsync();
+      var page = JsonSerializer.Deserialize<ItemResponse>(json, options);
+      if (page == null)
+        throw new Exception("Failed to parse Steam inventory page!");
+
+      allAssets.AddRange(page.Assets);
+      allDescriptions.AddRange(page.Descriptions);
+      moreItems = page.MoreItems;
+      lastAssetId = page.LastAssetId;
+    }
+
+    var items = new ItemResponse
+    {
+      Assets = allAssets,
+      Descriptions = allDescriptions
+    };
+    return new InventoryResult
+    {
+      Response = items
+    };
+  }
+
+  private async Task<List<ParsedItem>?> GetOrFetchEnrichedInventory(string userId)
+  {
     if (!_cache.TryGetValue($"full-enriched-inventory_{userId}", out List<ParsedItem>? fullEnrichedList))
     {
       var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
       var items = await GetFullSteamInventory(userId);
 
-      if (items == null || items.Error != null) return StatusCode(500, "Internal Server Error");
+      if (items == null || items.Error != null) return null;
 
       var mergedItems = items.Response.Assets.Select(asset =>
                {
@@ -77,7 +164,7 @@ public class ItemsController : ControllerBase
       var enrichedJson = await response.Content.ReadAsStringAsync();
 
       fullEnrichedList = JsonSerializer.Deserialize<List<ParsedItem>>(enrichedJson, options);
-      if (fullEnrichedList == null) return StatusCode(500, "Failed to enrich items.");
+      if (fullEnrichedList == null) return null;
 
       var cacheEntryOptions = new MemoryCacheEntryOptions()
           .SetSlidingExpiration(TimeSpan.FromMinutes(10))
@@ -86,63 +173,7 @@ public class ItemsController : ControllerBase
 
       _cache.Set($"full-enriched-inventory_{userId}", fullEnrichedList, cacheEntryOptions);
     }
-
-    if (fullEnrichedList == null)
-    {
-      return StatusCode(500, "Failed to parse items.");
-    }
-    var page = fullEnrichedList
-        .Skip(offset)
-        .Take(limit)
-        .ToList();
-
-    return Ok(page);
-  }
-  private async Task<InventoryResult> GetFullSteamInventory(string userId)
-  {
-    string lastAssetId = null;
-    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-    var allAssets = new List<Asset>();
-    var allDescriptions = new List<ItemDescription>();
-
-    bool moreItems = true;
-    while (moreItems)
-    {
-      string url = $"https://steamcommunity.com/inventory/{userId}/440/2";
-      if (lastAssetId != null)
-        url += $"?start_assetid={lastAssetId}";
-
-      var response = await _http.GetAsync(url);
-      if (response.StatusCode == HttpStatusCode.InternalServerError)
-      {
-        return new InventoryResult
-        {
-          Error = response.ReasonPhrase
-
-          // 
-        };
-      }
-      var json = await response.Content.ReadAsStringAsync();
-      var page = JsonSerializer.Deserialize<ItemResponse>(json, options);
-      if (page == null)
-        throw new Exception("Failed to parse Steam inventory page!");
-
-      allAssets.AddRange(page.Assets);
-      allDescriptions.AddRange(page.Descriptions);
-      moreItems = page.MoreItems;
-      lastAssetId = page.LastAssetId;
-    }
-
-    var items = new ItemResponse
-    {
-      Assets = allAssets,
-      Descriptions = allDescriptions
-    };
-    return new InventoryResult
-    {
-      Response = items
-    };
+    return fullEnrichedList;
   }
 
 }

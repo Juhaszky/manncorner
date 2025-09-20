@@ -57,192 +57,80 @@ namespace manncorner_backend.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("ParsedItem", b =>
+            modelBuilder.Entity("CommentOfferItem", b =>
                 {
-                    b.Property<string>("id")
-                        .HasColumnType("text");
+                    b.Property<int>("dbId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
 
-                    b.PrimitiveCollection<string[]>("classes")
-                        .IsRequired()
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("dbId"));
+
+                    b.PrimitiveCollection<List<string>>("Classes")
                         .HasColumnType("text[]");
 
-                    b.Property<bool>("commodity")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("craftable")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("defindex")
+                    b.Property<int?>("CommentId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("effect")
+                    b.Property<bool?>("Commodity")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Craftable")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Defindex")
                         .HasColumnType("integer");
 
-                    b.Property<string>("fullName")
+                    b.Property<int?>("Effect")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("img")
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Img")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("killstreak")
+                    b.Property<int?>("Level")
                         .HasColumnType("integer");
 
-                    b.Property<string>("killstreaker")
-                        .HasColumnType("text");
-
-                    b.Property<int>("level")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("marketable")
+                    b.Property<bool?>("Marketable")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.PrimitiveCollection<List<string>>("Parts")
+                        .HasColumnType("text[]");
+
+                    b.Property<int>("Quality")
+                        .HasColumnType("integer");
+
+                    b.PrimitiveCollection<List<string>>("Spells")
+                        .HasColumnType("text[]");
+
+                    b.Property<bool>("Tradable")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("paint")
                         .HasColumnType("text");
 
-                    b.Property<int>("paintDefindex")
+                    b.Property<int?>("paintDefindex")
                         .HasColumnType("integer");
 
-                    b.PrimitiveCollection<string[]>("parts")
-                        .HasColumnType("text[]");
+                    b.HasKey("dbId");
 
-                    b.Property<int>("quality")
-                        .HasColumnType("integer");
+                    b.HasIndex("CommentId");
 
-                    b.Property<string>("sheen")
-                        .HasColumnType("text");
-
-                    b.PrimitiveCollection<string[]>("spells")
-                        .HasColumnType("text[]");
-
-                    b.Property<bool>("tradable")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("id");
-
-                    b.ToTable("ParsedItem");
-                });
-
-            modelBuilder.Entity("Tf2ItemAttribute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Class")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Tf2ItemSchemaId")
-                        .HasColumnType("integer");
-
-                    b.Property<double>("Value")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Tf2ItemSchemaId");
-
-                    b.ToTable("Tf2ItemAttribute");
-                });
-
-            modelBuilder.Entity("Tf2ItemSchema", b =>
-                {
-                    b.Property<int>("Defindex")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Defindex"));
-
-                    b.Property<string>("DropType")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ImageInventory")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ImageUrlLarge")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ItemClass")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ItemDescription")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ItemName")
-                        .HasColumnType("text");
-
-                    b.Property<int>("ItemQuality")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ItemSlot")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ItemTypeName")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("MaxILevel")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("MinILevel")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ModelPlayer")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("ProperName")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Defindex");
-
-                    b.ToTable("Tf2ItemSchemas", (string)null);
-                });
-
-            modelBuilder.Entity("Tf2ItemStyle", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Tf2ItemSchemaId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Tf2ItemSchemaId");
-
-                    b.ToTable("Tf2ItemStyle");
+                    b.ToTable("CommentOfferItem");
                 });
 
             modelBuilder.Entity("Trade", b =>
@@ -289,6 +177,9 @@ namespace manncorner_backend.Migrations
 
                     b.PrimitiveCollection<List<string>>("Classes")
                         .HasColumnType("text[]");
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("integer");
 
                     b.Property<bool?>("Commodity")
                         .HasColumnType("boolean");
@@ -353,6 +244,8 @@ namespace manncorner_backend.Migrations
 
                     b.HasKey("dbId");
 
+                    b.HasIndex("CommentId");
+
                     b.HasIndex("TradeId");
 
                     b.ToTable("Items");
@@ -410,49 +303,37 @@ namespace manncorner_backend.Migrations
                     b.Navigation("Trade");
                 });
 
-            modelBuilder.Entity("Tf2ItemAttribute", b =>
+            modelBuilder.Entity("CommentOfferItem", b =>
                 {
-                    b.HasOne("Tf2ItemSchema", "Tf2ItemSchema")
-                        .WithMany("Attributes")
-                        .HasForeignKey("Tf2ItemSchemaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Comment", "Comment")
+                        .WithMany("ItemsOffer")
+                        .HasForeignKey("CommentId");
 
-                    b.Navigation("Tf2ItemSchema");
-                });
-
-            modelBuilder.Entity("Tf2ItemStyle", b =>
-                {
-                    b.HasOne("Tf2ItemSchema", "Tf2ItemSchema")
-                        .WithMany("Styles")
-                        .HasForeignKey("Tf2ItemSchemaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tf2ItemSchema");
+                    b.Navigation("Comment");
                 });
 
             modelBuilder.Entity("TradeItem", b =>
                 {
+                    b.HasOne("Comment", "Comment")
+                        .WithMany()
+                        .HasForeignKey("CommentId");
+
                     b.HasOne("Trade", "Trade")
                         .WithMany("Items")
                         .HasForeignKey("TradeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Comment");
+
                     b.Navigation("Trade");
                 });
 
             modelBuilder.Entity("Comment", b =>
                 {
+                    b.Navigation("ItemsOffer");
+
                     b.Navigation("Replies");
-                });
-
-            modelBuilder.Entity("Tf2ItemSchema", b =>
-                {
-                    b.Navigation("Attributes");
-
-                    b.Navigation("Styles");
                 });
 
             modelBuilder.Entity("Trade", b =>

@@ -26,6 +26,14 @@ export const routes: Routes = [
     canActivate: [authGuardGuard]
   },
   {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(
+        m => m.DashboardComponent
+      ),
+    canActivate: [authGuardGuard]
+  },
+  {
     path: '**',
     redirectTo: '/home',
   },
