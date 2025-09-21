@@ -117,7 +117,7 @@ export class HomeComponent implements OnInit {
     const userId = this.userService.getUserId();
     console.log(userId);
     if (userId) {
-      this.tradeService.bumpTrade(userId, +tradeId).subscribe(res => {
+      this.tradeService.bumpTrade(userId, tradeId).subscribe(res => {
         console.log(res);
       });
     }

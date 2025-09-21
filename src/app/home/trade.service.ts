@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment.development';
 import { Trade, TradeResult } from '../../shared/models/trade.model';
 import { Item } from '../../shared/models/item.model';
 import { TradeBumpResult } from '../../shared/models/tradeBumpResult.model';
+import { TradeStatusResult } from '../../shared/models/Responses/tradeStatusResult.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,10 +34,15 @@ export class TradeService {
   }): Observable<Trade> {
     return this.http.post<Trade>(`${environment.API_URL}/api/Trade`, tradeData);
   }
-  bumpTrade(userId: string, tradeId: number): Observable<TradeBumpResult> {
+  bumpTrade(userId: string, tradeId: string): Observable<TradeBumpResult> {
     return this.http.post<TradeBumpResult>(`${environment.API_URL}/api/Trade/bump`, {
       userId,
       tradeId,
     });
+  }
+  changeTradeStatus(tradeId: string): Observable<TradeStatusResult> {
+    return this.http.post<TradeStatusResult>(`${environment.API_URL}/api/Trade/changeStatus`, {
+      tradeId
+    })
   }
 }

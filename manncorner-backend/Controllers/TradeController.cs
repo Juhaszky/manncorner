@@ -63,4 +63,15 @@ public class TradeController : ControllerBase
         if (bumpResult == null) return NotFound();
         return Ok(bumpResult);
     }
+    [HttpPost("changeStatus")]
+    public async Task<ActionResult> ChangeTradeStatus([FromBody] TradeIdRequest request)
+    {
+        var result = await _tradeService.ChangeTradeStatusAsync(request.TradeId);
+        if (result.Status == 404)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
 }

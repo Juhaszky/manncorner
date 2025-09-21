@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 public class TradeService : ITradeService
@@ -27,6 +28,7 @@ public class TradeService : ITradeService
         var trades = await _db.Trades
             .Include(t => t.Items)
             .OrderByDescending(t => t.BumpDate)
+            .Where(t => t.Status != "closed")
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -44,6 +46,7 @@ public class TradeService : ITradeService
         return await _db.Trades
             .Include(t => t.Items)
             .OrderByDescending(t => t.BumpDate)
+            .OrderByDescending(t => t.Status == "open")
             .Where(t => t.UserId == userId)
             .ToListAsync();
     }
@@ -85,6 +88,28 @@ public class TradeService : ITradeService
         await _db.SaveChangesAsync();
 
         return new TradeBumpResult
+        {
+            Status = 200,
+            Trade = trade
+        };
+    }
+    public async Task<TradeStatusResult> ChangeTradeStatusAsync(int tradeId)
+    {
+        var trade = await _db.Trades.FirstOrDefaultAsync(t => t.Id == tradeId);
+
+        if (trade == null)
+        {
+            return new TradeStatusResult
+            {
+                Status = 404,
+                Error = "Trade not found"
+            };
+        }
+
+        trade.Status = trade.Status == "open" ? "closed" : "open";
+        await _db.SaveChangesAsync();
+
+        return new TradeStatusResult
         {
             Status = 200,
             Trade = trade

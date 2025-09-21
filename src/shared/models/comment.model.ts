@@ -3,7 +3,7 @@ import { ProfileData } from "./ProfileData";
 
 export interface Comment {
     id: number;
-    tradeId: number;
+    tradeId: string;
     userId: number;
     commentData: string;
     createdAt: Date;

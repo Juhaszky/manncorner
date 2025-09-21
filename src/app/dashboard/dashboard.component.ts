@@ -9,10 +9,20 @@ import { ItemSelectorFacade } from '../../shared/item-selector/item-selector.fac
 import { UserDataService } from '../../shared/user-data.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { FormsModule } from '@angular/forms';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CardModule, CommonModule, ItemContainerComponent],
+  imports: [
+    CardModule,
+    CommonModule,
+    ItemContainerComponent,
+    ToggleButtonModule,
+    FormsModule,
+    ProgressSpinnerModule
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -26,16 +36,24 @@ export class DashboardComponent implements OnInit {
     itemsToSell: Item[];
     itemsToBuy: Item[];
     id: string;
+    status: string;
     username: string;
     createdAt: Date;
     bumpedAt: Date;
   }[] = [];
+  checked = false;
+  loading = true;
+  get inactiveTrade() {
+    return this.trades.filter(t => t.status === 'closed');
+  }
+
   ngOnInit(): void {
     this.loadTrades();
   }
   private loadTrades(): void {
-    //this.loading = true;
+    this.loading = true;
     this.tradeService
+      //TODO - change the userId input
       .getUserTrades('76561198027857565')
       .pipe(
         map(trades => {
@@ -47,6 +65,7 @@ export class DashboardComponent implements OnInit {
               itemsToSell: itemsForSale,
               itemsToBuy: itemsToBuy,
               id: trade.id,
+              status: trade.status,
               username: trade.username,
               createdAt: trade.createdAt,
               bumpedAt: trade.bumpDate,
@@ -60,9 +79,7 @@ export class DashboardComponent implements OnInit {
       )
       .subscribe(tradesTransformed => {
         this.trades = tradesTransformed;
-        console.log(this.trades);
-        //this.cdr.detectChanges();
-        //this.loading = false;
+        this.loading = false;
       });
   }
   selectTrade(tradeId: string): void {
@@ -72,10 +89,9 @@ export class DashboardComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
     const userId = this.userService.getUserId();
-    console.log(userId);
     if (userId) {
-      this.tradeService.bumpTrade(userId, +tradeId).subscribe(res => {
-        if (res.error == null &&res.status === 200) {
+      this.tradeService.bumpTrade(userId, tradeId).subscribe(res => {
+        if (res.error == null && res.status === 200) {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -90,5 +106,59 @@ export class DashboardComponent implements OnInit {
         }
       });
     }
+  }
+  onHandleStatus(e: Event, tradeId: string) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.changeStatus(tradeId);
+  }
+  getStatus(trade: {
+    itemsToSell: Item[];
+    itemsToBuy: Item[];
+    id: string;
+    status: string;
+    username: string;
+    createdAt: Date;
+    bumpedAt: Date;
+  }): boolean {
+    return trade.status === 'open';
+  }
+  setStatus(
+    trade: {
+      itemsToSell: Item[];
+      itemsToBuy: Item[];
+      id: string;
+      status: string;
+      username: string;
+      createdAt: Date;
+      bumpedAt: Date;
+    },
+    value: boolean
+  ): void {
+    trade.status = value ? 'open' : 'closed';
+  }
+
+  changeStatus(tradeId: string) {
+    this.tradeService.changeTradeStatus(tradeId).subscribe(res => {
+      if (res.status === 200) {
+        const trades = this.trades;
+        const modifiedTradeIdx = trades.findIndex(t => t.id === tradeId);
+        if (modifiedTradeIdx > -1) {
+          const modifiedTrade = trades[modifiedTradeIdx];
+          modifiedTrade.status = res.trade.status;
+        }
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `Trade status changed.`,
+        });
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: `${res.error}`,
+        });
+      }
+    });
   }
 }

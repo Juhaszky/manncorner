@@ -84,4 +84,22 @@ p {
   --p-card-background: rgb(30 41 59) !important;
   --p-paginator-background: rgb(30 41 59) !important;
   --p-tabs-tablist-background: rgb(30 41 59) !important;
+  --p-togglebutton-content-checked-background: #4aff86 !important;
+}
+.p-togglebutton {
+  background-color: #ff683a !important;
+  border-color: #ff683a !important;
+  color: #1f2937 !important;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.p-togglebutton.p-highlight,
+.p-togglebutton.p-togglebutton-checked {
+  background-color: #4aff86 !important;
+  border-color: #3afa7a !important;
+  color: #000000 !important;
+}
+
+.p-togglebutton-label {
+  color: inherit !important;
 }
