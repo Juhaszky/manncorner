@@ -8,6 +8,8 @@ import { ItemContainerComponent } from '../../../shared/item/item-container.comp
 import { Item } from '../../../shared/models/item.model';
 import { CommentsComponent } from './comments/comments.component';
 import { Comment } from '../../../shared/models/comment.model';
+import { AvatarModule } from 'primeng/avatar';
+
 
 @Component({
   standalone: true,
@@ -16,7 +18,8 @@ import { Comment } from '../../../shared/models/comment.model';
     CommonModule,
     ItemContainerComponent,
     DescrpitionComponent,
-    CommentsComponent
+    CommentsComponent,
+    AvatarModule
     // InventoryItemsSelectorComponent,
     // OfferItemPanelComponent,
     // OfferItemSelectorComponent
@@ -46,7 +49,6 @@ export class TradeComponent implements OnInit {
         .getTradeById(this.tradeId)
         .pipe(
           switchMap(trade => {
-            console.log(trade);
             const itemsForSale = trade.items.filter((i: Item) => i.isSelling);
             const itemsToBuy = trade.items.filter((i: Item) => !i.isSelling);
             const tradeData = {
