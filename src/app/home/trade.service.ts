@@ -6,6 +6,7 @@ import { Trade, TradeResult } from '../../shared/models/trade.model';
 import { Item } from '../../shared/models/item.model';
 import { TradeBumpResult } from '../../shared/models/tradeBumpResult.model';
 import { TradeStatusResult } from '../../shared/models/Responses/tradeStatusResult.model';
+import { TradeDeleteResult } from '../../shared/models/Responses/tradeDeleteResult.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,9 @@ export class TradeService {
     return this.http.get<Trade>(`${environment.API_URL}/api/Trade/${id}`);
   }
   getUserTrades(id: string): Observable<Trade[]> {
-    return this.http.get<Trade[]>(`${environment.API_URL}/api/Trade/user/${id}`);
+    return this.http.get<Trade[]>(
+      `${environment.API_URL}/api/Trade/user/${id}`
+    );
   }
   postTrade(tradeData: {
     userId: string;
@@ -35,14 +38,28 @@ export class TradeService {
     return this.http.post<Trade>(`${environment.API_URL}/api/Trade`, tradeData);
   }
   bumpTrade(userId: string, tradeId: string): Observable<TradeBumpResult> {
-    return this.http.post<TradeBumpResult>(`${environment.API_URL}/api/Trade/bump`, {
-      userId,
-      tradeId,
-    });
+    return this.http.post<TradeBumpResult>(
+      `${environment.API_URL}/api/Trade/bump`,
+      {
+        userId,
+        tradeId,
+      }
+    );
+  }
+  deleteTrade(tradeId: string): Observable<TradeDeleteResult> {
+    return this.http.delete<TradeDeleteResult>(
+      `${environment.API_URL}/api/Trade/delete`,
+      {
+        body: { tradeId },
+      }
+    );
   }
   changeTradeStatus(tradeId: string): Observable<TradeStatusResult> {
-    return this.http.post<TradeStatusResult>(`${environment.API_URL}/api/Trade/changeStatus`, {
-      tradeId
-    })
+    return this.http.post<TradeStatusResult>(
+      `${environment.API_URL}/api/Trade/changeStatus`,
+      {
+        tradeId,
+      }
+    );
   }
 }

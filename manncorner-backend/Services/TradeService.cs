@@ -14,6 +14,7 @@ public class TradeService : ITradeService
     public async Task<Trade> CreateTradeAsync(Trade trade)
     {
         trade.CreatedAt = DateTime.UtcNow;
+        trade.Deleted = false;
         trade.BumpDate = trade.CreatedAt;
         _db.Trades.Add(trade);
         await _db.SaveChangesAsync();
@@ -24,11 +25,12 @@ public class TradeService : ITradeService
     {
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 10;
-        var totalCount = await _db.Trades.CountAsync();
+        var totalCount = await _db.Trades.CountAsync(t => t.Deleted == false);
         var trades = await _db.Trades
             .Include(t => t.Items)
             .OrderByDescending(t => t.BumpDate)
             .Where(t => t.Status != "closed")
+            .Where(t => t.Deleted == false)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -47,6 +49,7 @@ public class TradeService : ITradeService
             .Include(t => t.Items)
             .OrderByDescending(t => t.BumpDate)
             .OrderByDescending(t => t.Status == "open")
+            .Where(t => t.Deleted == false)
             .Where(t => t.UserId == userId)
             .ToListAsync();
     }
@@ -110,6 +113,28 @@ public class TradeService : ITradeService
         await _db.SaveChangesAsync();
 
         return new TradeStatusResult
+        {
+            Status = 200,
+            Trade = trade
+        };
+    }
+
+    public async Task<TradeDeleteResult> DeleteTrade(int tradeId)
+    {
+        var trade = await _db.Trades.FirstOrDefaultAsync(t => t.Id == tradeId);
+        if (trade == null)
+        {
+            return new TradeDeleteResult
+            {
+                Status = 404,
+                Error = "Trade not found"
+            };
+        }
+
+        trade.Deleted = true;
+        await _db.SaveChangesAsync();
+
+        return new TradeDeleteResult
         {
             Status = 200,
             Trade = trade

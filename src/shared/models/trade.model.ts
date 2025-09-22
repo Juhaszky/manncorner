@@ -8,6 +8,7 @@ export interface Trade {
     createdAt: Date;
     items: Item[];
     status: string;
+    deleted: boolean;
     username: string;
     userId: string;
     comments: Comment[]

@@ -74,4 +74,15 @@ public class TradeController : ControllerBase
 
         return Ok(result);
     }
+    [HttpDelete("delete")]
+    public async Task<ActionResult> DeleteTradeStatus([FromBody] TradeIdRequest request)
+    {
+        var result = await _tradeService.DeleteTrade(request.TradeId);
+        if (result.Status == 404)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
 }

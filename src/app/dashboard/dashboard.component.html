@@ -10,14 +10,14 @@
     <ng-template #header>
       <div
         class="w-full flex gap-2 p-2 justify-end border-solid border-slate-600">
-        <button>
+        <button *ngIf="trade.status === 'open'">
           <img
             class="h-6 w-6"
             src="/assets/icons/refresh.svg"
             alt=""
             (click)="onBump(trade.id, $event)" />
         </button>
-        <button>
+        <button (click)="handleConfirmDeleteDialog($event, trade.id)">
           <img class="h-6 w-6" src="/assets/icons/trash.svg" alt="" />
         </button>
         <p-togglebutton
@@ -67,3 +67,10 @@
   *ngIf="loading">
   <p-progress-spinner ariaLabel="loading" />
 </div>
+<p-dialog header="Confirmation" [modal]="true" [(visible)]="showConfirmDelete" [style]="{ width: '25rem', padding: '2em'}">
+    <span class="p-text-secondary block mb-8">Are you sure you want to delete your trade?</span>
+    <div class="flex justify-end gap-2">
+        <p-button label="Cancel" severity="secondary" (onClick)="showConfirmDelete = false" />
+        <p-button label="Delete"  severity="danger" (onClick)="handleTradeDelete()"/>
+    </div>
+</p-dialog>

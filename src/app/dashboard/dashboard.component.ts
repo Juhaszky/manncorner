@@ -12,6 +12,8 @@ import { MessageService } from 'primeng/api';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { FormsModule } from '@angular/forms';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,7 +23,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ItemContainerComponent,
     ToggleButtonModule,
     FormsModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    DialogModule,
+    ButtonModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -42,6 +46,8 @@ export class DashboardComponent implements OnInit {
     bumpedAt: Date;
   }[] = [];
   checked = false;
+  showConfirmDelete = false;
+  lastSelectedTradeId = '';
   loading = true;
   get inactiveTrade() {
     return this.trades.filter(t => t.status === 'closed');
@@ -84,6 +90,31 @@ export class DashboardComponent implements OnInit {
   }
   selectTrade(tradeId: string): void {
     this.router.navigate(['/trade', tradeId]);
+  }
+  handleConfirmDeleteDialog(e: Event, tradeId: string) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.lastSelectedTradeId = tradeId;
+    this.showConfirmDelete = true;
+  }
+  handleTradeDelete() {
+    this.showConfirmDelete = false;
+    this.tradeService.deleteTrade(this.lastSelectedTradeId).subscribe(res => {
+      if (res.error == null && res.status === 200 && res.trade.deleted) {
+        this.trades = this.trades.filter(t => t.id !== res.trade.id);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `Trade deleted successfully`,
+        });
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: `${res.error}`,
+        });
+      }
+    });
   }
   onBump(tradeId: string, event: MouseEvent) {
     event.preventDefault();

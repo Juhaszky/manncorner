@@ -6,4 +6,5 @@ public interface ITradeService
     Task<Trade> CreateTradeAsync(Trade trade);
     Task<List<Trade>> GetAllTradesByUserAsync(string userId);
     Task<TradeStatusResult> ChangeTradeStatusAsync(int tradeId);
+    Task<TradeDeleteResult> DeleteTrade(int tradeId);
 }
