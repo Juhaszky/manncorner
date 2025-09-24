@@ -34,6 +34,7 @@ export class TradeComponent implements OnInit {
         itemsFrom: Item[];
         itemsTo: Item[];
         id: string;
+        avatarPath: string;
         username: string;
         description: string;
         comments: Comment[]
@@ -55,6 +56,7 @@ export class TradeComponent implements OnInit {
               itemsFrom: itemsForSale,
               itemsTo: itemsToBuy,
               id: trade.id,
+              avatarPath: trade.avatarPath,
               username: trade.username,
               description: trade.description,
               comments: trade.comments

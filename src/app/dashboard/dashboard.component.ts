@@ -97,6 +97,9 @@ export class DashboardComponent implements OnInit {
     this.lastSelectedTradeId = tradeId;
     this.showConfirmDelete = true;
   }
+  handleTradeEditing(tradeId: string) {
+    this.router.navigate(['/trade', tradeId, 'edit']);
+  }
   handleTradeDelete() {
     this.showConfirmDelete = false;
     this.tradeService.deleteTrade(this.lastSelectedTradeId).subscribe(res => {

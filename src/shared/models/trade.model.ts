@@ -3,6 +3,7 @@ import { Item } from "./item.model";
 
 export interface Trade {
     id: string;
+    avatarPath: string;
     description: string;
     bumpDate: Date;
     createdAt: Date;

@@ -37,6 +37,17 @@ export class TradeService {
   }): Observable<Trade> {
     return this.http.post<Trade>(`${environment.API_URL}/api/Trade`, tradeData);
   }
+  updateTrade(tradeData: {
+    id: string;
+    userId: string;
+    createdAt: string;
+    status: string;
+    description: string;
+    items: Item[];
+    username: string;
+  }): Observable<Trade> {
+    return this.http.put<Trade>(`${environment.API_URL}/api/Trade/${tradeData.id}`, tradeData);
+  }
   bumpTrade(userId: string, tradeId: string): Observable<TradeBumpResult> {
     return this.http.post<TradeBumpResult>(
       `${environment.API_URL}/api/Trade/bump`,

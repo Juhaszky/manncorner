@@ -3,6 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { TradeComponent } from './home/trade/trade.component';
 import { LoginSuccessComponent } from './login-success/login-success.component';
 import { authGuardGuard } from './auth-guard.guard';
+import { EditTradeComponent } from './edit-trade/edit-trade.component';
 
 export const routes: Routes = [
   {
@@ -11,6 +12,7 @@ export const routes: Routes = [
   },
   { path: 'login-successful', component: LoginSuccessComponent },
   { path: 'trade/:id', component: TradeComponent },
+  { path: 'trade/:id/edit', component: EditTradeComponent },
   {
     path: 'add-trade',
     loadComponent: () =>

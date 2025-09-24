@@ -52,6 +52,21 @@ public class TradeController : ControllerBase
         var createTrade = await _tradeService.CreateTradeAsync(trade);
         return CreatedAtAction(nameof(GetTrade), new { id = createTrade.Id }, createTrade);
     }
+    [HttpPut("{id}")]
+    public async Task<ActionResult<Trade>> UpdateTrade(int id, [FromBody] Trade trade)
+    {
+        if (id != trade.Id)
+        {
+            return BadRequest("Trade ID mismatch");
+        }
+
+        var updatedTrade = await _tradeService.UpdateTradeAsync(trade);
+        if (updatedTrade == null)
+        {
+            return NotFound();
+        }
+        return Ok(updatedTrade);
+    }
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("bump")]
     public async Task<ActionResult> BumpTrade([FromBody] BumpTrade tradeData)

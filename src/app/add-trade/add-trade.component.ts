@@ -135,6 +135,7 @@ export class AddTradeComponent implements OnInit {
         ];
 
         const tradePayload = {
+          avatarPath: userData.avatar,
           userId: userData.steamid,
           createdAt: new Date().toISOString(),
           status: 'open',

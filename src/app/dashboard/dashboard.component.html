@@ -20,6 +20,9 @@
         <button (click)="handleConfirmDeleteDialog($event, trade.id)">
           <img class="h-6 w-6" src="/assets/icons/trash.svg" alt="" />
         </button>
+        <button (click)="handleTradeEditing(trade.id)">
+          <img class="h-6 w-6" src="/assets/icons/modify.svg" alt="" />
+        </button>
         <p-togglebutton
           [ngModel]="getStatus(trade)"
           (ngModelChange)="setStatus(trade, $event)"

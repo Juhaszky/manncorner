@@ -118,6 +118,31 @@ public class TradeService : ITradeService
             Trade = trade
         };
     }
+    public async Task<Trade?> UpdateTradeAsync(Trade trade)
+    {
+        var existingTrade = await _db.Trades
+            .Include(t => t.Items)
+            .FirstOrDefaultAsync(t => t.Id == trade.Id);
+
+        if (existingTrade == null)
+        {
+            return null;
+        }
+
+        existingTrade.Description = trade.Description;
+        existingTrade.Username = trade.Username;
+        existingTrade.BumpDate = DateTime.UtcNow;
+        _db.Items.RemoveRange(existingTrade.Items);
+
+        existingTrade.Items.Clear();
+        foreach (var item in trade.Items)
+        {
+            existingTrade.Items.Add(item);
+        }
+
+        await _db.SaveChangesAsync();
+        return existingTrade;
+    }
 
     public async Task<TradeDeleteResult> DeleteTrade(int tradeId)
     {
