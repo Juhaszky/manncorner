@@ -102,7 +102,7 @@
       </app-inventory-items-selector> -->
     <!-- </div> -->
   </div>
-  <descrpition [canEdit]="true"> </descrpition>
+  <descrpition [html]="tradeData?.description ?? ''" [canEdit]="true" > </descrpition>
 </div>
 <p-dialog 
   header="Customize Item"
