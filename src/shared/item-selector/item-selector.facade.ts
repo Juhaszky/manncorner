@@ -110,10 +110,10 @@ export class ItemSelectorFacade {
     this._itemsToTrade.next(newItems);
   }
   onRemoveEditItem(item: Item) {
-    const currentItems = this._itemsEditToTrade.getValue();
-    const newItems = currentItems.filter(i => i.id !== item.id);
+    const currentItems = this._itemsEditForTrade.getValue();
+    const newItems = currentItems.filter(i => i.name !== item.name);
     this.selectedEditItemIds.delete(item.id);
-    this._itemsEditToTrade.next(newItems);
+    this._itemsEditForTrade.next(newItems);
   }
   onRemoveOfferItem(item: Item) {
     const currentItems = this._itemsOffer.getValue();

@@ -102,9 +102,9 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.itemSelectorFacade.itemsEditToTrade$.subscribe(selectedItems => {
-      this.itemsFrom = selectedItems;
-      selectedItems.forEach(item => {
+    this.itemSelectorFacade.itemsEditToTrade$.subscribe(itemsFrom => {
+      this.itemsFrom = itemsFrom;
+      itemsFrom.forEach(item => {
         if (item.id) {
           this.selectedItemIds.add(item.id);
         }
@@ -286,7 +286,8 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
     return item?.id || index;
   }
   onRemoveItem(item: Item) {
-    this.itemSelectorFacade.onRemoveBaseItem(item);
+    console.log('ran');
+    this.itemSelectorFacade.onRemoveEditItem(item);
   }
   onCustomizeItem(item: Item) {
     console.log(this.customizeVisible);
