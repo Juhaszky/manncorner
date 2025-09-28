@@ -38,6 +38,7 @@ export class ItemEditorComponent implements OnInit, OnChanges {
   facade = inject(ItemSelectorFacade);
   @Input() options: Item[] = [];
   @Output() confirmSelecion = new EventEmitter();
+  @Output() filterSearch = new EventEmitter();
   @Output() closeDialog = new EventEmitter();
 
   myControl = new FormControl<Item[]>([]);
@@ -65,16 +66,13 @@ export class ItemEditorComponent implements OnInit, OnChanges {
     //this.selectedItems = [...this.selectedItems, ...event.value];
     console.log(event);
   }
+  onHandleFilter(event: any) {
+    this.filterSearch.emit(event.filter);
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['options']) {
       this.filteredOptions = this.options ?? [];
     }
-  }
-  filter(query: string): void {
-    const lower = query?.toLowerCase() || '';
-    this.filteredOptions = this.options.filter((o: Item) =>
-      o.name.toLowerCase().includes(lower)
-    );
   }
 
   onConfirmSelection() {

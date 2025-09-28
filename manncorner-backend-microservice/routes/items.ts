@@ -4,8 +4,7 @@ import { getItems, parseItems } from '../controllers/ItemController';
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  const searchTerm = req.query.searchTerm as string;
-
+  const searchTerm = req.query.searchterm as string;
   const paginatedItems = getItems(searchTerm);
   res.json(paginatedItems);
 });

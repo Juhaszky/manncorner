@@ -153,32 +153,10 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
     return this.itemSelectorFacade.isItemSelected(item);
   }
   handleSelectEmitter(item: Item) {
-    if (this.mode === 'inventory') {
-      this.itemSelectorFacade.onAddItem(item);
-    } else if (this.mode === 'offer') {
-      this.itemSelectorFacade.onOfferItem(item);
-    }
-  }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onRemoveItem(idx: number) {
-    // this.itemService.itemState$.subscribe(state => {
-    //   this.filter = state.filterText;
-    // });
-    // if (this.mode === 'toTrade') {
-    //   console.log(this.filter);
-    //   if (this.filter) {
-    //     console.log('ran');
-    //     this.itemService.moveItemToFilteredInventory(idx);
-    //     this.itemService.itemState$.subscribe(s =>
-    //       console.log(s.filteredInventoryItems)
-    //     );
-    //   } else {
-    //     this.itemService.moveItemToInventory(idx);
-    //   }
-    // } else {
-    //   this.itemService.removeItemFrom(idx);
-    // }
-    // this.applyFilter();
+      this.itemSelectorFacade.onAddItem(item);
+
+     // this.itemSelectorFacade.onOfferItem(item);
+    
   }
 }

@@ -8,6 +8,8 @@ import { Item } from '../../../shared/models/item.model';
 import { TooltipModule } from 'primeng/tooltip';
 import { HttpClient } from '@angular/common/http';
 import { ItemCustomizerComponent } from '../../../shared/item-customizer/item-customizer.component';
+import { debounceTime, Subject } from 'rxjs';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-buy-item-panel',
@@ -18,7 +20,7 @@ import { ItemCustomizerComponent } from '../../../shared/item-customizer/item-cu
     ItemCustomizerComponent,
     ItemContainerComponent,
     CommonModule,
-    TooltipModule
+    TooltipModule,
   ],
   templateUrl: './buy-item-panel.component.html',
   styleUrl: './buy-item-panel.component.scss',
@@ -26,6 +28,7 @@ import { ItemCustomizerComponent } from '../../../shared/item-customizer/item-cu
 export class BuyItemPanelComponent implements OnInit {
   @Output() itemAdd = new EventEmitter<Item>();
   @Output() itemRemove = new EventEmitter<Item>();
+  private filterSubject = new Subject<string>();
   allItems: Item[] = [];
   selectedItems: Item[] = [];
   customizableItem!: Item;
@@ -37,17 +40,26 @@ export class BuyItemPanelComponent implements OnInit {
   constructor(public itemSelectorFacade: ItemSelectorFacade) {}
 
   ngOnInit(): void {
+    this.filterSubject.pipe(debounceTime(100)).subscribe(filterText => {
+      this.loadItems(filterText);
+    });
     this.loadItems();
-    this.itemSelectorFacade.itemsForTrade$.subscribe((res) => {
+    this.itemSelectorFacade.itemsForTrade$.subscribe(res => {
       this.selectedItems = res;
     });
   }
-  loadItems(): void {
+  loadItems(searchTerm?: string): void {
+    const params = searchTerm
+      ? `?searchterm=${encodeURIComponent(searchTerm)}`
+      : '';
     this.http
-      .get<Item[]>(`http://localhost:3000/api/items`)
+      .get<Item[]>(`${environment.MICROSERVICE_URL}/api/items${params}`)
       .subscribe((res: Item[]) => {
         this.allItems = res;
       });
+  }
+  handleFilterSearch(searchTerm: string) {
+    this.filterSubject.next(searchTerm);
   }
 
   onDialogClose() {

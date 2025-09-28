@@ -7,18 +7,27 @@ import { Item } from '../models/Item';
 
 const allItems = rawItems as TF2Item[];
 export const getItems = (searchTerm?: string) => {
-  const filtered: Item[] = allItems.map(i => parseStockItemToItem(i));
+  //let filtered: Item[] = allItems.map(i => parseStockItemToItem(i));
+  const DEFAULT_ITEMS = allItems
+    .filter(i => [5021, 5002, 5000, 5001].includes(i.defindex))
+    .map(i => parseStockItemToItem(i));
 
-  // if (searchTerm) {
-  //   const lower = searchTerm.toLowerCase();
-  //   filtered = allItems.map((i) => parseStockItemToItem(i)).filter(
-  //     item =>
-  //       item.item_name?.toLowerCase().includes(lower) ||
-  //       item.name?.toLowerCase().includes(lower)
-  //   );
-  // }
+  let filtered: Item[] = [];
+  if (searchTerm) {
+    const lower = searchTerm.toLowerCase();
+    filtered = allItems
+      .filter(
+        item =>
+          item.item_name?.toLowerCase().includes(lower) ||
+          item.name?.toLowerCase().includes(lower)
+      )
+      .map(i => parseStockItemToItem(i))
+      .slice(0, 50);
+  } else {
+    filtered = allItems.slice(0, 50).map(i => parseStockItemToItem(i));
+  }
 
-  return filtered;
+  return [...DEFAULT_ITEMS, ...filtered];
 };
 
 export const parseItems = (items: any[]) => {
@@ -39,10 +48,10 @@ function sanitizeEconItem(rawItem: any): EconItem {
     assetid: rawItem.assetid || rawItem.Assetid || rawItem.assetId || '',
     descriptions: Array.isArray(rawItem.Descriptions || rawItem.descriptions)
       ? (rawItem.Descriptions || rawItem.descriptions).map((desc: any) => ({
-        value: desc.Value ?? desc.value,
-        color: desc.Color ?? desc.color,
-        name: desc.Name
-      }))
+          value: desc.Value ?? desc.value,
+          color: desc.Color ?? desc.color,
+          name: desc.Name,
+        }))
       : [],
     name: rawItem.Name ?? rawItem.name,
     name_color: rawItem.Name_Color,
@@ -50,26 +59,27 @@ function sanitizeEconItem(rawItem: any): EconItem {
     market_hash_name: rawItem.Market_Hash_Name ?? rawItem.market_Hash_Name,
     tags: Array.isArray(rawItem.Tags || rawItem.tags)
       ? (rawItem.Tags || rawItem.tags).map((tag: any) => ({
-        category: tag.Category ?? tag.category,
-        internal_name: tag.Internal_Name ?? tag.internal_Name,
-        localized_category_name: tag.Localized_Category_Name ?? tag.localized_Category_Name,
-        localized_tag_name: tag.Localized_Tag_Name ?? tag.localized_Tag_Name,
-        color: tag.Color ?? tag.color,
-      }))
+          category: tag.Category ?? tag.category,
+          internal_name: tag.Internal_Name ?? tag.internal_Name,
+          localized_category_name:
+            tag.Localized_Category_Name ?? tag.localized_Category_Name,
+          localized_tag_name: tag.Localized_Tag_Name ?? tag.localized_Tag_Name,
+          color: tag.Color ?? tag.color,
+        }))
       : [],
     app_data:
       rawItem.App_Data || rawItem.app_data
         ? {
-          def_index:
-            rawItem.App_Data?.Def_Index ?? rawItem.app_data?.def_index ?? 0,
-          quality:
-            rawItem.App_Data?.Quality ?? rawItem.app_data?.quality ?? 0,
-          quantity: rawItem.App_Data?.Quantity ?? rawItem.app_data?.quantity,
-        }
+            def_index:
+              rawItem.App_Data?.Def_Index ?? rawItem.app_data?.def_index ?? 0,
+            quality:
+              rawItem.App_Data?.Quality ?? rawItem.app_data?.quality ?? 0,
+            quantity: rawItem.App_Data?.Quantity ?? rawItem.app_data?.quantity,
+          }
         : undefined,
     type: rawItem.Type ?? rawItem.type,
-    tradable: (rawItem.Tradable ?? rawItem.tradable == 1 ? true : false),
-    marketable: (rawItem.Marketable ?? rawItem.marketable == 1 ? true : false),
+    tradable: (rawItem.Tradable ?? rawItem.tradable == 1) ? true : false,
+    marketable: (rawItem.Marketable ?? rawItem.marketable == 1) ? true : false,
     commodity: rawItem.Commodity ?? rawItem.commodity,
     icon_url: rawItem.Icon_Url ?? rawItem.icon_Url,
     icon_url_large: rawItem.Icon_Url_Large ?? rawItem.icon_Url_Large,
@@ -82,8 +92,12 @@ function sanitizeEconItem(rawItem: any): EconItem {
     actions: rawItem.Actions ?? rawItem.actions,
     market_actions: rawItem.Market_Actions ?? rawItem.market_actions,
     background_color: rawItem.Background_Color ?? rawItem.background_Color,
-    market_tradable_restriction: rawItem.Market_Tradable_Restriction ?? rawItem.market_Tradable_Restriction,
-    market_marketable_restriction: rawItem.Market_Marketable_Restriction ?? rawItem.market_Marketable_Restriction,
+    market_tradable_restriction:
+      rawItem.Market_Tradable_Restriction ??
+      rawItem.market_Tradable_Restriction,
+    market_marketable_restriction:
+      rawItem.Market_Marketable_Restriction ??
+      rawItem.market_Marketable_Restriction,
     fraudwarnings: rawItem.FraudWarnings ?? rawItem.fraudwarnings,
   };
 }

@@ -29,7 +29,8 @@
   [style]="{ width: '80%', height: '80%' }">
 
   <app-item-editor *ngIf="editorVisible" 
-    [options]="allItems" 
+    [options]="allItems"
+    (filterSearch)="handleFilterSearch($event)" 
     (closeDialog)="onDialogClose()">
   </app-item-editor>
   <item-customizer *ngIf="customizableItem"
