@@ -18,19 +18,13 @@ import { AuthService } from '../auth.service';
 })
 export class NavbarComponent implements OnInit {
   @Output() toggleDrawer = new EventEmitter<void>();
-  isLoggedIn: boolean = true;
-  userData: Subject<any> = new Subject();
-  userInfo!: any;
+  isLoggedIn = true;
 
   constructor(private authService: AuthService) {}
   ngOnInit(): void {
     this.authService.isAuthenticated$.subscribe((status) => {
       this.isLoggedIn = status;
     })
-    this.userData.subscribe((data) => {
-      console.log(data);
-      this.userInfo = data;
-    });
   }
   handletoggleDrawer(): void {
     this.toggleDrawer.emit();
