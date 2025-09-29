@@ -31,7 +31,8 @@
   <app-item-editor *ngIf="editorVisible" 
     [options]="allItems"
     (filterSearch)="handleFilterSearch($event)" 
-    (closeDialog)="onDialogClose()">
+    (closeDialog)="onDialogClose()"
+    (confirmSelecion)="this.itemSelectorFacade.onAddDefaultItem($event)">
   </app-item-editor>
   <item-customizer *ngIf="customizableItem"
     (itemModified)="closeOnModification()"

@@ -24,10 +24,10 @@ export const getItems = (searchTerm?: string) => {
       .map(i => parseStockItemToItem(i))
       .slice(0, 50);
   } else {
-    filtered = allItems.slice(0, 50).map(i => parseStockItemToItem(i));
+    filtered = [...DEFAULT_ITEMS, ...allItems.slice(0, 50).map(i => parseStockItemToItem(i))];
   }
 
-  return [...DEFAULT_ITEMS, ...filtered];
+  return filtered;
 };
 
 export const parseItems = (items: any[]) => {

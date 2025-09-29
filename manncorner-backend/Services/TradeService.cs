@@ -1,4 +1,5 @@
 
+using System.Diagnostics;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -163,6 +164,54 @@ public class TradeService : ITradeService
         {
             Status = 200,
             Trade = trade
+        };
+    }
+    public async Task<object> SearchTradesAsync(TradeItemSearchCriteria criteria, int page = 1, int pageSize = 50)
+    {
+        var stopwatch = Stopwatch.StartNew();
+        var query = _db.Trades.AsQueryable();
+
+        if (criteria.ItemIds != null && criteria.ItemIds.Any())
+        {
+            var itemIdsHash = criteria.ItemIds.ToHashSet();
+            int requiredCount = itemIdsHash.Count;
+
+            query = query.Where(t => t.Items.Count(i => i.Defindex != null && itemIdsHash.Contains(i.Defindex.ToString())) == requiredCount);
+        }
+
+        if (criteria.Effects != null && criteria.Effects.Any())
+        {
+            var effectsHash = criteria.Effects.ToHashSet();
+            query = query.Where(t => t.Items.Any(i => i.Effect.HasValue && effectsHash.Contains(i.Effect.Value)));
+        }
+
+        if (criteria.Qualities != null && criteria.Qualities.Any())
+        {
+            var qualitiesHash = criteria.Qualities.ToHashSet();
+            query = query.Where(t => t.Items.Any(i => qualitiesHash.Contains(i.Quality)));
+        }
+
+        if (criteria.Paints != null && criteria.Paints.Any())
+        {
+            var paintsHash = criteria.Paints.ToHashSet();
+            query = query.Where(t => t.Items.Any(i => i.paintDefindex.HasValue && paintsHash.Contains(i.paintDefindex.Value)));
+        }
+
+        query = query.Skip((page - 1) * pageSize)
+                     .Take(pageSize)
+                     .Include(t => t.Items);
+        var trades = await query.ToListAsync();
+        var totalCount = trades.Count;
+        stopwatch.Stop();
+        var elapsedMs = stopwatch.ElapsedMilliseconds;
+        Console.WriteLine($"SearchTradesAsync executed in {elapsedMs} ms");
+        //return await query.ToListAsync();
+         return new
+        {
+            Trades = trades,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount
         };
     }
 }

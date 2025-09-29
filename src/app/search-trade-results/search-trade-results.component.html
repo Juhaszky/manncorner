@@ -1,0 +1,76 @@
+<div class="container flex flex-col w-full h-94">
+  <p-card
+    class="trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow bg-slate-800"
+    *ngFor="let trade of trades"
+    (click)="selectTrade(trade.id)"
+    (keydown)="selectTrade(trade.id)"
+    tabindex="0"
+  >
+    <div class="trade-details">
+      <div class="flex flex-row justify-between">
+        <p class="w-50 p-0 m-0">
+          <span 
+            class="user-name-text">
+            {{ trade.username }}
+          </span> 
+          wants to trade...
+          <span pTooltip="{{ trade.bumpedAt | date }}">
+            {{ trade.bumpedAt | postDate }}
+          </span>
+        </p>
+        <p
+          class="w-50 text-end p-0 m-0 sm:text-sm text-xs font-black text-gray-700"
+        >
+          <!-- <button *ngIf="userService.currentUsername === trade.username"><img class="h-6 w-6" src="/assets/icons/refresh.svg" alt="" (click)="onBump(trade.id, $event)"></button> -->
+        </p>
+      </div>
+    </div>
+    <div class="flex flex-wrap sm:flex-row flex-col w-full">
+      <div
+        class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
+        #inventorySelector>
+        <div class="flex flex-row flex-wrap w-full gap-2 p-2">
+          <div *ngFor="let item of trade.itemsToSell" class="w-24">
+            <app-item-container [item]="item"> </app-item-container>
+          </div>
+        </div>
+      </div>
+      <div class="arrow flex sm:items-center justify-center">
+        <img
+          class="h-20 hidden sm:block"
+          src="/assets/images/arrow-right-01-512.webp"
+          alt="Arrow"
+        />
+
+        <!-- Visible only on mobile -->
+        <img
+          class="h-20 block sm:hidden"
+          src="/assets/images/Down-Arrow-PNG-Image.png"
+          alt="Arrow for Mobile"
+        />
+      </div>
+      <div
+        class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
+        #inventorySelector>
+        <div class="flex flex-row flex-wrap w-full gap-2 p-2">
+          <div *ngFor="let item of trade.itemsToBuy" class="w-24">
+            <app-item-container [item]="item"> </app-item-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-card>
+  <div class="paginator-wrapper">
+    <p-paginator 
+      [first]="first" 
+      [rows]="rows" 
+      [totalRecords]="allPage" 
+      [showCurrentPageReport]="true" 
+      (onPageChange)="onPageChange($event)">
+    </p-paginator>
+  </div>
+  <div class="absolute top-full" *ngIf="loading">
+    <p-progress-spinner  ariaLabel="loading" />
+  </div>
+  
+</div>

@@ -11,10 +11,13 @@ export class ItemSelectorFacade {
   private _itemsForTrade = new BehaviorSubject<Item[]>([]);
   private _itemsEditToTrade = new BehaviorSubject<Item[]>([]);
   private _itemsEditForTrade = new BehaviorSubject<Item[]>([]);
+  private _itemsSearchToTrade = new BehaviorSubject<Item[]>([]);
+  private _itemsSearchForTrade = new BehaviorSubject<Item[]>([]);
   private _itemsOffer = new BehaviorSubject<Item[]>([])
   private loadedPages = new Set<string>();
   private selectedItemIds = new Set<string>();
   private selectedEditItemIds = new Set<string>();
+  private selectedSearchItemIds = new Set<string>();
   private selectedOfferItemIds = new Set<string>();
   loading = false;
   items$ = this._items.asObservable();
@@ -23,6 +26,8 @@ export class ItemSelectorFacade {
   itemsForTrade$ = this._itemsForTrade.asObservable();
   itemsEditToTrade$ = this._itemsEditToTrade.asObservable();
   itemsEditForTrade$ = this._itemsEditForTrade.asObservable();
+  itemsSearchToTrade$ = this._itemsSearchToTrade.asObservable();
+  itemsSearchForTrade$ = this._itemsSearchForTrade.asObservable();
   itemsOfferTrade$ = this._itemsOffer.asObservable();
   private _customIdCounter = 0;
   constructor(
@@ -83,6 +88,18 @@ export class ItemSelectorFacade {
       this.selectedEditItemIds.add(item.id);
     }
   }
+  onAddSearchItem(item: Item) {
+    const currentItems = this._itemsSearchToTrade.getValue();
+    const exists = currentItems.some(existingItem =>
+      this.deepEqual(existingItem, item)
+    );
+
+    if (!exists) {
+      const itemWithCustomId = { ...item, customId: ++this._customIdCounter };
+      this._itemsSearchToTrade.next([...currentItems, itemWithCustomId]);
+      this.selectedSearchItemIds.add(item.defindex.toString());
+    }
+  }
   onOfferItem(item: Item) {
     const currentItems = this._itemsOffer.getValue();
     const exists = currentItems.some(existingItem =>
@@ -97,10 +114,16 @@ export class ItemSelectorFacade {
   }
 
   onAddDefaultItem(items: Item[]) {
-    this._itemsForTrade.next(items);
+    const currentItems = this._itemsForTrade.getValue();
+    this._itemsForTrade.next([...currentItems, ...items]);
   }
   onAddEditDefaultItem(items: Item[]) {
-    this._itemsEditForTrade.next(items);
+    const currentItems = this._itemsEditForTrade.getValue();
+    this._itemsEditForTrade.next([...currentItems, ...items]);
+  }
+  onAddSearchDefaultItem(items: Item[]) {
+    const currentItems = this._itemsSearchForTrade.getValue();
+    this._itemsSearchForTrade.next([...currentItems, ...items]);
   }
 
   onRemoveItem(item: Item) {
@@ -114,6 +137,17 @@ export class ItemSelectorFacade {
     const newItems = currentItems.filter(i => i.name !== item.name);
     this.selectedEditItemIds.delete(item.id);
     this._itemsEditForTrade.next(newItems);
+  }
+  onRemoveSearchItem(item: Item) {
+    const currentItems = this._itemsSearchToTrade.getValue();
+    const newItems = currentItems.filter(i => i.name !== item.name);
+    this.selectedSearchItemIds.delete(item.defindex.toString());
+    this._itemsSearchToTrade.next(newItems);
+  }
+  onRemoveBaseSearchItem(item: Item) {
+    const currentItems = this._itemsSearchForTrade.getValue();
+    const newItems = currentItems.filter(i => i.name !== item.name);
+    this._itemsSearchForTrade.next(newItems);
   }
   onRemoveOfferItem(item: Item) {
     const currentItems = this._itemsOffer.getValue();
@@ -137,6 +171,11 @@ export class ItemSelectorFacade {
     this._itemsEditForTrade.next([]);
     this._itemsEditToTrade.next([]);
   }
+  emptySearchItems() {
+    this.selectedSearchItemIds.clear();
+    this._itemsSearchForTrade.next([]);
+    this._itemsSearchToTrade.next([]);
+  }
   emptyOfferItems() {
     this.selectedOfferItemIds.clear();
     this._itemsOffer.next([]);
@@ -150,5 +189,8 @@ export class ItemSelectorFacade {
   }
   isEditItemSelected(item: Item): boolean {
     return this.selectedEditItemIds.has(item.id);
+  }
+  isSearchItemSelected(item: Item): boolean {
+    return this.selectedSearchItemIds.has(item.defindex.toString());
   }
 }

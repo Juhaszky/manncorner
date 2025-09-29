@@ -56,15 +56,7 @@ export class ItemEditorComponent implements OnInit, OnChanges {
         this.selectedItems = [...values];
       }
     });
-    this.itemSelectorFacade.itemsForTrade$.subscribe(items => {
-      const clonedItems = items.map(item => ({ ...item }));
-      this.myControl.setValue(clonedItems);
-    });
     this.filteredOptions = this.options;
-  }
-  onSelection(event:any) {
-    //this.selectedItems = [...this.selectedItems, ...event.value];
-    console.log(event);
   }
   onHandleFilter(event: any) {
     this.filterSearch.emit(event.filter);
@@ -76,7 +68,7 @@ export class ItemEditorComponent implements OnInit, OnChanges {
   }
 
   onConfirmSelection() {
-    this.facade.onAddDefaultItem(this.selectedItems);
+    this.confirmSelecion.emit(this.selectedItems);
     this.closeDialog.emit(null);
   }
   onClose() {

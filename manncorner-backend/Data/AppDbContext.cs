@@ -13,6 +13,13 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
+        modelBuilder.Entity<Item>()
+            .HasIndex(i => i.Effect)
+            .HasDatabaseName("idx_items_effect");
+        modelBuilder.Entity<Item>()
+            .HasIndex(i => i.Defindex)
+            .HasDatabaseName("idx_items_defindex");
+            
         modelBuilder.Entity<Trade>()
             .HasMany(t => t.Comments)
             .WithOne(c => c.Trade)

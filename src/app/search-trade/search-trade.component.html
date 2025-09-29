@@ -7,8 +7,10 @@
           <div *ngFor="let item of itemsFrom" class="w-24">
             <app-item-container 
               [item]="item" 
-              [canDelete]="true" 
-              (removeEmitter)="itemSelectorFacade.onRemoveEditItem(item)">
+              [canDelete]="true"
+              [canModify]="true"
+              (customizeEmitter)="onCustomizeItem(item)"
+              (removeEmitter)="itemSelectorFacade.onRemoveSearchItem(item)">
             </app-item-container>
           </div>
         </div>
@@ -26,7 +28,7 @@
         alt="Arrow for Mobile" />
       <div class="flex">
         <div class="sm:block hidden">
-          <p-button (onClick)="updateTrade()"> Update Trade </p-button>
+          <p-button (onClick)="searchTrade()"> Search Trade </p-button>
         </div>
       </div>
     </div>
@@ -49,7 +51,7 @@
             [canDelete]="true"
             [canModify]="true"
             (customizeEmitter)="onCustomizeItem(item)"
-            (removeEmitter)="onRemoveItem(item)">
+            (removeEmitter)="itemSelectorFacade.onRemoveBaseSearchItem(item)">
           </app-item-container>
         </div>
       </div>
@@ -71,7 +73,7 @@
   </div>
   <div class="flex justify-center">
     <div class="sm:hidden">
-      <p-button (onClick)="updateTrade()"> Update Trade </p-button>
+      <p-button (onClick)="searchTrade()"> Search Trade </p-button>
     </div>
   </div>
   <div class="row mt-4">
@@ -79,7 +81,7 @@
       <h2 [style.color]="'white'">Your backpack:</h2>
     </div>
     <div class="flex flex-row-reverse p-2">
-      <app-action-bar></app-action-bar>
+      <app-action-bar [type]="'search-trade'"></app-action-bar>
     </div>
     <!-- <div class="col-card mb-3 p-1"> -->
       <div
@@ -88,11 +90,11 @@
 
   <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
 
-    <div *ngFor="let item of inventoryItems" class="w-24">
+    <div *ngFor="let item of baseInventoryItems" class="w-24">
       <app-item-container 
         [item]="item"
         [disabled]="isItemDisabled(item)"
-        (selectEmitter)="itemSelectorFacade.onAddEditItem(item)"
+        (selectEmitter)="itemSelectorFacade.onAddSearchItem(item)"
         (click)="onItemSelect(item)">
       </app-item-container>
     </div>
@@ -105,7 +107,7 @@
       </app-inventory-items-selector> -->
     <!-- </div> -->
   </div>
-  <descrpition [html]="tradeData?.description ?? ''" [canEdit]="true" > </descrpition>
+  <!-- <descrpition [html]="tradeData?.description ?? ''" [canEdit]="true" > </descrpition> -->
 </div>
 <p-dialog 
   header="Customize Item"
@@ -114,8 +116,9 @@
   [style]="{ width: '80%', height: '80%' }">
 
   <app-item-editor *ngIf="editorVisible" 
-    [options]="allItems" 
+    [options]="allItems"
     (filterSearch)="handleFilterSearch($event)"
+    (confirmSelecion)="this.itemSelectorFacade.onAddSearchDefaultItem($event)"
     (closeDialog)="onDialogClose()">
   </app-item-editor>
   <item-customizer

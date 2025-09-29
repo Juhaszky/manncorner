@@ -15,10 +15,12 @@ import { DescrpitionComponent } from '../../shared/descrpition/descrpition.compo
 import {
   catchError,
   combineLatest,
+  debounceTime,
   first,
   fromEvent,
   map,
   of,
+  Subject,
   switchMap,
   take,
 } from 'rxjs';
@@ -37,6 +39,7 @@ import { AddTradeService } from '../add-trade/add-trade.service';
 import { SortService } from '../../shared/sort.service';
 import { MessageService } from 'primeng/api';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-edit-trade',
@@ -59,6 +62,7 @@ import { HttpClient } from '@angular/common/http';
 export class EditTradeComponent implements OnInit, AfterViewInit {
   filterText = '';
   tradeId = '';
+  private filterSubject = new Subject<string>();
   selectedItemIds = new Set<string>();
   route = inject(ActivatedRoute);
   tradeService = inject(TradeService);
@@ -89,9 +93,10 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
   customizeVisible = false;
   ngOnInit(): void {
     this.loadItems();
-  
-  
-    this.itemSelectorFacade.itemsEditForTrade$.subscribe((res) => {
+    this.filterSubject.pipe(debounceTime(100)).subscribe(filterText => {
+        this.loadItems(filterText);
+      });
+    this.itemSelectorFacade.itemsEditForTrade$.subscribe(res => {
       this.selectedItems = res;
     });
     this.userDataFacade.userData$.pipe(first()).subscribe(res => {
@@ -167,12 +172,18 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
         });
     }
   }
-  loadItems(): void {
+  loadItems(searchTerm?: string): void {
+    const params = searchTerm
+      ? `?searchterm=${encodeURIComponent(searchTerm)}`
+      : '';
     this.http
-      .get<Item[]>(`http://localhost:3000/api/items`)
+      .get<Item[]>(`${environment.MICROSERVICE_URL}/api/items${params}`)
       .subscribe((res: Item[]) => {
         this.allItems = res;
       });
+  }
+  handleFilterSearch(searchTerm: string) {
+    this.filterSubject.next(searchTerm);
   }
   ngAfterViewInit(): void {
     this.userDataFacade.userData$.pipe(take(1)).subscribe(res => {

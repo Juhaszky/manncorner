@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SortBarComponent } from './sort-bar/sort-bar.component';
 
@@ -9,4 +9,6 @@ import { SortBarComponent } from './sort-bar/sort-bar.component';
     templateUrl: './action-bar.component.html',
     styleUrl: './action-bar.component.scss'
 })
-export class ActionBarComponent {}
+export class ActionBarComponent {
+    @Input() type: "add-trade" | "search-trade" = "search-trade";
+}

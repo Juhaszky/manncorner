@@ -20,6 +20,18 @@ export const routes: Routes = [
     canActivate: [authGuardGuard],
   },
   {
+    path: 'search',
+    loadComponent: () =>
+      import('./search-trade/search-trade.component').then(m => m.SearchTradeComponent),
+    canActivate: [authGuardGuard],
+  },
+  {
+    path: 'results',
+    loadComponent: () =>
+      import('./search-trade-results/search-trade-results.component').then(m => m.SearchTradeResultsComponent),
+    canActivate: [authGuardGuard],
+  },
+  {
     path: 'user-profile',
     loadComponent: () =>
       import('./user-profile/user-profile-container.component').then(
