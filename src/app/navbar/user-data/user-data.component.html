@@ -1,5 +1,6 @@
-<div *ngIf="userData" class="flex justify-center">
-  <img routerLink="user-profile" class="h-8 w-8 rounded-full" [src]="userData.avatar" alt="asd" />
+<div *ngIf="userData" routerLink="user-profile" class="flex justify-end items-center gap-2 p-4">
+  <img  class="h-8 w-8 rounded-full" [src]="userData.avatar" alt="asd" />
+  <h2>{{userData.personaname}}</h2>
 
   <!-- <span class="cursor-pointer" mat-button [matMenuTriggerFor]="menu">
     <div class="flex justify-center items-center h-full">

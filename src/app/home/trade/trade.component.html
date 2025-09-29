@@ -2,10 +2,8 @@
   <div class="trade mt-3 p-3 w-full last:mb-5">
     <div class="trade-details">
       <div class="flex flex-row justify-between">
-        <p>
-          <p-avatar image="./assets/" shape="circle" />
-        </p>
-        <p class="w-50 p-0 m-0">
+        <p class="flex items-center gap-2 w-50 p-0 m-0">
+          <p-avatar [image]="tradeData.avatarPath" shape="circle" />
           <span class="user-name-text">{{ tradeData.username }}</span> wants to
           trade...
           <!-- <span matTooltip="{{ tradeData.postDate | date }}">{{
