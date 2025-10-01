@@ -8,5 +8,5 @@ public interface ITradeService
     Task<TradeStatusResult> ChangeTradeStatusAsync(int tradeId);
     Task<TradeDeleteResult> DeleteTrade(int tradeId);
     Task<Trade?> UpdateTradeAsync(Trade trade);
-    Task<object> SearchTradesAsync(TradeItemSearchCriteria criteria, int page = 1, int pageSize = 50);
+    Task<object> SearchTradesAsync(ICollection<TradeItem> items, int page = 1, int pageSize = 50);
 }

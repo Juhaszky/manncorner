@@ -166,49 +166,43 @@ public class TradeService : ITradeService
             Trade = trade
         };
     }
-    public async Task<object> SearchTradesAsync(TradeItemSearchCriteria criteria, int page = 1, int pageSize = 50)
+    public async Task<object> SearchTradesAsync(ICollection<TradeItem> items, int page = 1, int pageSize = 50)
     {
         var stopwatch = Stopwatch.StartNew();
-        var query = _db.Trades.AsQueryable();
 
-        if (criteria.ItemIds != null && criteria.ItemIds.Any())
+        IQueryable<Trade> query = _db.Trades.Include(t => t.Items);
+
+        if (items != null && items.Any())
         {
-            var itemIdsHash = criteria.ItemIds.ToHashSet();
-            int requiredCount = itemIdsHash.Count;
+            var defindexSet = items.Select(i => i.Defindex).ToHashSet();
 
-            query = query.Where(t => t.Items.Count(i => i.Defindex != null && itemIdsHash.Contains(i.Defindex.ToString())) == requiredCount);
+            query = query.Where(t => t.Items.Any(i => defindexSet.Contains(i.Defindex)));
         }
 
-        if (criteria.Effects != null && criteria.Effects.Any())
-        {
-            var effectsHash = criteria.Effects.ToHashSet();
-            query = query.Where(t => t.Items.Any(i => i.Effect.HasValue && effectsHash.Contains(i.Effect.Value)));
-        }
+        var pagedTrades = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
-        if (criteria.Qualities != null && criteria.Qualities.Any())
-        {
-            var qualitiesHash = criteria.Qualities.ToHashSet();
-            query = query.Where(t => t.Items.Any(i => qualitiesHash.Contains(i.Quality)));
-        }
+        var filteredTrades = pagedTrades.Where(t =>
+            items.All(searchItem =>
+                t.Items.Any(dbItem =>
+                    (dbItem.Defindex == searchItem.Defindex) &&
+                    (searchItem.Effect == null || dbItem.Effect == searchItem.Effect) &&
+                    //(dbItem.Quality == searchItem.Quality) &&
+                    (searchItem.paintDefindex == null || dbItem.paintDefindex == searchItem.paintDefindex) &&
+                    (dbItem.IsSelling == searchItem.IsSelling)
+                )
+            )
+        ).ToList();
 
-        if (criteria.Paints != null && criteria.Paints.Any())
-        {
-            var paintsHash = criteria.Paints.ToHashSet();
-            query = query.Where(t => t.Items.Any(i => i.paintDefindex.HasValue && paintsHash.Contains(i.paintDefindex.Value)));
-        }
+        var totalCount = await _db.Trades.CountAsync(t =>
+            t.Items.Any(i => items.Select(x => x.Defindex).Contains(i.Defindex))
+        );
 
-        query = query.Skip((page - 1) * pageSize)
-                     .Take(pageSize)
-                     .Include(t => t.Items);
-        var trades = await query.ToListAsync();
-        var totalCount = trades.Count;
         stopwatch.Stop();
-        var elapsedMs = stopwatch.ElapsedMilliseconds;
-        Console.WriteLine($"SearchTradesAsync executed in {elapsedMs} ms");
-        //return await query.ToListAsync();
-         return new
+        Console.WriteLine($"SearchTradesAsync executed in {stopwatch.ElapsedMilliseconds} ms");
+
+        return new
         {
-            Trades = trades,
+            Trades = filteredTrades,
             Page = page,
             PageSize = pageSize,
             TotalCount = totalCount

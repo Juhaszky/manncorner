@@ -117,7 +117,7 @@ export function parseStockItemToItem(stockItem: any): Item {
     defindex: stockItem.defindex,
     marketable: true,
     commodity: false,
-    level: `${stockItem.min_ilevel || ''}${stockItem.max_ilevel ? `-${stockItem.max_ilevel}` : ''}`,
+    level: Number(`${stockItem.min_ilevel || stockItem.max_ilevel}`),
     classes: stockItem.used_by_classes || [],
     parts: [],
     spells: [],

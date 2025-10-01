@@ -15,7 +15,7 @@ export interface Item {
   //econitem attributes
   marketable?: boolean;
   commodity?: boolean;
-  level?: string;
+  level?: number;
   paint?: string;
   paintDefindex?:number;
   classes?: string[];

@@ -19,6 +19,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Item>()
             .HasIndex(i => i.Defindex)
             .HasDatabaseName("idx_items_defindex");
+        modelBuilder.Entity<TradeItem>()
+            .HasIndex(i => i.IsSelling)
+            .HasDatabaseName("idx_items_isSelling");
             
         modelBuilder.Entity<Trade>()
             .HasMany(t => t.Comments)

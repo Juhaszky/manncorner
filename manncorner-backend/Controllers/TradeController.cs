@@ -43,11 +43,11 @@ public class TradeController : ControllerBase
         return Ok(trades);
     }
     [HttpPost("search")]
-    public async Task<ActionResult<Trade>> SearchTrades([FromBody] TradeItemSearchCriteria criteria, int page = 1, int pageSize = 10)
+    public async Task<ActionResult<Trade>> SearchTrades([FromBody] ICollection<TradeItem> items, int page = 1, int pageSize = 10)
     {
         if (page < 1 || pageSize < 1 || pageSize > 10000)
             return BadRequest("Invalid pagination parameters.");
-        var trades = await _tradeService.SearchTradesAsync(criteria, page, pageSize);
+        var trades = await _tradeService.SearchTradesAsync(items, page, pageSize);
         if (trades == null)
             return NotFound();
 

@@ -149,6 +149,7 @@ export class SearchTradeComponent implements OnInit {
     ])
       .pipe(take(1))
       .subscribe(([itemsToTrade, itemsForTrade, userData]) => {
+        
         const items: Item[] = [
           ...itemsToTrade.map(item => ({ ...item, isSelling: true })),
           ...itemsForTrade.map(item => ({
@@ -158,22 +159,10 @@ export class SearchTradeComponent implements OnInit {
           })),
         ];
 
-        const itemIdsSet = new Set(
-          items.map(i => i.defindex).filter(id => id != null)
-        );
-        const effectsSet = new Set(
-          items.map(i => i.effect).filter(eff => eff != null)
-        );
-
-        const criteria = {
-          itemIds: Array.from(itemIdsSet),
-          effects: Array.from(effectsSet),
-        };
-
         this.http
           .post<TradeResult>(
             `${environment.API_URL}/api/Trade/search?page=1&pageSize=10`,
-            criteria
+            items
           )
           .subscribe(res => {
             this.searchTradeResultService.setResults(res);
