@@ -159,6 +159,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
         )
         .subscribe(data => {
           if (data) {
+            this.itemSelectorFacade.emptyEditTradeItems();
             this.tradeData = data;
             this.tradeData.itemsFrom.forEach(i =>
               this.itemSelectorFacade.onAddEditItem(i)
@@ -254,6 +255,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
         this.tradeService.updateTrade(tradePayload).subscribe({
           next: () => {
             //this.emptySelectedItems();
+            //this.itemSelectorFacade.emptyEditTradeItems();
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
@@ -298,7 +300,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
   }
   onRemoveItem(item: Item) {
     console.log('ran');
-    this.itemSelectorFacade.onRemoveEditItem(item);
+    this.itemSelectorFacade.onRemoveBaseEditItem(item);
   }
   onCustomizeItem(item: Item) {
     console.log(this.customizeVisible);
