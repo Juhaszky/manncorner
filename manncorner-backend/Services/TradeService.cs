@@ -188,6 +188,9 @@ public class TradeService : ITradeService
                     (searchItem.Effect == null || dbItem.Effect == searchItem.Effect) &&
                     //(dbItem.Quality == searchItem.Quality) &&
                     (searchItem.paintDefindex == null || dbItem.paintDefindex == searchItem.paintDefindex) &&
+                    (searchItem.Killstreak == null || dbItem.Killstreak == searchItem.Killstreak) &&
+                    (searchItem.Killstreaker == "" || dbItem.Killstreaker == searchItem.Killstreaker) &&
+                    (searchItem.Sheen == null || dbItem.Sheen == searchItem.Sheen) &&
                     (dbItem.IsSelling == searchItem.IsSelling)
                 )
             )

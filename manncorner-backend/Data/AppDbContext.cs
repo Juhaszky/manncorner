@@ -22,6 +22,15 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TradeItem>()
             .HasIndex(i => i.IsSelling)
             .HasDatabaseName("idx_items_isSelling");
+        modelBuilder.Entity<TradeItem>()
+            .HasIndex(i => i.Killstreak)
+            .HasDatabaseName("idx_items_killstreak");
+        modelBuilder.Entity<TradeItem>()
+            .HasIndex(i => i.Killstreaker)
+            .HasDatabaseName("idx_items_killstreaker");
+        modelBuilder.Entity<TradeItem>()
+            .HasIndex(i => i.Sheen)
+            .HasDatabaseName("idx_items_sheen");
             
         modelBuilder.Entity<Trade>()
             .HasMany(t => t.Comments)
