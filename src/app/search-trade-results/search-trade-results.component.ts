@@ -7,11 +7,12 @@ import { UserDataService } from '../../shared/user-data.service';
 import { TradeService } from '../home/trade.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { ItemContainerComponent } from '../../shared/item/item-container.component';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, NgOptimizedImage } from '@angular/common';
 import { PostDatePipe } from '../home/post-date.pipe';
 import { PaginatorModule } from 'primeng/paginator';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
+import { AvatarModule } from 'primeng/avatar';
 
 @Component({
   selector: 'app-search-results',
@@ -24,7 +25,9 @@ import { CardModule } from 'primeng/card';
     ProgressSpinnerModule,
     CardModule,
     CommonModule,
-  ],
+    NgOptimizedImage,
+    AvatarModule
+],
   templateUrl: './search-trade-results.component.html',
   styleUrl: './search-trade-results.component.scss',
 })

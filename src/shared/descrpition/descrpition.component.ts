@@ -2,17 +2,19 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { CardModule } from 'primeng/card';
 import { EditorModule } from 'primeng/editor';
 
 @Component({
   standalone: true,
   selector: 'descrpition',
-  imports: [FormsModule, CommonModule, EditorModule],
+  imports: [FormsModule, CommonModule, EditorModule, CardModule],
   templateUrl: './descrpition.component.html',
   styleUrl: './descrpition.component.scss',
 })
 export class DescrpitionComponent implements OnInit {
   description = '';
+  @Input() showTitle = true;
   @Input() html!: string | null;
   @Output() descriptionData = new EventEmitter<string>();
   @Input() canEdit = false;

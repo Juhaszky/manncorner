@@ -13,6 +13,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UserDataService } from '../../shared/user-data.service';
 import { CardModule } from 'primeng/card';
+import { AvatarModule } from 'primeng/avatar';
+import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
 
 
 @Component({
@@ -25,7 +27,9 @@ import { CardModule } from 'primeng/card';
     ProgressSpinnerModule,
     TooltipModule,
     ItemContainerComponent,
-    CardModule
+    CardModule,
+    AvatarModule,
+    DescrpitionComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -40,9 +44,11 @@ export class HomeComponent implements OnInit {
     itemsToSell: Item[];
     itemsToBuy: Item[];
     id: string;
+    avatarPath: string;
     username: string;
     createdAt: Date;
     bumpedAt: Date;
+    description: string
   }[] = [];
   loading = false;
   constructor(
@@ -76,10 +82,12 @@ export class HomeComponent implements OnInit {
             return {
               itemsToSell: itemsForSale,
               itemsToBuy: itemsToBuy,
+              avatarPath: trade.avatarPath,
               id: trade.id,
               username: trade.username,
               createdAt: trade.createdAt,
               bumpedAt: trade.bumpDate,
+              description: trade.description
             };
           });
         }),

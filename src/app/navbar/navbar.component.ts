@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UserDataComponent } from './user-data/user-data.component';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
@@ -18,7 +17,7 @@ import { AuthService } from '../auth.service';
 })
 export class NavbarComponent implements OnInit {
   @Output() toggleDrawer = new EventEmitter<void>();
-  isLoggedIn = true;
+  isLoggedIn = false;
 
   constructor(private authService: AuthService) {}
   ngOnInit(): void {

@@ -4,23 +4,21 @@
     *ngFor="let trade of trades"
     (click)="selectTrade(trade.id)"
     (keydown)="selectTrade(trade.id)"
-    tabindex="0"
-  >
+    tabindex="0">
     <div class="trade-details">
       <div class="flex flex-row justify-between">
-        <p class="w-50 p-0 m-0">
-          <span 
-            class="user-name-text">
+        <p class="flex items-center gap-2 w-50 p-0 m-0">
+          <p-avatar [image]="trade.avatarPath" shape="circle" />
+          <span class="user-name-text">
             {{ trade.username }}
-          </span> 
+          </span>
           wants to trade...
           <span pTooltip="{{ trade.bumpedAt | date }}">
             {{ trade.bumpedAt | postDate }}
           </span>
         </p>
         <p
-          class="w-50 text-end p-0 m-0 sm:text-sm text-xs font-black text-gray-700"
-        >
+          class="w-50 text-end p-0 m-0 sm:text-sm text-xs font-black text-gray-700">
           <!-- <button *ngIf="userService.currentUsername === trade.username"><img class="h-6 w-6" src="/assets/icons/refresh.svg" alt="" (click)="onBump(trade.id, $event)"></button> -->
         </p>
       </div>
@@ -39,15 +37,13 @@
         <img
           class="h-20 hidden sm:block"
           src="/assets/images/arrow-right-01-512.webp"
-          alt="Arrow"
-        />
+          alt="Arrow" />
 
         <!-- Visible only on mobile -->
         <img
           class="h-20 block sm:hidden"
           src="/assets/images/Down-Arrow-PNG-Image.png"
-          alt="Arrow for Mobile"
-        />
+          alt="Arrow for Mobile" />
       </div>
       <div
         class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
@@ -60,17 +56,17 @@
       </div>
     </div>
   </p-card>
+ 
   <div class="paginator-wrapper">
-    <p-paginator 
-      [first]="first" 
-      [rows]="rows" 
-      [totalRecords]="allPage" 
-      [showCurrentPageReport]="true" 
+    <p-paginator
+      [first]="first"
+      [rows]="rows"
+      [totalRecords]="allPage"
+      [showCurrentPageReport]="true"
       (onPageChange)="onPageChange($event)">
     </p-paginator>
   </div>
   <div class="absolute top-full" *ngIf="loading">
-    <p-progress-spinner  ariaLabel="loading" />
+    <p-progress-spinner ariaLabel="loading" />
   </div>
-  
 </div>
