@@ -18,6 +18,7 @@ export class MobileNavComponent implements OnInit {
   
     constructor(private authService: AuthService) {}
     ngOnInit(): void {
+      this.authService.checkAuth();
       this.authService.isAuthenticated$.subscribe((status) => {
         this.isLoggedIn = status;
       })
