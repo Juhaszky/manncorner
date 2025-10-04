@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ItemSelectorService } from '../item-selector.service';
 import { Item } from '../models/item.model';
-import { HttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 
 @Injectable({ providedIn: 'root' })
 export class ItemSelectorFacade {
@@ -34,7 +34,7 @@ export class ItemSelectorFacade {
   private _customSearchIdCounter = 0;
   constructor(
     private itemService: ItemSelectorService,
-    private http: HttpClient
+    private messageService: MessageService
   ) {}
   private deepEqual(obj1: unknown, obj2: unknown): boolean {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
@@ -59,21 +59,20 @@ export class ItemSelectorFacade {
       },
     });
   }
-
-  loadAllItems() {
-    this.itemService.fetchAllItems().subscribe(items => {
-      this._itemsForTrade.next(items);
-    });
-  }
-
   onAddItem(item: Item) {
     const currentItems = this._itemsToTrade.getValue();
+    if (currentItems.length === 10) {
+      this.showMaxLimitMessage();
+    }
     const exists = currentItems.some(existingItem =>
       this.deepEqual(existingItem, item)
     );
 
     if (!exists) {
-      const itemWithCustomId = { ...item, customId: (++this._customEditIdCounter).toString() };
+      const itemWithCustomId = {
+        ...item,
+        customId: (++this._customEditIdCounter).toString(),
+      };
       this._itemsToTrade.next([...currentItems, itemWithCustomId]);
       this.selectedItemIds.add(item.id);
     }
@@ -85,21 +84,30 @@ export class ItemSelectorFacade {
     );
 
     if (!exists) {
-      const itemWithCustomId = { ...item, customId: (++this._customEditIdCounter).toString() };
+      const itemWithCustomId = {
+        ...item,
+        customId: (++this._customEditIdCounter).toString(),
+      };
       this._itemsEditToTrade.next([...currentItems, itemWithCustomId]);
       this.selectedEditItemIds.add(item.id);
     }
   }
   onAddSearchItem(item: Item) {
     const currentItems = this._itemsSearchToTrade.getValue();
-    const exists = currentItems.some(existingItem =>
-      this.deepEqual(existingItem, item)
-    );
-
-    if (!exists) {
-      const itemWithCustomId = { ...item, customId: ++this._customSearchIdCounter };
-      this._itemsSearchToTrade.next([...currentItems, itemWithCustomId]);
-      this.selectedSearchItemIds.add(item.defindex.toString());
+    if (currentItems.length === 10) {
+      this.showMaxLimitMessage();
+    } else {
+      const exists = currentItems.some(existingItem =>
+        this.deepEqual(existingItem, item)
+      );
+      if (!exists) {
+        const itemWithCustomId = {
+          ...item,
+          customId: ++this._customSearchIdCounter,
+        };
+        this._itemsSearchToTrade.next([...currentItems, itemWithCustomId]);
+        this.selectedSearchItemIds.add(item.defindex.toString());
+      }
     }
   }
   onOfferItem(item: Item) {
@@ -116,6 +124,8 @@ export class ItemSelectorFacade {
   }
 
   onAddDefaultItem(items: Item[]) {
+    //should empty all the time, to do not let user select always 10 items on the item-edior multiselect component
+    this._itemsForTrade.next([]);
     const currentItems = this._itemsForTrade.getValue();
     const itemsWithCustomId = items.map(i => {
       return { ...i, id: (this._customEditIdCounter++).toString() };
@@ -210,5 +220,12 @@ export class ItemSelectorFacade {
   }
   isSearchItemSelected(item: Item): boolean {
     return this.selectedSearchItemIds.has(item.defindex.toString());
+  }
+  showMaxLimitMessage() {
+    return this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'You reached the max limit of the selected category!',
+    });
   }
 }

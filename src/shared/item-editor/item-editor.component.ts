@@ -8,8 +8,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { ItemSelectorService } from '../item-selector.service';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ItemListViewComponent } from './item-list-view/item-list-view.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -18,6 +17,7 @@ import { HttpClient } from '@angular/common/http';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ItemSelectorFacade } from '../item-selector/item-selector.facade';
 import { Item } from '../models/item.model';
+import { take } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-item-editor',
@@ -41,24 +41,26 @@ export class ItemEditorComponent implements OnInit, OnChanges {
   @Output() filterSearch = new EventEmitter();
   @Output() closeDialog = new EventEmitter();
 
-  myControl = new FormControl<Item[]>([]);
   selectedItems: Item[] = [];
   filteredOptions: Item[] = [];
 
-  constructor(
-    private itemService: ItemSelectorService,
-    private itemSelectorFacade: ItemSelectorFacade
-  ) {}
+  constructor(private itemSelectorFacade: ItemSelectorFacade) {}
 
   ngOnInit(): void {
-    this.myControl.valueChanges.subscribe(values => {
-      if (values) {
-        this.selectedItems = [...values];
-      }
-    });
+    this.itemSelectorFacade.itemsForTrade$
+      .pipe(take(1))
+      .subscribe(savedItems => {
+        this.selectedItems = savedItems
+          .map(savedItem =>
+            this.filteredOptions.find(
+              opt => opt.defindex === savedItem.defindex
+            )
+          )
+          .filter(item => item !== undefined) as Item[];
+      });
     this.filteredOptions = this.options;
   }
-  onHandleFilter(event: any) {
+  onHandleFilter(event: { originalEvent: Event; filter: string }) {
     this.filterSearch.emit(event.filter);
   }
   ngOnChanges(changes: SimpleChanges): void {
