@@ -170,28 +170,38 @@ public class TradeService : ITradeService
     {
         var stopwatch = Stopwatch.StartNew();
 
-        IQueryable<Trade> query = _db.Trades.Include(t => t.Items);
+        IQueryable<Trade> query = _db.Trades.Where(t => t.Deleted == false && t.Status != "closed").Include(t => t.Items);
 
         if (items != null && items.Any())
         {
-            var defindexSet = items.Select(i => i.Defindex).ToHashSet();
-
-            query = query.Where(t => t.Items.Any(i => defindexSet.Contains(i.Defindex)));
+            var hasCustomSpells = items.Any(i => i.Name == "CUSTOM_SPELLS");
+            if (!hasCustomSpells)
+            {
+                var defindexSet = items.Select(i => i.Defindex).ToHashSet();
+                query = query.Where(t => t.Items.Any(i => defindexSet.Contains(i.Defindex)));
+            }
         }
 
         var pagedTrades = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
+
         var filteredTrades = pagedTrades.Where(t =>
-            items.All(searchItem =>
+            items.Any(searchItem =>
                 t.Items.Any(dbItem =>
-                    (dbItem.Defindex == searchItem.Defindex) &&
-                    (searchItem.Effect == null || dbItem.Effect == searchItem.Effect) &&
-                    //(dbItem.Quality == searchItem.Quality) &&
-                    (searchItem.paintDefindex == null || dbItem.paintDefindex == searchItem.paintDefindex) &&
-                    (searchItem.Killstreak == null || dbItem.Killstreak == searchItem.Killstreak) &&
-                    (searchItem.Killstreaker == "" || dbItem.Killstreaker == searchItem.Killstreaker) &&
-                    (searchItem.Sheen == null || dbItem.Sheen == searchItem.Sheen) &&
-                    (dbItem.IsSelling == searchItem.IsSelling)
+                {
+                    if (searchItem.Name == "CUSTOM_SPELLS")
+                    {
+                        return dbItem.Spells != null && dbItem.Spells.Count > 0;
+                    }
+                    return (dbItem.Defindex == searchItem.Defindex) &&
+                           (searchItem.Effect == null || dbItem.Effect == searchItem.Effect) &&
+                           //(dbItem.Quality == searchItem.Quality) &&
+                           (searchItem.paintDefindex == null || dbItem.paintDefindex == searchItem.paintDefindex) &&
+                           (searchItem.Killstreak == null || dbItem.Killstreak == searchItem.Killstreak) &&
+                           (searchItem.Killstreaker == "" || dbItem.Killstreaker == searchItem.Killstreaker) &&
+                           (searchItem.Sheen == null || dbItem.Sheen == searchItem.Sheen) &&
+                           (dbItem.IsSelling == searchItem.IsSelling);
+                }
                 )
             )
         ).ToList();

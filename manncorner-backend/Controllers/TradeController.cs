@@ -53,6 +53,7 @@ public class TradeController : ControllerBase
 
         return Ok(trades);
     }
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost]
     public async Task<ActionResult<Trade>> CreateTrade([FromBody] Trade trade)
     {
@@ -63,6 +64,7 @@ public class TradeController : ControllerBase
         var createTrade = await _tradeService.CreateTradeAsync(trade);
         return CreatedAtAction(nameof(GetTrade), new { id = createTrade.Id }, createTrade);
     }
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("{id}")]
     public async Task<ActionResult<Trade>> UpdateTrade(int id, [FromBody] Trade trade)
     {
@@ -89,6 +91,7 @@ public class TradeController : ControllerBase
         if (bumpResult == null) return NotFound();
         return Ok(bumpResult);
     }
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPost("changeStatus")]
     public async Task<ActionResult> ChangeTradeStatus([FromBody] TradeIdRequest request)
     {
@@ -100,6 +103,7 @@ public class TradeController : ControllerBase
 
         return Ok(result);
     }
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete("delete")]
     public async Task<ActionResult> DeleteTradeStatus([FromBody] TradeIdRequest request)
     {
