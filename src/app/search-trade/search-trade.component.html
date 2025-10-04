@@ -4,7 +4,7 @@
       <div
         class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full">
         <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
-          <div *ngFor="let item of itemsFrom" class="w-24">
+          <div *ngFor="let item of itemsFrom; trackBy: trackByFn" class="w-24">
             <app-item-container 
               [item]="item" 
               [canDelete]="true"
@@ -45,7 +45,7 @@
         <img src="/assets/images/8333955.png" alt="" class="w-full h-full" />
       </div>
       <div class="flex flex-row flex-wrap gap-2" >
-        <div *ngFor="let item of selectedItems" class="w-24">
+        <div *ngFor="let item of selectedItems; trackBy: trackByFn" class="w-24">
           <app-item-container
             [item]="item"
             [canDelete]="true"
@@ -90,7 +90,7 @@
 
   <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
 
-    <div *ngFor="let item of baseInventoryItems" class="w-24">
+    <div *ngFor="let item of baseInventoryItems; trackBy: trackByFn" class="w-24">
       <app-item-container 
         [item]="item"
         [disabled]="isItemDisabled(item)"
@@ -98,9 +98,9 @@
         (click)="onItemSelect(item)">
       </app-item-container>
     </div>
-    <!-- <div *ngIf="itemSelectorFacade.loading" class="flex justify-center items-center w-full mt-4">
+    <div *ngIf="isLoading" class="flex justify-center items-center w-full mt-4">
       <p-progress-spinner ariaLabel="Loading" styleClass="custom-spinner"></p-progress-spinner>
-    </div> -->
+    </div>
   </div>
 </div>
       <!-- <app-inventory-items-selector [mode]="'inventory'" [filter]="filterText">

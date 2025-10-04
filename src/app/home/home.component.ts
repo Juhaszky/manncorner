@@ -7,7 +7,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TradeService } from './trade.service';
 import { catchError } from 'rxjs/operators';
 import { ItemContainerComponent } from '../../shared/item/item-container.component';
-import { Item } from '../../shared/models/item.model';
 import { PaginatorModule } from 'primeng/paginator';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -15,6 +14,7 @@ import { UserDataService } from '../../shared/user-data.service';
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
 import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
+import { displayableTrade } from '../../shared/models/displayableTrade.model';
 
 
 @Component({
@@ -40,16 +40,7 @@ export class HomeComponent implements OnInit {
 
   rows = 10;
   allPage = 0;
-  trades: {
-    itemsToSell: Item[];
-    itemsToBuy: Item[];
-    id: string;
-    avatarPath: string;
-    username: string;
-    createdAt: Date;
-    bumpedAt: Date;
-    description: string
-  }[] = [];
+  trades: displayableTrade[] = [];
   loading = false;
   constructor(
     private http: HttpClient,
@@ -129,5 +120,8 @@ export class HomeComponent implements OnInit {
         console.log(res);
       });
     }
+  }
+  trackByFn(index: number, trade: displayableTrade): number {
+    return +trade.id;
   }
 }

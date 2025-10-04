@@ -68,7 +68,7 @@ export class BuyItemPanelComponent implements OnInit {
   }
 
   trackByFn(index: number, item: Item) {
-    return item?.id || index;
+    return item?.defindex || index;
   }
 
   onOpenItemEditor() {

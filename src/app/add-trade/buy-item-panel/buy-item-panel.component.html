@@ -10,8 +10,8 @@
     (keydown)="onOpenItemEditor()">
     <img src="/assets/images/8333955.png" alt="" class="w-full h-full" />
   </div>
-  <div class="flex flex-row flex-wrap gap-2 p-2" *ngIf="allItems">
-    <div *ngFor="let item of selectedItems" class="w-24">
+  <div class="flex flex-row flex-wrap gap-2 " *ngIf="allItems">
+    <div *ngFor="let item of selectedItems; trackBy: trackByFn" class="w-24">
       <app-item-container
         [item]="item"
         [canDelete]="true"
