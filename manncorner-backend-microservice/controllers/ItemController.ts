@@ -6,13 +6,13 @@ import { EconItem } from 'tf2-item-format/.';
 import { Item } from '../models/Item';
 
 const allItems = rawItems as TF2Item[];
-export const getItems = (searchTerm?: string) => {
-  //let filtered: Item[] = allItems.map(i => parseStockItemToItem(i));
+export const getItems = (searchTerm?: string, offset = 0, limit = 40) => {
   const DEFAULT_ITEMS = allItems
-    .filter(i => [5021, 5002, 5000, 5001].includes(i.defindex))
+    .filter(i => [-11, 5021, 5002, 5000, 5001].includes(i.defindex))
     .map(i => parseStockItemToItem(i));
 
   let filtered: Item[] = [];
+
   if (searchTerm) {
     const lower = searchTerm.toLowerCase();
     filtered = allItems
@@ -22,9 +22,20 @@ export const getItems = (searchTerm?: string) => {
           item.name?.toLowerCase().includes(lower)
       )
       .map(i => parseStockItemToItem(i))
-      .slice(0, 50);
+      .slice(offset, offset + limit);
   } else {
-    filtered = [...DEFAULT_ITEMS, ...allItems.slice(0, 50).map(i => parseStockItemToItem(i))];
+    if (offset === 0) {
+      filtered = [
+        ...DEFAULT_ITEMS,
+        ...allItems
+          .slice(offset, offset + limit)
+          .map(i => parseStockItemToItem(i)),
+      ];
+    } else {
+      filtered = allItems
+        .slice(offset, offset + limit)
+        .map(i => parseStockItemToItem(i));
+    }
   }
 
   return filtered;
