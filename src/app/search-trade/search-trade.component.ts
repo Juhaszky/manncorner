@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
@@ -20,6 +27,8 @@ import {
   catchError,
   combineLatest,
   debounceTime,
+  finalize,
+  fromEvent,
   map,
   Observable,
   of,
@@ -28,11 +37,13 @@ import {
   Subject,
   switchMap,
   take,
+  tap,
 } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { TradeResult } from '../../shared/models/trade.model';
 import { SearchTradeResultsService } from '../search-trade-results/search-trade-results.service';
 import { SearchTradeService } from './search-trade.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-search',
@@ -45,14 +56,16 @@ import { SearchTradeService } from './search-trade.service';
     DialogModule,
     ItemEditorComponent,
     ItemCustomizerComponent,
+    ProgressSpinnerModule
   ],
   templateUrl: './search-trade.component.html',
   styleUrl: './search-trade.component.scss',
 })
-export class SearchTradeComponent implements OnInit {
+export class SearchTradeComponent implements OnInit, AfterViewInit {
   filterText = '';
   tradeId = '';
   private filterSubject = new Subject<string>();
+  @ViewChild('inventorySelector') inventorySelectorEl!: ElementRef;
   selectedItemIds = new Set<string>();
   route = inject(ActivatedRoute);
   tradeService = inject(TradeService);
@@ -74,6 +87,66 @@ export class SearchTradeComponent implements OnInit {
   visible = false;
   editorVisible = false;
   customizeVisible = false;
+  offset = 0;
+  limit = 25;
+  isLoading = false;
+  hasMoreItems = true;
+  ngAfterViewInit(): void {
+    this.userDataFacade.userData$.pipe(take(1)).subscribe(res => {
+      if (!res.steamid) return;
+
+      fromEvent<Event>(
+        this.inventorySelectorEl.nativeElement,
+        'scroll'
+      ).subscribe(event => {
+        const target = event.target as HTMLElement;
+        const distanceFromBottom =
+          target.scrollHeight - (target.scrollTop + target.clientHeight);
+        const threshold = 50;
+
+        if (
+          distanceFromBottom <= threshold &&
+          !this.isLoading &&
+          this.hasMoreItems &&
+          (!this.filterText || this.filterText.trim() === '')
+        ) {
+          this.loadMoreItems();
+        }
+      });
+    });
+  }
+  loadMoreItems() {
+    if (this.isLoading || !this.hasMoreItems) return;
+    this.isLoading = true;
+
+    this.userDataFacade.userData$.pipe(take(1)).subscribe(res => {
+      if (!res.steamid) {
+        this.isLoading = false;
+        return;
+      }
+      let params = `?offset=${this.offset}&limit=${this.limit}`;
+      if (this.filterText.trim()) {
+        params += `&searchterm=${encodeURIComponent(this.filterText)}`;
+      }
+
+      this.http
+        .get<Item[]>(`${environment.MICROSERVICE_URL}/api/items${params}`)
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe(
+          items => {
+            if (!items || items.length < this.limit) {
+              this.hasMoreItems = false;
+            }
+            this.allItems = [...this.allItems, ...items];
+            this.baseInventoryItems = this.allItems;
+            this.offset += items.length;
+          },
+          () => {
+            this.hasMoreItems = false;
+          }
+        );
+    });
+  }
   ngOnInit(): void {
     const initialLoad$ = this.loadItems().pipe(
       catchError(() => of([])),
@@ -91,6 +164,9 @@ export class SearchTradeComponent implements OnInit {
     ])
       .pipe(
         debounceTime(500),
+        tap(([filterText]) => {
+          this.filterText = filterText;
+        }),
         switchMap(([filterText, sortCriteria]) =>
           this.loadItems(filterText).pipe(
             catchError(() => of([])),
@@ -138,6 +214,7 @@ export class SearchTradeComponent implements OnInit {
   }
 
   handleFilterSearch(searchTerm: string) {
+    this.filterText = searchTerm;
     this.filterSubject.next(searchTerm);
   }
 
@@ -148,8 +225,7 @@ export class SearchTradeComponent implements OnInit {
       this.userDataFacade.userData$.pipe(take(1)),
     ])
       .pipe(take(1))
-      .subscribe(([itemsToTrade, itemsForTrade, userData]) => {
-        
+      .subscribe(([itemsToTrade, itemsForTrade]) => {
         const items: Item[] = [
           ...itemsToTrade.map(item => ({ ...item, isSelling: true })),
           ...itemsForTrade.map(item => ({
@@ -194,7 +270,7 @@ export class SearchTradeComponent implements OnInit {
   }
 
   trackByFn(index: number, item: Item) {
-    return item?.id || index;
+    return item?.defindex || index;
   }
   onRemoveItem(item: Item) {
     this.itemSelectorFacade.onRemoveEditItem(item);

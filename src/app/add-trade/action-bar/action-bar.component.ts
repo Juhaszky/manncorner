@@ -10,5 +10,5 @@ import { SortBarComponent } from './sort-bar/sort-bar.component';
     styleUrl: './action-bar.component.scss'
 })
 export class ActionBarComponent {
-    @Input() type: "add-trade" | "search-trade" = "search-trade";
+    @Input() type: "add-trade" | "search-trade" | "edit-trade" | "offer-item" = "search-trade";
 }

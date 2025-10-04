@@ -9,6 +9,8 @@ import {
 import { AddTradeService } from '../../add-trade.service';
 import { take } from 'rxjs';
 import { SearchTradeService } from '../../../search-trade/search-trade.service';
+import { OfferItemService } from '../../offer-item-selector/offer-item.service';
+import { EditTradeService } from '../../../edit-trade/edit-trade.service';
 
 @Component({
   standalone: true,
@@ -18,19 +20,25 @@ import { SearchTradeService } from '../../../search-trade/search-trade.service';
   styleUrl: './search-bar.component.scss',
 })
 export class SearchBarComponent implements AfterViewInit {
-  @Input() type: 'add-trade' | 'search-trade' = 'add-trade';
+  @Input() type: 'add-trade' | 'search-trade' | 'edit-trade' | 'offer-item' = 'add-trade';
   @ViewChild('searchBar') searchBar!: ElementRef;
   addTradeService = inject(AddTradeService);
   searchTradeService = inject(SearchTradeService);
+  offerItemService = inject(OfferItemService);
+  editTradeService = inject(EditTradeService);
   filterText = '';
 
   filterItems(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (this.type === 'add-trade') {
+    if (this.type === "add-trade") {
       this.addTradeService.setFilterText(input.value);
 
     } else if (this.type === "search-trade") {
       this.searchTradeService.setFilterText(input.value);
+    } else if (this.type === "offer-item") {
+      this.offerItemService.setFilterText(input.value);
+    } else if (this.type === "edit-trade") {
+      this.editTradeService.setFilterText(input.value);
     }
   }
 

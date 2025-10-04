@@ -79,8 +79,8 @@ export class ItemSelectorService {
   fetchAllItems(): Observable<any> {
     return this.http.get("/assets/items.json");
   }
-  fetchAllEffects() {
-
+  fetchAllDefaultItemsForSearch(offset: number): Observable<Item[]> {
+    return this.http.get<Item[]>(`${environment.MICROSERVICE_URL}/items?offset=${offset}`);
   }
   
   filterItems(items: ItemData[], filterText: string): ItemData[] {

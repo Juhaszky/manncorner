@@ -40,6 +40,7 @@ import { SortService } from '../../shared/sort.service';
 import { MessageService } from 'primeng/api';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
+import { EditTradeService } from './edit-trade.service';
 
 @Component({
   selector: 'app-edit-trade',
@@ -69,6 +70,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
   itemSelectorFacade = inject(ItemSelectorFacade);
   userDataFacade = inject(UserProfileFacade);
   addTradeService = inject(AddTradeService);
+  editTradeService = inject(EditTradeService);
   sortService = inject(SortService);
   messageService = inject(MessageService);
   http = inject(HttpClient);
@@ -116,19 +118,26 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
       });
     });
     combineLatest([
-      this.itemSelectorFacade.items$,
-      this.addTradeService.filterText$,
+      this.editTradeService.filterText$,
       this.sortService.sortCriteria$,
     ])
       .pipe(
-        map(([items, filterText, sortCriteria]) => {
-          const filtered = filterText
-            ? items.filter(i =>
-                i.fullName.toLowerCase().includes(filterText.toLowerCase())
-              )
-            : [...items];
-
-          return this.sortService.sortItems(filtered, sortCriteria);
+        debounceTime(500),
+        switchMap(([filterText, sortCriteria]) => {
+          const trimmed = filterText.trim();
+          if (trimmed.length === 0) {
+            return this.itemSelectorFacade.items$.pipe(
+              map(items => this.sortService.sortItems(items, sortCriteria))
+            );
+          }
+          return this.http
+            .get<
+              Item[]
+            >(`${environment.API_URL}/items/search?searchString=${filterText}&userId=76561198027857565`)
+            .pipe(
+              catchError(() => of([])),
+              map(items => this.sortService.sortItems(items, sortCriteria))
+            );
         })
       )
       .subscribe(filteredSorted => {

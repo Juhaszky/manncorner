@@ -8,15 +8,27 @@ import {
   OnInit,
   AfterViewInit,
 } from '@angular/core';
-import { combineLatest, map, take, fromEvent, first } from 'rxjs';
+import {
+  combineLatest,
+  map,
+  take,
+  fromEvent,
+  first,
+  debounceTime,
+  switchMap,
+  catchError,
+  of,
+} from 'rxjs';
 import { ItemSelectorFacade } from '../../../shared/item-selector/item-selector.facade';
 import { Item } from '../../../shared/models/item.model';
 import { SortService } from '../../../shared/sort.service';
 import { UserProfileFacade } from '../../user-profile/user-profile.facade';
-import { AddTradeService } from '../add-trade.service';
 import { CommonModule } from '@angular/common';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { OfferItemService } from './offer-item.service';
+import { environment } from '../../../environments/environment.development';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-offer-item-selector',
@@ -38,9 +50,10 @@ export class OfferItemSelectorComponent implements OnInit, AfterViewInit {
   disabled = false;
   constructor(
     public itemSelectorFacade: ItemSelectorFacade,
-    private addTradeService: AddTradeService,
+    private offerItemService: OfferItemService,
     private sortService: SortService,
-    private userDataFacade: UserProfileFacade
+    private userDataFacade: UserProfileFacade,
+    private http: HttpClient
   ) {}
   ngOnInit(): void {
     this.userDataFacade.userData$.pipe(first()).subscribe(res => {
@@ -57,20 +70,30 @@ export class OfferItemSelectorComponent implements OnInit, AfterViewInit {
         }
       });
     });
+    this.itemSelectorFacade.items$.subscribe(i => (this.items = i));
     combineLatest([
-      this.itemSelectorFacade.items$,
-      this.addTradeService.filterText$,
+      this.offerItemService.filterText$,
       this.sortService.sortCriteria$,
+      this.userDataFacade.userData$,
     ])
       .pipe(
-        map(([items, filterText, sortCriteria]) => {
-          const filtered = filterText
-            ? items.filter(i =>
-                i.fullName.toLowerCase().includes(filterText.toLowerCase())
-              )
-            : [...items];
-
-          return this.sortService.sortItems(filtered, sortCriteria);
+        debounceTime(500),
+        switchMap(([filterText, sortCriteria, userData]) => {
+          console.log(userData);
+          const trimmed = filterText.trim();
+          if (trimmed.length === 0) {
+            return this.itemSelectorFacade.items$.pipe(
+              map(items => this.sortService.sortItems(items, sortCriteria))
+            );
+          }
+          return this.http
+            .get<
+              Item[]
+            >(`${environment.API_URL}/items/search?searchString=${filterText}&userId=${userData.steamid}`)
+            .pipe(
+              catchError(() => of([])),
+              map(items => this.sortService.sortItems(items, sortCriteria))
+            );
         })
       )
       .subscribe(filteredSorted => {
@@ -128,27 +151,5 @@ export class OfferItemSelectorComponent implements OnInit, AfterViewInit {
     } else if (this.mode === 'offer') {
       this.itemSelectorFacade.onOfferItem(item);
     }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onRemoveItem(idx: number) {
-    // this.itemService.itemState$.subscribe(state => {
-    //   this.filter = state.filterText;
-    // });
-    // if (this.mode === 'toTrade') {
-    //   console.log(this.filter);
-    //   if (this.filter) {
-    //     console.log('ran');
-    //     this.itemService.moveItemToFilteredInventory(idx);
-    //     this.itemService.itemState$.subscribe(s =>
-    //       console.log(s.filteredInventoryItems)
-    //     );
-    //   } else {
-    //     this.itemService.moveItemToInventory(idx);
-    //   }
-    // } else {
-    //   this.itemService.removeItemFrom(idx);
-    // }
-    // this.applyFilter();
   }
 }
