@@ -1,11 +1,12 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { Observable, catchError, filter, map, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { UserData } from '../../../shared/models/userdata.model';
 import { CommonModule } from '@angular/common';
 import { UserDataService } from '../../../shared/user-data.service';
 import { AuthService } from '../../auth.service';
 import { RouterModule } from '@angular/router';
+import { environment } from '../../../environments/environment.development';
 export interface Response {
   response: Players;
 }
@@ -30,7 +31,6 @@ export class UserDataComponent implements OnInit {
   ngOnInit(): void {
     this.userDataService.userData$
       .pipe(
-        filter(() => this.authService.checkAuth()),
         tap(userData => {
           if (userData) {
             this.userData = userData;
@@ -45,7 +45,7 @@ export class UserDataComponent implements OnInit {
   fetchUserSummary(): Observable<Response> {
     return this.http
       .get<Response>(
-        'http://localhost:5268/api/steam/profile/76561198027857565'
+        `${environment.API_URL}/api/steam/profile/76561198027857565`
       )
       .pipe(catchError(this.handleError));
   }

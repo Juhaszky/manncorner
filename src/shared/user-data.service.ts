@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { UserData, UserDataResponse } from './models/userdata.model';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment.development';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,7 @@ export class UserDataService {
   fetchUserSummary(): Observable<UserData> {
     return this.http
       .get<UserDataResponse>(
-        'http://localhost:5268/api/steam/profile/76561198027857565'
+        `${environment.API_URL}/api/steam/profile/76561198027857565`
       )
       .pipe(map(res => res.response.players[0]));
   }

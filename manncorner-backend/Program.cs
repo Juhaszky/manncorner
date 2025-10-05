@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using AspNet.Security.OpenId.Steam;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -20,66 +21,79 @@ builder.Services.AddHttpClient();
 var configuration = builder.Configuration;
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = "Cookies";
-    options.DefaultChallengeScheme = "Steam";
+  options.DefaultScheme = "Cookies";
+  options.DefaultChallengeScheme = SteamAuthenticationDefaults.AuthenticationScheme; ;
 
 })
 .AddCookie("Cookies")
 .AddSteam(options =>
 {
-    options.Events.OnAuthenticated = context =>
+  options.Events.OnAuthenticated = context =>
+  {
+    var url = context.Identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var steamId = new Uri(url).Segments.Last();
+    if (!string.IsNullOrEmpty(steamId))
     {
-        var url = context.Identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var steamId = new Uri(url).Segments.Last();
-        if (!string.IsNullOrEmpty(steamId))
-        {
 
-            context.Identity?.AddClaim(new Claim("steamId", steamId));
-        }
-        return Task.CompletedTask;
-    };
+      context.Identity?.AddClaim(new Claim("steamId", steamId));
+    }
+    return Task.CompletedTask;
+  };
+  options.SignInScheme = "Cookies";
+
 }).AddJwtBearer(options =>
 {
-    var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]);
-    options.Events = new JwtBearerEvents
+  var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]);
+  options.Events = new JwtBearerEvents
+  {
+    OnMessageReceived = context =>
     {
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine("Authentication failed: " + context.Exception.Message);
-            return Task.CompletedTask;
-        },
-        OnTokenValidated = context =>
-        {
-            Console.WriteLine("Token validated successfully.");
-            return Task.CompletedTask;
-        },
-        OnChallenge = context =>
-        {
-            Console.WriteLine("JWT challenge: " + context.Error + " - " + context.ErrorDescription);
-            return Task.CompletedTask;
-        }
-    };
-    options.TokenValidationParameters = new TokenValidationParameters
+      var accessToken = context.Request.Cookies["accessToken"];
+      if (!string.IsNullOrEmpty(accessToken))
+      {
+        context.Token = accessToken;
+      }
+      return Task.CompletedTask;
+    },
+    OnAuthenticationFailed = context =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = configuration["Jwt:Issuer"],
-        ValidAudience = configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ClockSkew = TimeSpan.Zero
-    };
+      Console.WriteLine("Authentication failed: " + context.Exception.Message);
+      return Task.CompletedTask;
+    },
+    OnTokenValidated = context =>
+    {
+      Console.WriteLine("Token validated successfully.");
+      return Task.CompletedTask;
+    },
+    OnChallenge = context =>
+    {
+      Console.WriteLine("JWT challenge: " + context.Error + " - " + context.ErrorDescription);
+      return Task.CompletedTask;
+    }
+  };
+  options.TokenValidationParameters = new TokenValidationParameters
+  {
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    ValidIssuer = configuration["Jwt:Issuer"],
+    ValidAudience = configuration["Jwt:Audience"],
+    IssuerSigningKey = new SymmetricSecurityKey(key),
+    ClockSkew = TimeSpan.Zero
+  };
 });
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()  // Allow all origins, can be restricted for security
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
+  options.AddPolicy("AllowAll", policy =>
+  {
+    policy
+          .WithOrigins("http://localhost:4200")
+          .AllowAnyMethod()
+          .AllowAnyHeader()
+          .AllowCredentials();
+  });
 });
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
@@ -96,14 +110,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseAuthentication();
-    app.UseAuthorization();
-    app.MapControllers();
-    app.UseCors("AllowAll");
+  app.MapOpenApi();
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
+  app.UseCors("AllowAll");
+  app.UseAuthentication();
+  app.UseAuthorization();
+  app.MapControllers();
 
 app.UseHttpsRedirection();
 
@@ -114,15 +128,15 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+  var forecast = Enumerable.Range(1, 5).Select(index =>
+      new WeatherForecast
+      (
+          DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+          Random.Shared.Next(-20, 55),
+          summaries[Random.Shared.Next(summaries.Length)]
+      ))
+      .ToArray();
+  return forecast;
 })
 .WithName("GetWeatherForecast");
 
@@ -130,5 +144,5 @@ app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+  public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
