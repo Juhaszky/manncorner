@@ -14,6 +14,7 @@ export class LoginSuccessComponent implements OnInit {
     private authService: AuthService,
   ) {}
   ngOnInit(): void {
+    //TODO REMOVE this component
     this.authService.checkAuth();
     this.router.navigate(['/home'], { queryParams: { page: 1 } });
   }

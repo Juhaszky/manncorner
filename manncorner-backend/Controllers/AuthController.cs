@@ -70,7 +70,7 @@ public class AuthController : Controller
             Expires = DateTime.UtcNow.AddMinutes(15)
         });
 
-        var frontendUrl = $"http://localhost:4200/login-successful";
+        var frontendUrl = $"http://localhost:4200/home";
         return Redirect(frontendUrl);
     }
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
