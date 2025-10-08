@@ -65,11 +65,7 @@
     </div>
   </p-card>
 </div>
-<div
-  class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center z-50"
-  *ngIf="loading">
-  <p-progress-spinner ariaLabel="loading" />
-</div>
+
 <p-dialog header="Confirmation" [modal]="true" [(visible)]="showConfirmDelete" [style]="{ width: '25rem', padding: '2em'}">
     <span class="p-text-secondary block mb-8">Are you sure you want to delete your trade?</span>
     <div class="flex justify-end gap-2">
@@ -77,3 +73,5 @@
         <p-button label="Delete"  severity="danger" (onClick)="handleTradeDelete()"/>
     </div>
 </p-dialog>
+
+<app-loading-spinner [isLoading]="loading"></app-loading-spinner>

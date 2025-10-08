@@ -15,6 +15,7 @@ import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
 import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
 import { displayableTrade } from '../../shared/models/displayableTrade.model';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 
 @Component({
@@ -29,7 +30,8 @@ import { displayableTrade } from '../../shared/models/displayableTrade.model';
     ItemContainerComponent,
     CardModule,
     AvatarModule,
-    DescrpitionComponent
+    DescrpitionComponent,
+    LoadingSpinnerComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

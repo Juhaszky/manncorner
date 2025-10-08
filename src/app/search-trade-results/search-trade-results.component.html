@@ -1,6 +1,6 @@
-<div class="container flex flex-col w-full h-94">
+<div class=" flex flex-col w-full h-94" *ngIf="!loading">
   <p-card
-    class="trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow bg-slate-800"
+    class="trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow"
     *ngFor="let trade of trades"
     (click)="selectTrade(trade.id)"
     (keydown)="selectTrade(trade.id)"
@@ -56,8 +56,13 @@
       </div>
     </div>
   </p-card>
- 
-  <div class="paginator-wrapper">
+  <img
+    *ngIf="trades.length === 0"
+    [src]="'./assets/test.png'"
+    alt="No Results Found"
+    class="mx-auto max-w-full h-auto"
+    style="width: 100%; max-width: 350px" />
+  <div class="paginator-wrapper" *ngIf="allPage > 0">
     <p-paginator
       [first]="first"
       [rows]="rows"
@@ -66,7 +71,5 @@
       (onPageChange)="onPageChange($event)">
     </p-paginator>
   </div>
-  <div class="absolute top-full" *ngIf="loading">
-    <p-progress-spinner ariaLabel="loading" />
-  </div>
 </div>
+<app-loading-spinner [isLoading]="loading"></app-loading-spinner>

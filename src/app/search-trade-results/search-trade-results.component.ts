@@ -13,6 +13,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-search-results',
@@ -26,7 +27,8 @@ import { AvatarModule } from 'primeng/avatar';
     CardModule,
     CommonModule,
     NgOptimizedImage,
-    AvatarModule
+    AvatarModule,
+    LoadingSpinnerComponent
 ],
   templateUrl: './search-trade-results.component.html',
   styleUrl: './search-trade-results.component.scss',
@@ -57,6 +59,7 @@ export class SearchTradeResultsComponent implements OnInit {
   canBump = false;
   ngOnInit() {
     this.searchTraddeResults.results$.subscribe(res => {
+      this.loading = true;
       if (res) {
         this.trades = res.trades.map(trade => {
           {
@@ -75,6 +78,7 @@ export class SearchTradeResultsComponent implements OnInit {
         });
         this.allPage = res.totalCount;
       }
+      this.loading = false;
     });
   }
 
