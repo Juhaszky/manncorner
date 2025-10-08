@@ -1,4 +1,4 @@
-<div *ngIf="userData" routerLink="user-profile" class="flex justify-end items-center gap-2 p-4">
+<div *ngIf="userData" [routerLink]="['/user-profile', userData.steamid]" class="flex justify-end items-center gap-2 p-4">
   <img  class="h-8 w-8 rounded-full" [src]="userData.avatar" alt="asd" />
   <h2>{{userData.personaname}}</h2>
 

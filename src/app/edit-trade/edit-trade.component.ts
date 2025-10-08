@@ -121,10 +121,11 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
     combineLatest([
       this.editTradeService.filterText$,
       this.sortService.sortCriteria$,
+      this.userDataFacade.profileData$
     ])
       .pipe(
         debounceTime(500),
-        switchMap(([filterText, sortCriteria]) => {
+        switchMap(([filterText, sortCriteria, userData]) => {
           const trimmed = filterText.trim();
           if (trimmed.length === 0) {
             return this.itemSelectorFacade.items$.pipe(
@@ -134,7 +135,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
           return this.http
             .get<
               Item[]
-            >(`${environment.API_URL}/items/search?searchString=${filterText}&userId=76561198027857565`)
+            >(`${environment.API_URL}/items/search?searchString=${filterText}&userId=${userData.steamId}`)
             .pipe(
               catchError(() => of([])),
               map(items => this.sortService.sortItems(items, sortCriteria))

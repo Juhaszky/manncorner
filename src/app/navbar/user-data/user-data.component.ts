@@ -42,10 +42,10 @@ export class UserDataComponent implements OnInit {
       .subscribe();
   }
 
-  fetchUserSummary(): Observable<Response> {
+  fetchUserSummary(steamId: string): Observable<Response> {
     return this.http
       .get<Response>(
-        `${environment.API_URL}/api/steam/profile/76561198027857565`
+        `${environment.API_URL}/api/steam/profile/${steamId}`
       )
       .pipe(catchError(this.handleError));
   }
@@ -67,7 +67,7 @@ export class UserDataComponent implements OnInit {
     if (this.userData !== undefined) {
       return;
     }
-    this.fetchUserSummary()
+    this.fetchUserSummary(this.userDataService.getUserId())
       .pipe(map((info: Response) => info.response.players[0]))
       .subscribe(data => {
         this.userDataService.setUsername(data.personaname);

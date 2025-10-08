@@ -79,7 +79,6 @@ export class OfferItemSelectorComponent implements OnInit, AfterViewInit {
       .pipe(
         debounceTime(500),
         switchMap(([filterText, sortCriteria, userData]) => {
-          console.log(userData);
           const trimmed = filterText.trim();
           if (trimmed.length === 0) {
             return this.itemSelectorFacade.items$.pipe(

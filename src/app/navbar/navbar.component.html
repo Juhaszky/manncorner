@@ -9,18 +9,16 @@
     </a>
 
     <div class="flex items-center lg:order-2">
-      <div class="max-[1024px]:hidden">
+      <div class="max-[1024px]:hidden cursor-pointer">
         <app-user-data *ngIf="isLoggedIn"></app-user-data>
       </div>
 
-      <!-- Drawer Toggle Button for Mobile -->
       <div class="min-[1024px]:hidden">
         <button
           pButton
           class="text-gray-700 dark:text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
           (click)="handletoggleDrawer()">
           <i class="pi pi-bars text-2xl"></i>
-          <!-- PrimeIcons Menu Icon -->
         </button>
       </div>
     </div>
