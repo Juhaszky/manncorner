@@ -21,4 +21,5 @@ export interface Item {
   parts?: string[];
   spells?: string[];
   isSelling?: boolean;
+  quantity?: number;
 }

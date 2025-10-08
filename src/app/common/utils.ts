@@ -23,9 +23,9 @@ const qualityMap: Record<number, string> = {
 
 export function getItemBorderStyle(item: Item): string {
   if (item.quality === 15) {
-    return "decoratedWeapon";
+    return 'decoratedWeapon';
   } else if (item.quality === 14) {
-    return "Collectors"
+    return 'Collectors';
   }
   return qualityMap[item.quality];
 }
@@ -68,4 +68,9 @@ export function chunkItems(
     result[chunkIndex].push(item);
     return result;
   }, [] as ModifiedItemData[][]);
+}
+
+export function showQuantity(defindex: number) {
+  const DEFINDEX_NEED = [5021, 5002, 5000, 5001];
+  return DEFINDEX_NEED.includes(defindex);
 }

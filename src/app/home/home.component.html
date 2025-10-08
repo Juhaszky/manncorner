@@ -46,7 +46,7 @@
       <div class="col-card flex flex-wrap flex-row relative w-full h-full">
         <div class="flex flex-row flex-wrap w-full gap-2 p-2">
           <div *ngFor="let item of trade.itemsToBuy" class="w-24">
-            <app-item-container [item]="item"> </app-item-container>
+            <app-item-container [item]="item" [showQuantity]="true"> </app-item-container>
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { Item } from '../models/item.model';
+import { showQuantity } from '../../app/common/utils';
 
 @Component({
   standalone: true,
@@ -28,10 +29,16 @@ export class ItemComponent {
   @Input() disabled = false;
   @Input() canModify = false;
   @Input() canDelete = false;
+  @Input() showQuantity = false;
   @Input() borderStyle = '';
   @Input() effectUrl!: string | null;
   showActions = false;
+  showQuantityFn = showQuantity;
 
+  onQuantityChange(event: any) {
+    const quantity = parseInt(event.target.value, 10) || 1;
+    this.itemData.quantity = quantity;
+  }
   @HostListener('mouseenter') onMouseEnter() {
     this.showActions = this.canDelete || this.canModify;
   }

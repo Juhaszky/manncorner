@@ -13,6 +13,7 @@ public class Item
     public string Type { get; set; }
     public int? Effect { get; set; } // optional
     public int Quality { get; set; }
+    public int? Quantity { get; set; }
     public int? Killstreak { get; set; }
     public string? Killstreaker { get; set; }
     public string? Sheen { get; set; }

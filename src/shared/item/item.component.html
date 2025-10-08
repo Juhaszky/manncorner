@@ -24,4 +24,9 @@
       </p>
     </span>
   </div>
+  <div class="absolute bottom-1 right-1 bg-white bg-opacity-10 rounded flex items-center gap-1 p-1 z-20" *ngIf="showQuantity && showQuantityFn">
+    <label  for="quantity-{{itemData.id}}" class="text-xs select-none text-gray-400">Qty: <span *ngIf="showQuantity && !canModify">{{itemData.quantity}}</span></label>
+    <input *ngIf="canModify" id="quantity-{{itemData.id}}" type="number" min="1" [value]="itemData.quantity || 1"
+      (input)="onQuantityChange($event)" class="w-12 text-sm text-center rounded border" />
+  </div>
 </div>

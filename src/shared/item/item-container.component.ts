@@ -23,6 +23,7 @@ export class ItemContainerComponent implements OnChanges {
   @Input() disabled = false;
   @Input() canDelete = false;
   @Input() canModify = false;
+  @Input() showQuantity = false;
   @Output() selectEmitter: EventEmitter<Item> = new EventEmitter<Item>();
   @Output() removeEmitter: EventEmitter<Item> = new EventEmitter<Item>();
   @Output() customizeEmitter: EventEmitter<Item> = new EventEmitter<Item>();
