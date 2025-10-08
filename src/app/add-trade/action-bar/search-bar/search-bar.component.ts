@@ -54,6 +54,11 @@ export class SearchBarComponent implements AfterViewInit {
           this.filterText = value;
           this.searchBar.nativeElement.value = value;
         });
+      } else if(this.type === 'offer-item') {
+        this.offerItemService.filterText$.pipe(take(1)).subscribe(value => {
+          this.filterText = value;
+          this.searchBar.nativeElement.value = value;
+        });
       }
     }
   }
