@@ -28,6 +28,10 @@ export class AuthService {
       });
   }
 
+  refreshToken() {
+    return this.http.post(`${environment.API_URL}/Auth/refresh`, {}, { withCredentials: true });
+  }
+
   logout() {
     return this.http
       .get(`${environment.API_URL}/Auth/logout`, { withCredentials: true })
