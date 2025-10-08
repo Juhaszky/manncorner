@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { UserDataService } from '../../shared/user-data.service';
 import { UserProfileService } from './user-profile.service';
 import { filter, map, switchMap } from 'rxjs';
+import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
 
 @Injectable({ providedIn: 'root' })
 export class UserProfileFacade {
@@ -57,14 +58,14 @@ export class UserProfileFacade {
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Success',
-                    detail: 'Your trade url has been updated!',
+                    detail: ErrorMessage.PROFILE_CHANGE_TRADE_URL_SUCCESS,
                 });
             },
             error: () => {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: 'Something went wrong.',
+                    detail: ErrorMessage.PROFILE_CHANGE_TRADE_URL_FAIL,
                 });
             },
         });

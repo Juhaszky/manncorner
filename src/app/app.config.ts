@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, ErrorHandler } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -10,11 +10,13 @@ import Aura from '@primeng/themes/aura';
 import { authInterceptor } from './auth.interceptor';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
+import { GlobalErrorHandler } from './errorhandler';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     MessageService,
     DialogService,
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     provideRouter(routes),
     provideClientHydration(),
     provideAnimationsAsync(),

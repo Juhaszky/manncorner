@@ -1,7 +1,9 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from './auth.service';
-import { first, map } from 'rxjs';
+import { first, map, tap } from 'rxjs';
+import { MessageService } from 'primeng/api';
+import { ErrorMessage } from '../shared/models/enums/error-message.enum';
 
 export const authGuardGuard: CanActivateFn = (
   next: ActivatedRouteSnapshot,
@@ -9,11 +11,20 @@ export const authGuardGuard: CanActivateFn = (
 ) => {
   const authService = inject(AuthService);
   const router = inject(Router);
-
+  const messageService = inject(MessageService);
   authService.checkAuth();
 
   return authService.isAuthenticated$.pipe(
     first(),
+    tap(isAuth => {
+      if (!isAuth) {
+        messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: ErrorMessage.UNAUTHORIZED,
+        });
+      }
+    }),
     map(isAuth => {
       if (!isAuth) {
         router.navigate(['/home']);

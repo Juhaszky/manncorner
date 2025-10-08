@@ -20,6 +20,7 @@ import { SellItemPanelComponent } from './sell-item-panel/sell-item-panel.compon
 import { UserDataService } from '../../shared/user-data.service';
 import { UserProfileService } from '../user-profile/user-profile.service';
 import { MessageService } from 'primeng/api';
+import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
 
 @Component({
   standalone: true,
@@ -122,7 +123,7 @@ export class AddTradeComponent implements OnInit {
           return this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'You must select one item from each category!'
+            detail: ErrorMessage.EACH_CATEGORY
           })
         }
         const items: Item[] = [
@@ -150,7 +151,7 @@ export class AddTradeComponent implements OnInit {
             this.messageService.add({
                     severity: 'success',
                     summary: 'Success',
-                    detail: `Trade posted successfully`,
+                    detail: ErrorMessage.ADD_TRADE_SUCCESS,
                 });
           },
           error: err => {
@@ -158,7 +159,7 @@ export class AddTradeComponent implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: `Trade failed, please try again.`,
+                    detail: ErrorMessage.ADD_TRADE_FAIL,
                 });
             },
         });

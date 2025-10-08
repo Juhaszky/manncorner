@@ -1,0 +1,18 @@
+export enum ErrorMessage {
+    UNAUTHORIZED = "Unauthorized. Please log in first.",
+    UNKNOWN = "Unknown error occured. Please contact the site.",
+    ADD_TRADE_SUCCESS = "Trade posted successfully.",
+    ADD_TRADE_FAIL = "Trade failed, please try again.",
+    EDIT_TRADE_SUCCESS = "Trade updated successfully",
+    EDIT_TRADE_FAIL = "Trade update failed, something went wrong.",
+    BUMP_TRADE_SUCCESS = "Trade bumped successfully",
+    BUMP_TRADE_FAIL = "Trade was not bumped, something went wrong.",
+    REMOVE_TRADE_SUCCESS = "Trade deleted successfully.",
+    REMOVE_TRADE_FAIL = "Trade was not deleted, something went wrong.",
+    EACH_CATEGORY = "You must select one item from each category.",
+    MAX_LIMIT_EACH_CATEGORY = "You reached the max limit of the selected category.",
+    CHANGE_STATUS_SUCCESS = "Trade status changed.",
+    CHANGE_STATUS_FAIL = "Trade status was not changed, something went wrong.",
+    PROFILE_CHANGE_TRADE_URL_SUCCESS = "Your trade url has been updated.",
+    PROFILE_CHANGE_TRADE_URL_FAIL = "Your trade url has not been updated, something went wrong."
+}

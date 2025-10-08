@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ItemSelectorService } from '../item-selector.service';
 import { Item } from '../models/item.model';
 import { MessageService } from 'primeng/api';
+import { ErrorMessage } from '../models/enums/error-message.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ItemSelectorFacade {
@@ -225,7 +226,7 @@ export class ItemSelectorFacade {
     return this.messageService.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'You reached the max limit of the selected category!',
+      detail: ErrorMessage.MAX_LIMIT_EACH_CATEGORY,
     });
   }
 }

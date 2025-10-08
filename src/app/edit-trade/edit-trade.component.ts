@@ -41,6 +41,7 @@ import { MessageService } from 'primeng/api';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
 import { EditTradeService } from './edit-trade.service';
+import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
 
 @Component({
   selector: 'app-edit-trade',
@@ -238,7 +239,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
           return this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'You must select one item from each category!',
+            detail: ErrorMessage.EACH_CATEGORY,
           });
         }
         const items: Item[] = [
@@ -268,7 +269,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
-              detail: `Trade updated successfully`,
+              detail: ErrorMessage.EDIT_TRADE_SUCCESS,
             });
           },
           error: err => {
@@ -276,7 +277,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: `Trade update failed, please try again.`,
+              detail: ErrorMessage.EDIT_TRADE_FAIL,
             });
           },
         });

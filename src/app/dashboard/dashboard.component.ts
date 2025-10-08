@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
 
 @Component({
   selector: 'app-dashboard',
@@ -108,13 +109,13 @@ export class DashboardComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: `Trade deleted successfully`,
+          detail: ErrorMessage.REMOVE_TRADE_SUCCESS,
         });
       } else {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: `${res.error}`,
+          detail: ErrorMessage.REMOVE_TRADE_FAIL,
         });
       }
     });
@@ -129,13 +130,13 @@ export class DashboardComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: `Trade bumped successfully`,
+            detail: ErrorMessage.BUMP_TRADE_SUCCESS,
           });
         } else {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: `${res.error}`,
+            detail: ErrorMessage.BUMP_TRADE_FAIL,
           });
         }
       });
@@ -184,13 +185,13 @@ export class DashboardComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: `Trade status changed.`,
+          detail: ErrorMessage.CHANGE_STATUS_SUCCESS,
         });
       } else {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: `${res.error}`,
+          detail: ErrorMessage.CHANGE_STATUS_FAIL,
         });
       }
     });
