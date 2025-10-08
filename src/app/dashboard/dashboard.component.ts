@@ -16,6 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
 import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,7 +29,8 @@ import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-sp
     ProgressSpinnerModule,
     DialogModule,
     ButtonModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    Tooltip
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',

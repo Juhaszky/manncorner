@@ -10,20 +10,22 @@
     <ng-template #header>
       <div
         class="w-full flex gap-2 p-2 justify-end border-solid border-slate-600">
-        <button *ngIf="trade.status === 'open'">
+        <button *ngIf="trade.status === 'open'" pTooltip="Bump trade" tooltipPosition="bottom">
           <img
             class="h-6 w-6"
             src="/assets/icons/refresh.svg"
             alt=""
             (click)="onBump(trade.id, $event)" />
         </button>
-        <button (click)="handleConfirmDeleteDialog($event, trade.id)">
+        <button (click)="handleConfirmDeleteDialog($event, trade.id)" pTooltip="Delete trade" tooltipPosition="bottom">
           <img class="h-6 w-6" src="/assets/icons/trash.svg" alt="" />
         </button>
-        <button (click)="handleTradeEditing(trade.id)">
+        <button (click)="handleTradeEditing(trade.id)" pTooltip="Modify trade" tooltipPosition="bottom">
           <img class="h-6 w-6" src="/assets/icons/modify.svg" alt="" />
         </button>
         <p-togglebutton
+          pTooltip="Change status"
+          tooltipPosition="bottom"
           [ngModel]="getStatus(trade)"
           (ngModelChange)="setStatus(trade, $event)"
           (click)="onHandleStatus($event, trade.id)"

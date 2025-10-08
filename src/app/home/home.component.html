@@ -4,31 +4,27 @@
     *ngFor="let trade of trades; trackBy: trackByFn"
     (click)="selectTrade(trade.id)"
     (keydown)="selectTrade(trade.id)"
-    tabindex="0"
-  >
+    tabindex="0">
     <div class="trade-details">
       <div class="flex flex-row justify-between">
         <p class="flex items-center gap-2 w-50 p-0 m-0">
           <p-avatar [image]="trade.avatarPath" shape="circle" />
-          <span 
-            class="user-name-text">
+          <span class="user-name-text">
             {{ trade.username }}
-          </span> 
-          wants to trade...
+          </span>
+          <span class="hidden sm:inline"> wants to trade... </span>
           <span pTooltip="{{ trade.bumpedAt | date }}">
             {{ trade.bumpedAt | postDate }}
           </span>
         </p>
         <p
-          class="w-50 text-end p-0 m-0 sm:text-sm text-xs font-black text-gray-700"
-        >
+          class="w-50 text-end p-0 m-0 sm:text-sm text-xs font-black text-gray-700">
           <!-- <button *ngIf="userService.currentUsername === trade.username"><img class="h-6 w-6" src="/assets/icons/refresh.svg" alt="" (click)="onBump(trade.id, $event)"></button> -->
         </p>
       </div>
     </div>
     <div class="flex flex-wrap sm:flex-row flex-col w-full">
-      <div
-        class="col-card flex flex-wrap flex-row relative w-full h-full">
+      <div class="col-card flex flex-wrap flex-row relative w-full h-full">
         <div class="flex flex-row flex-wrap w-full gap-2 p-2">
           <div *ngFor="let item of trade.itemsToSell" class="w-24">
             <app-item-container [item]="item"> </app-item-container>
@@ -39,18 +35,15 @@
         <img
           class="h-20 hidden sm:block"
           src="/assets/images/arrow-right-01-512.webp"
-          alt="Arrow"
-        />
+          alt="Arrow" />
 
         <!-- Visible only on mobile -->
         <img
           class="h-20 block sm:hidden"
           src="/assets/images/Down-Arrow-PNG-Image.png"
-          alt="Arrow for Mobile"
-        />
+          alt="Arrow for Mobile" />
       </div>
-      <div
-        class="col-card flex flex-wrap flex-row relative w-full h-full">
+      <div class="col-card flex flex-wrap flex-row relative w-full h-full">
         <div class="flex flex-row flex-wrap w-full gap-2 p-2">
           <div *ngFor="let item of trade.itemsToBuy" class="w-24">
             <app-item-container [item]="item"> </app-item-container>
@@ -58,16 +51,19 @@
         </div>
       </div>
       <div class="w-full bg-gray-700 rounded-md" *ngIf="trade.description">
-        <descrpition [canEdit]="false" [showTitle]="false" [html]="trade.description"></descrpition>
+        <descrpition
+          [canEdit]="false"
+          [showTitle]="false"
+          [html]="trade.description"></descrpition>
       </div>
     </div>
   </p-card>
   <div class="paginator-wrapper">
-    <p-paginator 
-      [first]="first" 
-      [rows]="rows" 
-      [totalRecords]="allPage" 
-      [showCurrentPageReport]="true" 
+    <p-paginator
+      [first]="first"
+      [rows]="rows"
+      [totalRecords]="allPage"
+      [showCurrentPageReport]="true"
       (onPageChange)="onPageChange($event)">
     </p-paginator>
   </div>
