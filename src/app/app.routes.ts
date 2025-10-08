@@ -22,13 +22,17 @@ export const routes: Routes = [
   {
     path: 'search',
     loadComponent: () =>
-      import('./search-trade/search-trade.component').then(m => m.SearchTradeComponent),
+      import('./search-trade/search-trade.component').then(
+        m => m.SearchTradeComponent
+      ),
     canActivate: [authGuardGuard],
   },
   {
     path: 'results',
     loadComponent: () =>
-      import('./search-trade-results/search-trade-results.component').then(m => m.SearchTradeResultsComponent),
+      import('./search-trade-results/search-trade-results.component').then(
+        m => m.SearchTradeResultsComponent
+      ),
     canActivate: [authGuardGuard],
   },
   {
@@ -37,15 +41,13 @@ export const routes: Routes = [
       import('./user-profile/user-profile-container.component').then(
         m => m.UserProfileContainerComponent
       ),
-    canActivate: [authGuardGuard]
+    canActivate: [authGuardGuard],
   },
   {
     path: 'dashboard',
     loadComponent: () =>
-      import('./dashboard/dashboard.component').then(
-        m => m.DashboardComponent
-      ),
-    canActivate: [authGuardGuard]
+      import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+    canActivate: [authGuardGuard],
   },
   {
     path: '**',
