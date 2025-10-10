@@ -3,6 +3,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnInit,
   Output,
 } from '@angular/core';
 import { ResizedImageComponent } from '../resized-image/resized-image.component';
@@ -19,7 +20,7 @@ import { showQuantity } from '../../app/common/utils';
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss',
 })
-export class ItemComponent {
+export class ItemComponent implements OnInit {
   @Input() itemData!: Item;
 
   @Output() customizeEmitter = new EventEmitter<void>();
@@ -34,6 +35,12 @@ export class ItemComponent {
   @Input() effectUrl!: string | null;
   showActions = false;
   showQuantityFn = showQuantity;
+  
+  ngOnInit(): void {
+    if (this.showQuantity && this.canModify) {
+      this.itemData.quantity = 1;
+    }
+  }
 
   onQuantityChange(event: any) {
     const quantity = parseInt(event.target.value, 10) || 1;

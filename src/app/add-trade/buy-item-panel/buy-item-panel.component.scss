@@ -1,25 +1,25 @@
 .item-box {
-    border-radius: 1em;
-    &:hover {
-        cursor: pointer;
-    }
+  border-radius: 1em;
+  &:hover {
+    cursor: pointer;
+  }
 }
 .inventory-box {
-
-    height: 25em;
+  overflow-y: scroll;
+  height: 25em;
 }
 .Elite {
-    border: 1px solid #eb4b4b;
+  border: 1px solid #eb4b4b;
 }
 .Unusual {
-    border: 1px solid #8650AC;
+  border: 1px solid #8650ac;
 }
 .Strange {
-    border: 1px solid #CF6A32;
+  border: 1px solid #cf6a32;
 }
 .Unique {
-    border: 1px solid #7D6D00;
+  border: 1px solid #7d6d00;
 }
 .Vintage {
-    border: 1px solid #476291;
+  border: 1px solid #476291;
 }

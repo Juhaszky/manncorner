@@ -62,8 +62,9 @@ export class ItemSelectorFacade {
   }
   onAddItem(item: Item) {
     const currentItems = this._itemsToTrade.getValue();
-    if (currentItems.length === 10) {
+    if (currentItems.length >= 10) {
       this.showMaxLimitMessage();
+      return;
     }
     const exists = currentItems.some(existingItem =>
       this.deepEqual(existingItem, item)
@@ -95,8 +96,9 @@ export class ItemSelectorFacade {
   }
   onAddSearchItem(item: Item) {
     const currentItems = this._itemsSearchToTrade.getValue();
-    if (currentItems.length === 10) {
+    if (currentItems.length >= 10) {
       this.showMaxLimitMessage();
+      return;
     } else {
       const exists = currentItems.some(existingItem =>
         this.deepEqual(existingItem, item)
@@ -223,7 +225,7 @@ export class ItemSelectorFacade {
     return this.selectedSearchItemIds.has(item.defindex.toString());
   }
   showMaxLimitMessage() {
-    return this.messageService.add({
+    this.messageService.add({
       severity: 'error',
       summary: 'Error',
       detail: ErrorMessage.MAX_LIMIT_EACH_CATEGORY,

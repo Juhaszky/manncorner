@@ -4,10 +4,13 @@
   </div>
   <div class="col-card p-2 rounded-md text-slate-300">
     <div *ngIf="canEdit; else descnoheader">
-      <p-editor [(ngModel)]="html" (onTextChange)="onChange($event)" [style]="{ height: '320px' }" />
+      <p-editor
+        [(ngModel)]="html"
+        (onTextChange)="onChange($event)"
+        [style]="{ height: '320px' }" />
     </div>
     <ng-template #descnoheader>
-      <div [innerHTML]="safeHtml"></div>
+      <div class="max-w-52" [innerHTML]="safeHtml"></div>
     </ng-template>
   </div>
 </div>

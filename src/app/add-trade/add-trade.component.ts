@@ -71,7 +71,6 @@ export class AddTradeComponent implements OnInit {
     // });
   }
   check(description: string): void {
-    
     this.tradeDescription = description;
   }
   ngOnInit(): void {
@@ -123,8 +122,8 @@ export class AddTradeComponent implements OnInit {
           return this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: ErrorMessage.EACH_CATEGORY
-          })
+            detail: ErrorMessage.EACH_CATEGORY,
+          });
         }
         const items: Item[] = [
           ...itemsToTrade.map(item => ({ ...item, isSelling: true })),
@@ -142,26 +141,25 @@ export class AddTradeComponent implements OnInit {
           status: 'open',
           description: this.tradeDescription,
           items: items,
-          username: userData.personaname
+          username: userData.personaname,
         };
 
         this.tradeService.postTrade(tradePayload).subscribe({
           next: () => {
             this.emptySelectedItems();
             this.messageService.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: ErrorMessage.ADD_TRADE_SUCCESS,
-                });
+              severity: 'success',
+              summary: 'Success',
+              detail: ErrorMessage.ADD_TRADE_SUCCESS,
+            });
           },
           error: err => {
-            console.log(err);
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: ErrorMessage.ADD_TRADE_FAIL,
-                });
-            },
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: ErrorMessage.ADD_TRADE_FAIL,
+            });
+          },
         });
       });
   }
