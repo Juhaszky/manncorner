@@ -4,13 +4,22 @@ using AspNet.Security.OpenId.Steam;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
+using Serilog;
+using Serilog.AspNetCore;
+using Serilog.Sinks.File;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/app-.log", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
@@ -105,6 +114,7 @@ builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<SteamApiService>();
 builder.Services.AddScoped<ITradeService, TradeService>();
 builder.Services.AddScoped<CommentService>();
+builder.Services.AddSingleton<ILoggerService, LoggerService>();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
@@ -114,10 +124,10 @@ if (app.Environment.IsDevelopment())
   app.UseSwagger();
   app.UseSwaggerUI();
 }
-  app.UseCors("AllowAll");
-  app.UseAuthentication();
-  app.UseAuthorization();
-  app.MapControllers();
+app.UseCors("AllowAll");
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
 app.UseHttpsRedirection();
 

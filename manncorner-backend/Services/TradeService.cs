@@ -7,16 +7,19 @@ using Microsoft.EntityFrameworkCore;
 public class TradeService : ITradeService
 {
     private readonly AppDbContext _db;
+    private readonly ILoggerService _logger;
 
-    public TradeService(AppDbContext db)
+    public TradeService(AppDbContext db, ILoggerService logger)
     {
         _db = db;
+        _logger = logger;
     }
     public async Task<Trade> CreateTradeAsync(Trade trade)
     {
         trade.CreatedAt = DateTime.UtcNow;
         trade.Deleted = false;
         trade.BumpDate = trade.CreatedAt;
+        _logger.LogInformation("User {UserId} added trade {TradeId} with {ItemCount} items", trade.UserId, trade.Id, trade.Items.Count);
         _db.Trades.Add(trade);
         await _db.SaveChangesAsync();
         return trade;
