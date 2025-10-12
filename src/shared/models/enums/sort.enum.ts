@@ -1,4 +1,4 @@
 export enum SortCriteria {
   QUALITY = 'Quality',
-  NAME = 'Name'
+  NAME = 'Name',
 }
