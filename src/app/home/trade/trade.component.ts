@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TradeService } from '../trade.service';
 import { CommonModule } from '@angular/common';
 import { catchError, of, switchMap } from 'rxjs';
@@ -19,7 +19,8 @@ import { AvatarModule } from 'primeng/avatar';
     ItemContainerComponent,
     DescrpitionComponent,
     CommentsComponent,
-    AvatarModule
+    AvatarModule,
+    RouterLink
     // InventoryItemsSelectorComponent,
     // OfferItemPanelComponent,
     // OfferItemSelectorComponent
@@ -37,6 +38,7 @@ export class TradeComponent implements OnInit {
         avatarPath: string;
         username: string;
         description: string;
+        userId: string;
         comments: Comment[]
       }
     | undefined;
@@ -59,6 +61,7 @@ export class TradeComponent implements OnInit {
               avatarPath: trade.avatarPath,
               username: trade.username,
               description: trade.description,
+              userId: trade.userId,
               comments: trade.comments
             };
             return of(tradeData);

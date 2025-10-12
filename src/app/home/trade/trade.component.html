@@ -4,7 +4,7 @@
       <div class="flex flex-row justify-between">
         <p class="flex items-center gap-2 w-50 p-0 m-0">
           <p-avatar [image]="tradeData.avatarPath" shape="circle" />
-          <span class="user-name-text">{{ tradeData.username }}</span> wants to
+          <span class="user-name-text" [routerLink]="['/user-profile', tradeData.userId]">{{ tradeData.username }}</span> wants to
           trade...
           <!-- <span matTooltip="{{ tradeData.postDate | date }}">{{
             tradeData.postDate | postDate
