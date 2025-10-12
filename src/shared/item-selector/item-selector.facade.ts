@@ -81,17 +81,22 @@ export class ItemSelectorFacade {
   }
   onAddEditItem(item: Item) {
     const currentItems = this._itemsEditToTrade.getValue();
-    const exists = currentItems.some(existingItem =>
-      this.deepEqual(existingItem, item)
-    );
+    if (currentItems.length >= 10) {
+      this.showMaxLimitMessage();
+      return;
+    } else {
+      const exists = currentItems.some(existingItem =>
+        this.deepEqual(existingItem, item)
+      );
 
-    if (!exists) {
-      const itemWithCustomId = {
-        ...item,
-        customId: (++this._customEditIdCounter).toString(),
-      };
-      this._itemsEditToTrade.next([...currentItems, itemWithCustomId]);
-      this.selectedEditItemIds.add(item.id);
+      if (!exists) {
+        const itemWithCustomId = {
+          ...item,
+          customId: (++this._customEditIdCounter).toString(),
+        };
+        this._itemsEditToTrade.next([...currentItems, itemWithCustomId]);
+        this.selectedEditItemIds.add(item.id);
+      }
     }
   }
   onAddSearchItem(item: Item) {
@@ -115,14 +120,19 @@ export class ItemSelectorFacade {
   }
   onOfferItem(item: Item) {
     const currentItems = this._itemsOffer.getValue();
-    const exists = currentItems.some(existingItem =>
-      this.deepEqual(existingItem, item)
-    );
+    if (currentItems.length >= 10) {
+      this.showMaxLimitMessage();
+      return;
+    } else {
+      const exists = currentItems.some(existingItem =>
+        this.deepEqual(existingItem, item)
+      );
 
-    if (!exists) {
-      const itemWithCustomId = { ...item, customId: ++this._customIdCounter };
-      this._itemsOffer.next([...currentItems, itemWithCustomId]);
-      this.selectedOfferItemIds.add(item.id);
+      if (!exists) {
+        const itemWithCustomId = { ...item, customId: ++this._customIdCounter };
+        this._itemsOffer.next([...currentItems, itemWithCustomId]);
+        this.selectedOfferItemIds.add(item.id);
+      }
     }
   }
 
