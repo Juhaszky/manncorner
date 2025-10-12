@@ -38,7 +38,7 @@ export class ItemComponent implements OnInit {
   
   ngOnInit(): void {
     if (this.showQuantity && this.canModify) {
-      this.itemData.quantity = 1;
+      this.itemData.quantity = this.itemData.quantity ?? 1;
     }
   }
 
