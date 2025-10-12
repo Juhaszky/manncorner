@@ -25,7 +25,7 @@ import {
   take,
 } from 'rxjs';
 import { Item } from '../../shared/models/item.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TradeService } from '../home/trade.service';
 import { Comment } from '../../shared/models/comment.model';
 import { ItemContainerComponent } from '../../shared/item/item-container.component';
@@ -67,6 +67,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
   private filterSubject = new Subject<string>();
   selectedItemIds = new Set<string>();
   route = inject(ActivatedRoute);
+  router = inject(Router);
   tradeService = inject(TradeService);
   itemSelectorFacade = inject(ItemSelectorFacade);
   userDataFacade = inject(UserProfileFacade);
@@ -97,8 +98,8 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadItems();
     this.filterSubject.pipe(debounceTime(100)).subscribe(filterText => {
-        this.loadItems(filterText);
-      });
+      this.loadItems(filterText);
+    });
     this.itemSelectorFacade.itemsEditForTrade$.subscribe(res => {
       this.selectedItems = res;
     });
@@ -121,7 +122,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
     combineLatest([
       this.editTradeService.filterText$,
       this.sortService.sortCriteria$,
-      this.userDataFacade.profileData$
+      this.userDataFacade.profileData$,
     ])
       .pipe(
         debounceTime(500),
@@ -272,6 +273,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
               summary: 'Success',
               detail: ErrorMessage.EDIT_TRADE_SUCCESS,
             });
+            this.router.navigate(['/dashboard']);
           },
           error: err => {
             console.log(err);
