@@ -13,7 +13,7 @@ public class ItemsController : ControllerBase
   public ItemsController(IWebHostEnvironment env, IHttpClientFactory httpClientFactory, IConfiguration configuration, IMemoryCache cache)
   {
     _env = env;
-    _http = httpClientFactory.CreateClient();
+    _http = httpClientFactory.CreateClient("SteamClient");
     _configuration = configuration;
     _cache = cache;
   }
@@ -85,6 +85,17 @@ public class ItemsController : ControllerBase
         };
       }
       var json = await response.Content.ReadAsStringAsync();
+      if (string.IsNullOrWhiteSpace(json) || json.Equals("null", StringComparison.OrdinalIgnoreCase))
+      {
+        return new InventoryResult
+        {
+          Response = new ItemResponse
+          {
+            Assets = new List<Asset>(),
+            Descriptions = new List<ItemDescription>()
+          }
+        };
+      }
       var page = JsonSerializer.Deserialize<ItemResponse>(json, options);
       if (page == null)
         throw new Exception("Failed to parse Steam inventory page!");

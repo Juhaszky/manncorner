@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using AspNet.Security.OpenId.Steam;
@@ -26,7 +27,14 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("SteamClient")
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+      return new HttpClientHandler
+      {
+        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+      };
+    });
 var configuration = builder.Configuration;
 builder.Services.AddAuthentication(options =>
 {

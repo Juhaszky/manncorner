@@ -13,6 +13,7 @@
         (click)="onItemSelect(item)">
       </app-item-container>
     </div>
+    <div *ngIf="items.length === 0">You have no items</div>
     <div *ngIf="itemSelectorFacade.loading" class="flex justify-center items-center w-full mt-4">
       <p-progress-spinner ariaLabel="Loading" styleClass="custom-spinner"></p-progress-spinner>
     </div>
