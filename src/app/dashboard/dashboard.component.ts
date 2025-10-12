@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TradeService } from '../home/trade.service';
-import { catchError, map } from 'rxjs';
+import { catchError, map, take } from 'rxjs';
 import { Item } from '../../shared/models/item.model';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
@@ -30,7 +30,7 @@ import { Tooltip } from 'primeng/tooltip';
     DialogModule,
     ButtonModule,
     LoadingSpinnerComponent,
-    Tooltip
+    Tooltip,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -59,13 +59,16 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadTrades();
+    this.userService.userData$.pipe(take(1)).subscribe(userData => {
+      if (userData) {
+        this.loadTrades(userData.steamid);
+      }
+    });
   }
-  private loadTrades(): void {
+  private loadTrades(steamId: string): void {
     this.loading = true;
     this.tradeService
-      //TODO - change the userId input
-      .getUserTrades('76561198027857565')
+      .getUserTrades(steamId)
       .pipe(
         map(trades => {
           //this.allPage = trades.totalCount;
