@@ -234,6 +234,7 @@ export class SearchTradeComponent implements OnInit, AfterViewInit {
             level: 1,
           })),
         ];
+        this.searchTradeResultService.searchItems = items;
 
         this.http
           .post<TradeResult>(

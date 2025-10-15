@@ -28,15 +28,15 @@ import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-sp
     CommonModule,
     NgOptimizedImage,
     AvatarModule,
-    LoadingSpinnerComponent
-],
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './search-trade-results.component.html',
   styleUrl: './search-trade-results.component.scss',
 })
 export class SearchTradeResultsComponent implements OnInit {
   searchResults: Trade[] = [];
   router = inject(Router);
-  searchTraddeResults = inject(SearchTradeResultsService);
+  searchTradeResults = inject(SearchTradeResultsService);
 
   page = 1;
   first = 0;
@@ -58,33 +58,15 @@ export class SearchTradeResultsComponent implements OnInit {
   userService = inject(UserDataService);
   canBump = false;
   ngOnInit() {
-    this.searchTraddeResults.results$.subscribe(res => {
-      this.loading = true;
-      if (res) {
-        this.trades = res.trades.map(trade => {
-          {
-            const itemsForSale = trade.items.filter(i => i.isSelling === true);
-            const itemsToBuy = trade.items.filter(i => i.isSelling === false);
-            return {
-              itemsToSell: itemsForSale,
-              itemsToBuy: itemsToBuy,
-              avatarPath: trade.avatarPath,
-              id: trade.id,
-              username: trade.username,
-              createdAt: trade.createdAt,
-              bumpedAt: trade.bumpDate,
-            };
-          }
-        });
-        this.allPage = res.totalCount;
-      }
-      this.loading = false;
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.loadSearchResults(this.page);
     });
   }
 
   selectTrade(tradeId: string): void {
     this.router.navigate(['/trade', tradeId]);
   }
+
   onPageChange(event: {
     first?: number;
     rows?: number;
@@ -94,6 +76,34 @@ export class SearchTradeResultsComponent implements OnInit {
     this.first = event.first ?? 0;
     const rows = event.rows ?? this.rows;
     this.page = Math.floor((event.first ?? 0) / rows) + 1;
+    this.loadSearchResults(this.page);
+  }
+
+  loadSearchResults(page: number) {
+    this.loading = true;
+
+    this.searchTradeResults
+      .searchTrades(this.searchTradeResults.searchItems, page)
+      .subscribe({
+        next: response => {
+          this.trades = response.trades.map(trade => ({
+            itemsToSell: trade.items.filter(i => i.isSelling === true),
+            itemsToBuy: trade.items.filter(i => i.isSelling === false),
+            avatarPath: trade.avatarPath,
+            id: trade.id,
+            username: trade.username,
+            createdAt: trade.createdAt,
+            bumpedAt: trade.bumpDate,
+          }));
+          this.allPage = response.totalCount;
+          this.page = response.page;
+          this.loading = false;
+        },
+        error: err => {
+          console.error('Error loading search results:', err);
+          this.loading = false;
+        },
+      });
   }
   onBump(tradeId: string, event: MouseEvent) {
     event.preventDefault();
