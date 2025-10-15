@@ -7,7 +7,7 @@
         "request": "launch",
         "preLaunchTask": "build",
         "program": "${workspaceFolder}/bin/Debug/net9.0/manncorner-backend.dll",
-        "args": [],
+        //"args": ["--urls", "http://localhost:7221"],
         "cwd": "${workspaceFolder}",
         "stopAtEntry": true,
         "serverReadyAction": {

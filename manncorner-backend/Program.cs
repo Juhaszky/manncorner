@@ -120,9 +120,11 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<SteamApiService>();
+builder.Services.AddScoped<ItemService>();
 builder.Services.AddScoped<ITradeService, TradeService>();
 builder.Services.AddScoped<CommentService>();
 builder.Services.AddSingleton<ILoggerService, LoggerService>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
@@ -138,6 +140,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseHttpsRedirection();
+
 
 var summaries = new[]
 {

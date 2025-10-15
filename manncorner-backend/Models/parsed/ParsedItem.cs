@@ -11,6 +11,7 @@ public class ParsedItem
     public string type { get; set; }
     public int? effect { get; set; }
     public int quality { get; set; }
+    public int quantity { get; set; }
     public string? paint { get; set;  }
     public int defindex { get; set; }
     public int paintDefindex { get; set; }
@@ -18,8 +19,8 @@ public class ParsedItem
     public string? killstreaker { get; set; }
     public string? sheen { get; set; }
     public int level { get; set; }
-    public string[] classes { get; set; }
-    public string[]? parts { get; set; }
-    public string[]? spells { get; set; }
+    public List<string> classes { get; set; }
+    public List<string>? parts { get; set; }
+    public List<string>? spells { get; set; }
 
 }
