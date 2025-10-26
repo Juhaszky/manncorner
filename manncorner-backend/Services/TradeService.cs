@@ -171,54 +171,48 @@ public class TradeService : ITradeService
     }
     public async Task<object> SearchTradesAsync(ICollection<TradeItem> items, int page = 1, int pageSize = 50)
     {
-        var stopwatch = Stopwatch.StartNew();
-
-        IQueryable<Trade> query = _db.Trades.Where(t => t.Deleted == false && t.Status != "closed").Include(t => t.Items);
+        IQueryable<Trade> query = _db.Trades
+            .Where(t => t.Deleted == false && t.Status != "closed");
 
         if (items != null && items.Any())
         {
             var hasCustomSpells = items.Any(i => i.Name == "CUSTOM_SPELLS");
-            if (!hasCustomSpells)
+
+            if (hasCustomSpells)
             {
-                var defindexSet = items.Select(i => i.Defindex).ToHashSet();
-                query = query.Where(t => t.Items.Any(i => defindexSet.Contains(i.Defindex)));
+                query = query.Where(t => t.Items.Any(i => i.Spells != null && i.Spells.Count > 0));
+            }
+            else
+            {
+                foreach (var searchItem in items)
+                {
+                    var localSearchItem = searchItem;
+
+                    query = query.Where(t => t.Items.Any(dbItem =>
+                        dbItem.Defindex == localSearchItem.Defindex &&
+                        (localSearchItem.Effect == null || dbItem.Effect == localSearchItem.Effect) &&
+                        (localSearchItem.paintDefindex == null || dbItem.paintDefindex == localSearchItem.paintDefindex) &&
+                        (localSearchItem.Killstreak == null || dbItem.Killstreak == localSearchItem.Killstreak) &&
+                        (string.IsNullOrEmpty(localSearchItem.Killstreaker) || dbItem.Killstreaker == localSearchItem.Killstreaker) &&
+                        (string.IsNullOrEmpty(localSearchItem.Sheen) || dbItem.Sheen == localSearchItem.Sheen) &&
+                        dbItem.IsSelling == localSearchItem.IsSelling
+                    ));
+                }
             }
         }
 
-        var pagedTrades = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        var totalCount = await query.CountAsync();
 
-
-        var filteredTrades = pagedTrades.Where(t =>
-            items.Any(searchItem =>
-                t.Items.Any(dbItem =>
-                {
-                    if (searchItem.Name == "CUSTOM_SPELLS")
-                    {
-                        return dbItem.Spells != null && dbItem.Spells.Count > 0;
-                    }
-                    return (dbItem.Defindex == searchItem.Defindex) &&
-                           (searchItem.Effect == null || dbItem.Effect == searchItem.Effect) &&
-                           //(dbItem.Quality == searchItem.Quality) &&
-                           (searchItem.paintDefindex == null || dbItem.paintDefindex == searchItem.paintDefindex) &&
-                           (searchItem.Killstreak == null || dbItem.Killstreak == searchItem.Killstreak) &&
-                           (searchItem.Killstreaker == "" || dbItem.Killstreaker == searchItem.Killstreaker) &&
-                           (searchItem.Sheen == null || dbItem.Sheen == searchItem.Sheen) &&
-                           (dbItem.IsSelling == searchItem.IsSelling);
-                }
-                )
-            )
-        ).ToList();
-
-        var totalCount = await _db.Trades.CountAsync(t =>
-            t.Items.Any(i => items.Select(x => x.Defindex).Contains(i.Defindex))
-        );
-
-        stopwatch.Stop();
-        Console.WriteLine($"SearchTradesAsync executed in {stopwatch.ElapsedMilliseconds} ms");
+        var pagedTrades = await query
+            .Include(t => t.Items)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .AsNoTracking()
+            .ToListAsync();
 
         return new
         {
-            Trades = filteredTrades,
+            Trades = pagedTrades,
             Page = page,
             PageSize = pageSize,
             TotalCount = totalCount
