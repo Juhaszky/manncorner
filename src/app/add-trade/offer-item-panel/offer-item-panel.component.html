@@ -1,0 +1,14 @@
+<div
+  class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
+  #inventorySelector>
+  <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
+    <div *ngFor="let item of items" class="w-24">
+      <app-item-container
+        [item]="item"
+        [canDelete]="true"
+        (selectEmitter)="itemSelectorFacade.onOfferItem(item)"
+        (removeEmitter)="itemSelectorFacade.onRemoveOfferItem(item)">
+      </app-item-container>
+    </div>
+  </div>
+</div>

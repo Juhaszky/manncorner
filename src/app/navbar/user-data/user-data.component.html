@@ -1,22 +1,20 @@
-<div
-  *ngIf="userData"
-  class="d-flex justify-content-center align-items-center p-2 gap-2"
->
-  <img [src]="userData.avatar" alt="asd" />
+<div *ngIf="userData" [routerLink]="['/user-profile', userData.steamid]" class="flex justify-end items-center gap-2 p-4">
+  <img  class="h-8 w-8 rounded-full" [src]="userData.avatar" alt="asd" />
+  <h2>{{userData.personaname}}</h2>
 
-  <button class="p-2" mat-button [matMenuTriggerFor]="menu">
-    <div class="d-flex">
-      <p class="d-flex align-items-center m-0">
+  <!-- <span class="cursor-pointer" mat-button [matMenuTriggerFor]="menu">
+    <div class="flex justify-center items-center h-full">
+      <p class="h-max">
         {{ userData.personaname }}
       </p>
       <i class="material-icons">keyboard_arrow_down</i>
     </div>
-  </button>
+  </span>
   <mat-menu #menu="matMenu" class="matMenu">
     <button mat-menu-item class="menu-item">
       <span class="d-flex align-items-center">
         <i class="material-icons mr-2">contact_mail</i>Contact
       </span>
     </button>
-  </mat-menu>
+  </mat-menu> -->
 </div>

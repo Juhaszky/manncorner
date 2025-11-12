@@ -1,0 +1,23 @@
+<div class="w-full flex justify-center">
+  <div class="w-full">
+    <p-selectButton
+      [options]="qualityOptions"
+      [formControl]="selectedQuality"
+      optionValue="value"
+      optionLabel="type"
+      ariaLabel="Color selection"
+      class="w-full flex flex-wrap"
+      [ngClass]="{ 'chip-container': true }"
+      [style.flexWrap]="'wrap'"
+    >
+      <ng-template let-quality pTemplate="item">
+        <span
+          class="p-button p-component m-1 text-white px-3 py-2 rounded-lg"
+          [ngClass]="getQualityClass(quality.type)"
+        >
+          {{ quality.type }}
+        </span>
+      </ng-template>
+    </p-selectButton>
+  </div>
+</div>

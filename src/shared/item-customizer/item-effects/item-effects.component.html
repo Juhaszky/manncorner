@@ -1,0 +1,26 @@
+<div class="flex flex-col w-full justify-center">
+  <input
+    (input)="onSearch($event)"
+    matInput
+    placeholder="Search effect..."
+    class="bg-slate-800 mb-4 p-2 border border-slate-700 rounded" />
+  <div class="w-full flex justify-center">
+    <div class="w-full overflow-y-scroll max-h-80">
+      <p-selectButton
+        [options]="filteredEffects"
+        [formControl]="effectControl"
+        
+        optionValue="value"
+        optionLabel="label"
+        multiple="false"
+        ariaLabel="Color selection"
+        class="w-full flex flex-wrap"
+        [ngClass]="{ 'chip-container': true }"
+        [style.flexWrap]="'wrap'">
+        <ng-template let-effect>
+          <span>{{ effect }}</span>
+        </ng-template>
+      </p-selectButton>
+    </div>
+  </div>
+</div>

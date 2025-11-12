@@ -1,0 +1,48 @@
+<!-- eslint-disable @angular-eslint/template/elements-content -->
+<div class="item-editor bg-gray-800 h-full w-full flex flex-col overflow-auto p-4">
+  <p-multiselect 
+      [(ngModel)]="selectedItems"
+      [options]="filteredOptions"
+      [filter]="true"
+      [virtualScroll]="true"
+      (onFilter)="onHandleFilter($event)"
+      [scrollHeight]="'500px'"
+      [virtualScrollItemSize]="100"
+      [selectionLimit]="10" 
+      [maxSelectedLabels]="3"
+      placeholder="Select Items"
+      optionLabel="name"
+      class="w-full md:w-80">
+      <ng-template let-item pTemplate="item" class="w-full">
+        <div class="item w-full flex justify-between items-center text-slate-300">
+          {{ item.name }}
+          <img
+            [src]="item.img"
+            class="sm:h-32 sm:w-32 h-16 w-16"
+            alt=""
+          />
+        </div>
+      </ng-template>
+  </p-multiselect>
+
+  <item-list-view class="h-100" [selectedItems]="selectedItems"></item-list-view>
+
+  <div class="actions flex flex-col h-full gap-6 justify-end mt-4">
+    <div class="buttons flex flex-row w-full justify-between">
+      <button
+        pButton
+        type="button"
+        label="Ok"
+        class="p-button-success w-24"
+        (click)="onConfirmSelection()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="No Thanks"
+        class="p-button-danger w-32"
+        (click)="onClose()"
+      ></button>
+    </div>
+  </div>
+</div>

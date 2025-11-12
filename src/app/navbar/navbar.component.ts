@@ -1,24 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UserDataComponent } from './user-data/user-data.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'navbar',
   standalone: true,
   imports: [CommonModule, UserDataComponent, RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit {
-  isLoggedIn: boolean = true;
-  userData: Subject<any> = new Subject();
-  userInfo!: any;
+  @Output() toggleDrawer = new EventEmitter<void>();
+  isLoggedIn = false;
+
+  constructor(
+    private authService: AuthService,
+    private route: Router
+  ) {}
   ngOnInit(): void {
-    this.userData.subscribe((data) => {
-      console.log(data);
-      this.userInfo = data
+    this.authService.checkAuth();
+    this.authService.isAuthenticated$.subscribe(status => {
+      this.isLoggedIn = status;
+    });
+  }
+  handletoggleDrawer(): void {
+    this.toggleDrawer.emit();
+  }
+  handleLogout() {
+    this.authService.logout().subscribe(() => {
+      this.authService.checkAuth();
+      this.route.navigate(['/home']);
     });
   }
 }

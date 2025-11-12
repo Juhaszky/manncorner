@@ -1,8 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import "primeicons/primeicons.css";
 html, body { height: 100%; }
 body { height: 100vh; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; box-sizing: border-box; background-color: #1E1E1E;}
-
+p {
+  margin: 0 !important;
+}
 ::-webkit-scrollbar {
     width: 0.2em;
     height: 40%;
@@ -24,3 +29,72 @@ body { height: 100vh; margin: 0; font-family: Roboto, "Helvetica Neue", sans-ser
     background: #555;
     
   }
+  ::ng-deep .p-dialog-header, ::ng-deep .p-dialog-content {
+  background-color: rgba(31 41 55) !important;
+  padding: 0 0 0 0 !important;
+  
+}
+.p-dialog-content {
+    padding: 0 !important;
+}
+
+.Elite {
+    border: 1px solid #eb4b4b;
+}
+.Unusual {
+    border: 1px solid #8650AC;
+}
+.Strange {
+    border: 1px solid #CF6A32;
+}
+.Unique {
+    border: 1px solid #7D6D00;
+}
+.Normal {
+    border: 1px solid #7D6D00;
+}
+
+.Vintage {
+    border: 1px solid #476291;
+}
+.Genuine {
+    border: 1px solid #4D7455;
+}
+.Collectors {
+    border: 1px solid #AA0000
+}
+.Haunted {
+    border: 1px solid #38F3AB;
+}
+.decoratedWeapon {
+    border: 1px solid #fafafa;
+}
+:root {
+  --p-editor-toolbar-background: #111827 !important;
+  --p-editor-toolbar-border-color: #283244 !important;
+  --p-editor-toolbar-border-radius: 8px;
+  --p-editor-toolbar-item-color: #cbd5e1 !important;
+  --p-editor-toolbar-item-hover-color: #94a3b8 !important;
+  --p-editor-toolbar-item-active-color: #26A69A !important;
+
+  --p-editor-content-background: #1e293b !important;
+  --p-editor-content-color: #e2e8f0;
+  --p-editor-content-border-color: #334155;
+  --p-editor-content-border-radius: 10px;
+  --p-card-background: rgb(30 41 59) !important;
+  --p-paginator-background: rgb(30 41 59) !important;
+  --p-tabs-tablist-background: rgb(30 41 59) !important;
+  --p-togglebutton-content-checked-background: #4aff86 !important;
+}
+
+
+.p-togglebutton.p-highlight,
+.p-togglebutton.p-togglebutton-checked {
+  background-color: #4aff86 !important;
+  border-color: #3afa7a !important;
+  color: #000000 !important;
+}
+
+.p-togglebutton-label {
+  color: inherit !important;
+}

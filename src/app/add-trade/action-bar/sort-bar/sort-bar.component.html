@@ -1,0 +1,46 @@
+<div class="sort-bar flex p-2.5">
+  <button
+    type="button"
+    pButton
+    label="Sort by.."
+    icon="pi pi-chevron-down"
+    (click)="toggleOverlay($event)"
+    class="flex items-center bg-gray-50 border border-gray-300 text-gray-400 text-sm rounded-lg p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+    Sort
+  </button>
+  <p-popover #overlay>
+    <div class="menu">
+      <div
+        class="menu-item"
+        (mouseenter)="qualitySubmenuVisible = true"
+        (mouseleave)="qualitySubmenuVisible = false">
+        Quality
+        <div class="submenu" *ngIf="qualitySubmenuVisible">
+          <div *ngFor="let option of qualityOptions" class="submenu-item">
+            <p-checkbox
+              [inputId]="option.label"
+              binary="true"
+              (onChange)="onQualityChange(option, $event)"></p-checkbox>
+            <label [for]="option.label">{{ option.label }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="menu-item"
+        (mouseenter)="classSubmenuVisible = true"
+        (mouseleave)="classSubmenuVisible = false">
+        Class
+        <div class="submenu" *ngIf="classSubmenuVisible">
+          <div *ngFor="let option of classOptions" class="submenu-item">
+            <p-checkbox
+              [inputId]="option.label"
+              binary="true"
+              (onChange)="onClassChange(option, $event)"></p-checkbox>
+            <label [for]="option.label">{{ option.label }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-popover>
+</div>

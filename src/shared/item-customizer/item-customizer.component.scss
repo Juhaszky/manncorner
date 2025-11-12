@@ -1,0 +1,63 @@
+.elite {
+    background: #eb4b4b !important;
+}
+.unusual {
+    background-color: #8650AC !important;
+}
+.strange {
+    background-color: #CF6A32 !important;
+}
+.unique {
+    background-color: #7D6D00 !important;
+}
+.vintage {
+    background-color: #476291 !important;
+}
+.genuine {
+    background-color: #4D7455 !important;
+}
+.collectors {
+    background-color: #AA0000 !important;
+}
+.haunted {
+    background-color: #38F3AB !important;
+}
+.p-dialog-content {
+    padding: 0 !important;
+}
+.item-effect-bg {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none; 
+}
+p-accordion {
+    width: 100%;
+}
+p-accordion p-accordion-panel p-accordion-header {
+
+    background-color: rgb(30 41 59 / 1);
+}
+:host ::ng-deep .chip-container .p-button.p-component {
+  flex: 1 1 120px;
+  min-width: 120px;
+  max-width: 1fr;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+:host ::ng-deep .chip-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;     
+  justify-content: center;
+}
+
+:host ::ng-deep .chip-container .p-button.p-component span {
+  width: 100%;
+  display: block;
+}

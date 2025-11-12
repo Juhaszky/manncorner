@@ -1,0 +1,25 @@
+
+.trade-details {
+    color: rgb(255, 255, 255, 0.3);
+}
+
+.user-name-text {
+    color: rgb(184, 184, 184);
+    cursor: pointer;
+}
+
+
+
+.container {
+  flex: 1 0 auto;
+  position: relative;
+}
+
+.paginator-wrapper {
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;  
+  border: 1px solid black;
+  z-index: 10;
+  width: 100vw;
+}

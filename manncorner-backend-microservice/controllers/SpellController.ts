@@ -1,0 +1,33 @@
+const SPELLS = [
+  'Bruised Purple Footprints',
+  'Corpse Gray Footprints',
+  'Gangreen Footprints',
+  'Headless Horseshoes',
+  'Rotten Orange Footprints',
+  'Team Spirit Footprints',
+  'Violent Violet Footprints',
+  'Team Spirit Footprints',
+  'Violent Violet Footprints',
+  'Chromatic Corruption',
+  'Die Job',
+  'Putrescent Pigmentation',
+  'Sinister Staining',
+  'Spectral Spectrum',
+  "Scout's Spectral Snarl",
+  "Soldier's Booming Bark",
+  "Pyro's Muffled Moan",
+  "Demoman's Cadaverous Croak",
+  "Heavy's Bottomless Bass",
+  "Engineer's Gravelly Growl",
+  "Medic's Blood Curdling Bellow",
+  "Sniper's Deep Downunder Drawl",
+  "Spy's Creepy Croon",
+  'Exorcism',
+  'Gourd Grenades',
+  'Sentry Quad-Pumpkins',
+  'Spectral Flame',
+  'Squash Rockets',
+];
+export const getSpells = () => {
+  return SPELLS;
+};

@@ -1,0 +1,75 @@
+<div
+  class="w-full h-screen rounded-md text-slate-500 flex flex-col items-center p-4 bg-slate-800 cursor-default"
+  
+>
+  <h1 class="text-3xl text-bold mb-0" [style.color]="'#' + itemData.name_color">
+    {{ itemData.name }}
+  </h1>
+  <h2>{{ itemData.type }}</h2>
+  <resized-image [ngStyle]="{ 'background-image': 'url(' + getEffectUrl() + ')', 'background-repeat': 'no-repeat'}" [imageUrl]="getImageUrl()"></resized-image>
+  <div class="qualitites w-full p-4 flex flex-col">
+    <div class="flex w-full justify-between" *ngIf="isAllClass; else classView">
+      <h3>Class</h3>
+      <h4>All-class</h4>
+    </div>
+    <ng-template #classView>
+      <div
+        class="flex w-full justify-between"
+        *ngFor="let tag of itemData.tags"
+      >
+        <h3>{{ tag.localized_category_name }}</h3>
+        <h4
+          [style.color]="
+            tag.category === 'Quality' ? '#' + itemData.name_color : ''
+          "
+        >
+          {{ tag.localized_tag_name }}
+        </h4>
+      </div>
+    </ng-template>
+    <div class="flex flex-col w-full justify-between">
+      <span *ngIf="itemData.spell" class="flex flex-row w-full justify-between">
+        <h3>Spell</h3>
+        <h4>{{ itemData.spell }}</h4>
+      </span>
+      <span *ngIf="itemData.killstreaker?.sheen" class="flex flex-row w-full justify-between">
+        <h3>Sheen</h3>
+        <h4>{{ itemData.killstreaker?.sheen }}</h4>
+      </span>
+      <span *ngIf="itemData.killstreaker?.killstreaker" class="flex flex-row w-full justify-between">
+        <h3>Killstreaker</h3>
+        <h4>{{ itemData.killstreaker?.killstreaker }}</h4>
+      </span>
+      <span *ngIf="itemData.killstreaker?.killstreak" class="flex flex-row w-full justify-between">
+        <h3>Killstreak</h3>
+        <h4>{{ itemData.killstreaker?.killstreak }}</h4>
+      </span>
+    </div>
+  </div>
+  <div class="flex flex-1 items-end actions gap-2">
+    <button
+      class="flex items-center h-auto px-4 py-2 text-slate-400 border border-slate-600 rounded-md"
+    >
+      <a
+        class="text-sm font-bold"
+        href="https://steamcommunity.com/market/listings/440/{{
+          itemData.name
+        }}"
+      >
+        Steam marketplace
+      </a>
+    </button>
+    <button
+      class="flex items-center h-auto px-4 py-2 text-slate-400 border border-slate-600 rounded-md"
+    >
+      <a
+        class="text-sm font-bold"
+        href="https://steamcommunity.com/market/listings/440/{{
+          itemData.name
+        }}"
+      >
+        Backpack TF
+      </a>
+    </button>
+  </div>
+</div>

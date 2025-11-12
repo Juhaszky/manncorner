@@ -1,0 +1,18 @@
+<div class="flex flex-col w-full justify-center">
+  <div class="w-full flex justify-center">
+    <div class="w-full overflow-y-scroll max-h-80">
+      <p-selectButton
+        [formControl]="spellFormGroup.spell"
+        [options]="spells"
+        multiple="true"
+        ariaLabel="Color selection"
+        class="w-full flex flex-wrap"
+        [ngClass]="{ 'chip-container': true }"
+        [style.flexWrap]="'wrap'">
+        <ng-template let-effect>
+          <span>{{ effect }}</span>
+        </ng-template>
+      </p-selectButton>
+    </div>
+  </div>
+</div>

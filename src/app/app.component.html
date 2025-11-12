@@ -1,6 +1,8 @@
-<main>
-  <navbar></navbar>
-  <div class="container-fluid">
+<main class="dark:bg-gray-800 min-h-screen">
+    <app-mobile-nav [isDrawerOpen]="isDrawerOpen"></app-mobile-nav>
+  <div class="container-fluid min-h-screen w-full dark:bg-gray-800">
+    <navbar (toggleDrawer)="isDrawerOpen = !isDrawerOpen"></navbar>
     <router-outlet></router-outlet>
+    <p-toast position="bottom-right" />
   </div>
 </main>

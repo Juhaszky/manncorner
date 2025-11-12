@@ -1,0 +1,23 @@
+
+.trade-details {
+    color: rgb(255, 255, 255, 0.3);
+}
+
+.user-name-text {
+    color: rgb(184, 184, 184);
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+    .inventory-box {
+        height: 50%;
+    }
+  }
+  @media only screen and (max-width: 600px) {
+    .alma {
+        height: 90vh;
+    }
+  }
+
+
+  /* width */

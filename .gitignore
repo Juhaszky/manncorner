@@ -40,3 +40,14 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Roslyn / CodeAnalysis temp files
+/manncorner-backend/obj/
+/manncorner-backend/bin/
+*.Generated.cs
+*.AssemblyAttributes.cs
+Microsoft.CodeAnalysis.*
+
+# Rekurzív kizárás minden projektfájlra
+**/bin/
+**/obj/

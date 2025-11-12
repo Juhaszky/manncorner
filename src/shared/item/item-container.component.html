@@ -1,0 +1,12 @@
+<app-item 
+    [itemData]="item"
+    [effectUrl]="item.effect ? `assets/images/effects/${item.effect}.png` : null"
+    [canDelete]="canDelete"
+    [canModify]="canModify"
+    [showQuantity]="showQuantity"
+    [disabled]="disabled"
+    [borderStyle]="facade.getBorderStyle(item)"
+    (selectEmitter)="selectEmitter.emit(item)"
+    (removeEmitter)="removeEmitter.emit(item)"
+    (customizeEmitter)="customizeEmitter.emit(item)">
+</app-item>

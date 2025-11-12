@@ -1,0 +1,11 @@
+ul.flex > li:not(:last-child) .trade {
+  border-right: 1px solid #ccc;
+}
+::ng-deep .chip {
+  background-color: #26a69a !important;
+  color: black !important;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(31, 139, 129) !important;
+  }
+}
