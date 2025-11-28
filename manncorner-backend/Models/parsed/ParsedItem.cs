@@ -9,6 +9,7 @@ public class ParsedItem
     public bool marketable { get; set; }
     public bool commodity { get; set; }
     public string type { get; set; }
+    public string originalTypeTxt { get; set; }
     public int? effect { get; set; }
     public int quality { get; set; }
     public int quantity { get; set; }

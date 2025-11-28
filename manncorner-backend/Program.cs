@@ -123,6 +123,7 @@ builder.Services.AddScoped<SteamApiService>();
 builder.Services.AddScoped<ItemService>();
 builder.Services.AddScoped<ITradeService, TradeService>();
 builder.Services.AddScoped<CommentService>();
+builder.Services.AddScoped<StrangeItemStatHistoryService>();
 builder.Services.AddSingleton<ILoggerService, LoggerService>();
 builder.Services.AddControllers();
 

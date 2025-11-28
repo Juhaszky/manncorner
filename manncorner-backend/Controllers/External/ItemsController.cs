@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System.Net;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 [ApiController]
 public class ItemsController : ControllerBase
@@ -9,13 +10,15 @@ public class ItemsController : ControllerBase
   private readonly IWebHostEnvironment _env;
   private readonly HttpClient _http;
   private readonly IConfiguration _configuration;
+  private readonly StrangeItemStatHistoryService _strangeItemStatHistoryService;
   private readonly IMemoryCache _cache;
-  public ItemsController(IWebHostEnvironment env, IHttpClientFactory httpClientFactory, IConfiguration configuration, IMemoryCache cache)
+  public ItemsController(IWebHostEnvironment env, IHttpClientFactory httpClientFactory, IConfiguration configuration, IMemoryCache cache, StrangeItemStatHistoryService strangeItemStatHistoryService)
   {
     _env = env;
     _http = httpClientFactory.CreateClient("SteamClient");
     _configuration = configuration;
     _cache = cache;
+    _strangeItemStatHistoryService = strangeItemStatHistoryService;
   }
 
   [HttpGet("/items")]
@@ -154,6 +157,7 @@ public class ItemsController : ControllerBase
                    matchingDesc.Market_Tradable_Restriction,
                    matchingDesc.Name_Color,
                    matchingDesc.Type,
+                   matchingDesc.OriginalTypeTxt,
                    matchingDesc.Tags,
                    matchingDesc.Descriptions,
                    matchingDesc.Tradable,
@@ -176,7 +180,25 @@ public class ItemsController : ControllerBase
 
       fullEnrichedList = JsonSerializer.Deserialize<List<ParsedItem>>(enrichedJson, options);
       if (fullEnrichedList == null) return null;
+      var strangeItems = fullEnrichedList
+        .Where(i => i.quality == 11);
+      foreach (var strangeItem in strangeItems)
+      {
+        var counterMatch = Regex.Match(strangeItem.originalTypeTxt ?? "",
+            @"-\s*([^:]+):\s*(\d+)", RegexOptions.IgnoreCase);
 
+        if (counterMatch.Success)
+        {
+          var statName = counterMatch.Groups[1].Value.Trim();
+          var counterValue = int.Parse(counterMatch.Groups[2].Value);
+
+          await _strangeItemStatHistoryService.refreshCounter(
+              userId,
+              strangeItem.id,
+              counterValue
+          );
+        }
+      }
       var cacheEntryOptions = new MemoryCacheEntryOptions()
           .SetSlidingExpiration(TimeSpan.FromMinutes(10))
           .SetAbsoluteExpiration(TimeSpan.FromHours(1))

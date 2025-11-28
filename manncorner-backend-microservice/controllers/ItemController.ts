@@ -2,7 +2,7 @@ import rawItems from 'tf2-static-schema/static/items.json';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import { parseEconItem } from 'tf2-item-format/static';
 import { TF2Item } from '../models/Tf2Item';
-import { EconItem } from 'tf2-item-format/.';
+import { EconItem } from 'tf2-item-format/';
 import { Item } from '../models/Item';
 
 const allItems = rawItems as TF2Item[];
@@ -44,12 +44,12 @@ export const getItems = (searchTerm?: string, offset = 0, limit = 40) => {
 export const parseItems = (items: any[]) => {
   try {
     const sanitizedItems = items.map(i => sanitizeEconItem(i));
-    console.log(sanitizedItems);
     const parsedItems = sanitizedItems.map(item =>
       parseEconItem(item, true, true, { useTrueDefindex: true })
     );
     return parsedItems;
   } catch (error: any) {
+    console.log(error);
     return [];
   }
 };
@@ -89,6 +89,7 @@ function sanitizeEconItem(rawItem: any): EconItem {
           }
         : undefined,
     type: rawItem.Type ?? rawItem.type,
+    originalTypeTxt: rawItem.Type ?? "-",
     tradable: (rawItem.Tradable ?? rawItem.tradable == 1) ? true : false,
     marketable: (rawItem.Marketable ?? rawItem.marketable == 1) ? true : false,
     commodity: rawItem.Commodity ?? rawItem.commodity,

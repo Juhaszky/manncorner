@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Trade> Trades { get; set; }
+    public DbSet<StrangeItemStatHistory> CountersHistory { get; set; }
     public DbSet<TradeItem> Items { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,7 +33,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<TradeItem>()
             .HasIndex(i => i.Sheen)
             .HasDatabaseName("idx_items_sheen");
-            
+
         modelBuilder.Entity<Trade>()
             .HasMany(t => t.Comments)
             .WithOne(c => c.Trade)
@@ -52,6 +53,15 @@ public class AppDbContext : DbContext
             .HasMany(c => c.Replies)
             .WithOne()
             .HasForeignKey("ParentCommentId");
-        
+        modelBuilder.Entity<StrangeItemStatHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.ItemId).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Counter).IsRequired();
+            entity.HasIndex(e => e.ItemId).HasDatabaseName("IX_StrangeItemStat_ParsedItemId");
+        });
+
+
+
     }
 }

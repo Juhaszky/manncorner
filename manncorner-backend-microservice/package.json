@@ -14,7 +14,7 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
-    "tf2-item-format": "^5.9.28"
+    "tf2-static-schema": "^1.102.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
@@ -23,8 +23,8 @@
     "typescript": "^5.8.3"
   },
   "exports": {
-  "./static/schema": "./dist/static/schema.js",
-  "./index": "./dist/index.js",
-  "./parseEconItem": "./dist/parseEconItem.js"
-}
+    "./static/schema": "./dist/static/schema.js",
+    "./index": "./dist/index.js",
+    "./parseEconItem": "./dist/parseEconItem.js"
+  }
 }

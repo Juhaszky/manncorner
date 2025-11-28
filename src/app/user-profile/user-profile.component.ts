@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  inject,
   Input,
+  OnInit,
   Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -15,6 +17,8 @@ import { ButtonModule } from 'primeng/button';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileData } from '../../shared/models/ProfileData';
 import { UserData } from '../../shared/models/userdata.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment.development';
 @Component({
   selector: 'app-user-profile',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,17 +36,22 @@ import { UserData } from '../../shared/models/userdata.model';
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })
-export class UserProfileComponent {
+export class UserProfileComponent implements OnInit {
   @Input() profileData!: ProfileData | null;
   @Input() userData!: UserData | null;
   @Input() chipData: { label: string, link: string }[] = [];
   @Input() tradeControl!: FormControl;
 
   @Output() saveTradeUrl = new EventEmitter<void>();
-
+  http = inject(HttpClient);
 
   openLink(url: string): void {
     window.open(url, '_blank');
   }
 
+  ngOnInit(): void {
+    this.http.get(`${environment.API_URL}/api/StrangeItemStatHistory/histories`).subscribe((res) => {
+      console.log(res);
+    })
+  }
 }
