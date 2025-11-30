@@ -1,0 +1,5 @@
+<ng-template #message>
+  <div class="w-full text-center">No data available</div>
+</ng-template>
+
+<p-chart *ngIf="data; else message" type="line" [data]="data" [options]="options" class="h-[30rem]"></p-chart>

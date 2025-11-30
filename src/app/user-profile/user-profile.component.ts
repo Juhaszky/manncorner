@@ -4,7 +4,6 @@ import {
   EventEmitter,
   inject,
   Input,
-  OnInit,
   Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -18,7 +17,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileData } from '../../shared/models/ProfileData';
 import { UserData } from '../../shared/models/userdata.model';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment.development';
+import { StrangeItemHistoriesComponent } from './strange-item-histories/strange-item-histories.component';
 @Component({
   selector: 'app-user-profile',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,12 +30,13 @@ import { environment } from '../../environments/environment.development';
     FloatLabel,
     ButtonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    StrangeItemHistoriesComponent
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent {
   @Input() profileData!: ProfileData | null;
   @Input() userData!: UserData | null;
   @Input() chipData: { label: string, link: string }[] = [];
@@ -47,11 +47,5 @@ export class UserProfileComponent implements OnInit {
 
   openLink(url: string): void {
     window.open(url, '_blank');
-  }
-
-  ngOnInit(): void {
-    this.http.get(`${environment.API_URL}/api/StrangeItemStatHistory/histories`).subscribe((res) => {
-      console.log(res);
-    })
   }
 }

@@ -1,0 +1,24 @@
+<div class="w-full h-full min-h-64">
+  <p-listbox
+    [(ngModel)]="selectedItems"
+    [options]="items"
+    (onChange)="handleSelectionChange($event)"
+    [filter]="true"
+    [scrollHeight]="'500px'"
+    [maxlength]="50"
+    [multiple]="true"
+    [checkbox]="true"
+    optionLabel="name"
+    class="w-full h-full md:w-56 min-h-64 bg-slate-200">
+    <ng-template #item let-item>
+      <div class="flex items-center gap-2">
+        <img
+            [src]="item.img"
+            class="sm:h-32 sm:w-32 h-16 w-16"
+            alt=""
+          />
+        <div>{{ item. name}}</div>
+      </div>
+    </ng-template>
+  </p-listbox>
+</div>

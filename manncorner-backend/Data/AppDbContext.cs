@@ -60,6 +60,10 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Counter).IsRequired();
             entity.HasIndex(e => e.ItemId).HasDatabaseName("IX_StrangeItemStat_ParsedItemId");
         });
+        modelBuilder.Entity<CounterEntry>(entity =>
+        {
+            entity.HasNoKey();
+        });
 
 
 

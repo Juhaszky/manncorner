@@ -4,21 +4,17 @@ using Microsoft.Extensions.Caching.Memory;
 public class StrangeItemStatHistoryService
 {
     private readonly AppDbContext _context;
-    private readonly IMemoryCache _cache;
-    private readonly ItemService _itemService;
 
-    public StrangeItemStatHistoryService(AppDbContext context, IMemoryCache cache, ItemService itemService)
+    public StrangeItemStatHistoryService(AppDbContext context)
     {
         _context = context;
-        _cache = cache;
-        _itemService = itemService;
     }
 
     public async Task refreshCounter(string userId, string itemId, int counterValue)
     {
         var existingStat = await _context.CountersHistory
             .FirstOrDefaultAsync(s => s.ItemId == itemId);
-
+            
         if (existingStat == null)
         {
             var newStat = new StrangeItemStatHistory
@@ -43,47 +39,33 @@ public class StrangeItemStatHistoryService
 
         await _context.SaveChangesAsync();
     }
-    public async Task<List<StrangeItemStatHistory>?> GetStatsByItemIdAsync(string itemId)
+    public async Task<List<StrangeItemStatHistory>> GetStatsByItemIdAsync(string itemId)
     {
         var stats = await _context.CountersHistory
-            .Where(i => i.ItemId == itemId)
+            .Where(s => s.ItemId == itemId)
+            .OrderBy(s => s.ChangeDate)
             .ToListAsync();
 
-        if (stats == null || stats.Count == 0)
-        {
-            return null;
-        }
+        var grouped = stats
+            .GroupBy(s => new { s.ItemId, s.UserId })
+            .Select(g => new StrangeItemStatHistory
+            {
+                ItemId = g.Key.ItemId,
+                UserId = g.Key.UserId,
+                Counters = g.Select(x => new CounterEntry { ChangeDate = x.ChangeDate, Value = x.Counter }).ToList(),
+            })
+            .ToList();
 
-        return stats;
+        return grouped;
     }
-    public async Task<List<StrangeItemStatWithItemDto>?> GetStatsByUserIdAsync(string userId)
-    {
 
-        var stats = await _context.CountersHistory
+    public async Task<List<StrangeItemStatHistory>> GetStatsByUserIdRawAsync(string userId)
+    {
+        return await _context.CountersHistory
             .Where(i => i.UserId == userId)
             .ToListAsync();
-
-        if (stats == null || stats.Count == 0)
-        {
-            return null;
-        }
-        var statItemIds = stats.Select(s => s.ItemId).Distinct().ToList();
-        var items = await _itemService.GetOrFetchEnrichedInventory(userId);
-        var strangeItems = items.Where(i => i.quality == 11);
-        var matchingStrangeItems = strangeItems
-                .Where(i => statItemIds.Contains(i.id))
-                .ToDictionary(i => i.id, i => i);
-        var result = stats
-        .Where(s => matchingStrangeItems.ContainsKey(s.ItemId))
-        .Select(s => new StrangeItemStatWithItemDto
-        {
-            Stat = s,
-            Item = matchingStrangeItems[s.ItemId]
-        })
-        .ToList();
-
-        return result.Count > 0 ? result : null;
     }
+
     private async Task AddHistoryEntry(string userId, string itemId, int counterValue)
     {
         var historyEntry = new StrangeItemStatHistory
@@ -95,4 +77,5 @@ public class StrangeItemStatHistoryService
         };
         await _context.CountersHistory.AddAsync(historyEntry);
     }
+
 }
