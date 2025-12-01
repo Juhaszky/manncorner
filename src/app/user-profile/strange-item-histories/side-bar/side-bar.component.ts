@@ -9,7 +9,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListboxModule } from 'primeng/listbox';
 import { StrangeItemStatWithItemDto } from '../../../../shared/models/strangeItemStatHistory.model';
 import { CommonModule } from '@angular/common';
@@ -22,7 +22,6 @@ import { CommonModule } from '@angular/common';
 })
 export class SideBarComponent implements OnInit, OnChanges {
   @Input() statWihItemsHistories: StrangeItemStatWithItemDto[] = [];
-  @Input() selectedItemsControl!: FormControl;
   @Output() selectEmitter = new EventEmitter<
     { name: string; img: string; code: string }[]
   >();
@@ -39,7 +38,7 @@ export class SideBarComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['statWihItemsHistories'] && this.statWihItemsHistories) {
-      this.items = this.getUniqueItems(this.statWihItemsHistories);
+      this.items = [...this.getUniqueItems(this.statWihItemsHistories)];
       this.cdr.detectChanges();
     }
   }

@@ -1,20 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import {
   StrangeItemStatHistory,
   StrangeItemStatWithItemDto,
 } from '../../../shared/models/strangeItemStatHistory.model';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Item } from '../../../shared/models/item.model';
 import { map } from 'rxjs';
 import { HistoryChartComponent } from './history-chart/history-chart.component';
 
@@ -32,6 +26,7 @@ import { HistoryChartComponent } from './history-chart/history-chart.component';
 })
 export class StrangeItemHistoriesComponent implements OnInit {
   http = inject(HttpClient);
+  cdr = inject(ChangeDetectorRef);
   data: StrangeItemStatWithItemDto[] = [];
   historyMap: Map<
     string,
@@ -40,10 +35,6 @@ export class StrangeItemHistoriesComponent implements OnInit {
     string,
     { stat: StrangeItemStatHistory; itemData: { name: string; id: string } }
   >();
-  historiesForm = new FormGroup({
-    histories: new FormControl(''),
-    selectedItems: new FormControl<Item[]>([]),
-  });
   datePipe = new DatePipe('hu-HU');
   chartData = {};
   ngOnInit(): void {
@@ -53,6 +44,7 @@ export class StrangeItemHistoriesComponent implements OnInit {
       )
       .pipe(
         map(res => {
+          res.sort((a, b) => a.item.name.localeCompare(b.item.name));
           res.forEach(stat =>
             this.historyMap.set(stat.item.id, {
               stat: stat.stat,
@@ -60,15 +52,12 @@ export class StrangeItemHistoriesComponent implements OnInit {
             })
           );
 
-          this.historiesForm.controls['selectedItems'].setValue(
-            res.map(s => s.item)
-          );
-
           return res;
         })
       )
       .subscribe(res => {
         this.data = [...res];
+        this.cdr.detectChanges();
       });
   }
   handleSelection(
@@ -80,7 +69,7 @@ export class StrangeItemHistoriesComponent implements OnInit {
 
     if (!selectedStats || selectedStats.length === 0) {
       this.chartData = {};
-       return;
+      return;
     }
 
     const allDatesSet = new Set<string>();
@@ -93,13 +82,11 @@ export class StrangeItemHistoriesComponent implements OnInit {
 
     const datasets = selectedStats.map(statItem => {
       const dateToCounter = new Map<string, number>();
-      statItem.stat.counters.forEach((c: any) =>
-      {
+      statItem.stat.counters.forEach((c: any) => {
         const date = new Date(c.changeDate);
         const formatted = `${date.getFullYear()}. ${('0' + (date.getMonth() + 1)).slice(-2)}. ${('0' + date.getDate()).slice(-2)}.`;
-        dateToCounter.set(formatted, c.value)
-      }
-      );
+        dateToCounter.set(formatted, c.value);
+      });
       const data = labels.map(labelDateStr => {
         const date = new Date(labelDateStr);
         const formatted = `${date.getFullYear()}. ${('0' + (date.getMonth() + 1)).slice(-2)}. ${('0' + date.getDate()).slice(-2)}.`;
