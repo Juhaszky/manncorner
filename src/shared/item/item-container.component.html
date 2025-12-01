@@ -1,4 +1,4 @@
-<app-item 
+<app-item
     [itemData]="item"
     [effectUrl]="item.effect ? `assets/images/effects/${item.effect}.png` : null"
     [canDelete]="canDelete"
@@ -7,6 +7,9 @@
     [disabled]="disabled"
     [borderStyle]="facade.getBorderStyle(item)"
     (selectEmitter)="selectEmitter.emit(item)"
+    (touchEmitter)="handleMobileTouch($event)"
     (removeEmitter)="removeEmitter.emit(item)"
-    (customizeEmitter)="customizeEmitter.emit(item)">
+    (customizeEmitter)="customizeEmitter.emit(item)"
+    (backpacktfEmitter)="facade.openBackpackTfLink(item)"
+    (contextMenuEmitter)="contextMenuService.show($event.event, $event.item)">
 </app-item>

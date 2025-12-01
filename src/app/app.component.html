@@ -1,8 +1,29 @@
 <main class="dark:bg-gray-800 min-h-screen">
-    <app-mobile-nav [isDrawerOpen]="isDrawerOpen"></app-mobile-nav>
+  <app-mobile-nav [isDrawerOpen]="isDrawerOpen"></app-mobile-nav>
   <div class="container-fluid min-h-screen w-full dark:bg-gray-800">
     <navbar (toggleDrawer)="isDrawerOpen = !isDrawerOpen"></navbar>
     <router-outlet></router-outlet>
     <p-toast position="bottom-right" />
   </div>
+  <p-dialog
+    header="Edit Profile"
+    [modal]="true"
+    [(visible)]="itemService.showItemDetails"
+    [style]="{ width: '25rem' }"
+    [baseZIndex]="10000">
+    <!--
+    TODO: make item details for mobile
+    -->
+    <!-- <span class="p-text-secondary block mb-8">Update your information.</span>
+    <div class="flex items-center gap-4 mb-4">
+      <label for="username" class="font-semibold w-24">Username</label>
+      <input pInputText id="username" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex items-center gap-4 mb-8">
+      <label for="email" class="font-semibold w-24">Email</label>
+      <input pInputText id="email" class="flex-auto" autocomplete="off" />
+    </div> -->
+  </p-dialog>
+  <p-contextmenu #globalContextMenu [model]="contextMenuItems" appendTo="body">
+  </p-contextmenu>
 </main>

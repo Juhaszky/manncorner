@@ -3,7 +3,7 @@
     Your trades ({{ trades.length }} - inactives ({{ inactiveTrade.length }}) )
   </h1>
   <p-card
-    class="col-card trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow bg-slate-800"
+    class="col-card trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow"
     *ngFor="let trade of trades"
     (click)="selectTrade(trade.id)"
     (keydown)="selectTrade(trade.id)">

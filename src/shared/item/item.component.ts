@@ -12,11 +12,18 @@ import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { Item } from '../models/item.model';
 import { showQuantity } from '../../app/common/utils';
+import { ContextMenuModule } from 'primeng/contextmenu';
 
 @Component({
   standalone: true,
   selector: 'app-item',
-  imports: [ResizedImageComponent, CommonModule, RouterModule, TooltipModule],
+  imports: [
+    ResizedImageComponent,
+    CommonModule,
+    RouterModule,
+    TooltipModule,
+    ContextMenuModule,
+  ],
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss',
 })
@@ -27,6 +34,10 @@ export class ItemComponent implements OnInit {
   @Output() removeEmitter = new EventEmitter<Item>();
   @Output() detailsEmitter = new EventEmitter<Item>();
   @Output() selectEmitter = new EventEmitter<Item>();
+  @Output() touchEmitter = new EventEmitter<Item>();
+  @Output() backpacktfEmitter: EventEmitter<Item> = new EventEmitter<Item>();
+  @Output() contextMenuEmitter: EventEmitter<{ item: Item, event: MouseEvent }> = new EventEmitter<{ item: Item, event: MouseEvent }>();
+
   @Input() disabled = false;
   @Input() canModify = false;
   @Input() canDelete = false;
@@ -35,7 +46,7 @@ export class ItemComponent implements OnInit {
   @Input() effectUrl!: string | null;
   showActions = false;
   showQuantityFn = showQuantity;
-  
+
   ngOnInit(): void {
     if (this.showQuantity && this.canModify) {
       this.itemData.quantity = this.itemData.quantity ?? 1;
@@ -57,5 +68,9 @@ export class ItemComponent implements OnInit {
     if (!this.disabled) {
       this.selectEmitter.emit();
     }
+  }
+  onContextMenu(event: MouseEvent) {
+    event.preventDefault();
+    this.contextMenuEmitter.emit({ item: this.itemData, event });
   }
 }

@@ -1,6 +1,6 @@
-<div class="container flex flex-col w-full relative h-94" *ngIf="!loading">
+<div class="container flex flex-col w-full relative h-94 mb-2" *ngIf="!loading">
   <p-card
-    class="trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow bg-slate-800"
+    class="trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow col-main-card tf2-trade-card last:mb-2"
     *ngFor="let trade of trades; trackBy: trackByFn"
     (click)="selectTrade(trade.id)"
     (keydown)="selectTrade(trade.id)"
