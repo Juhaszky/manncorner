@@ -16,7 +16,7 @@
     [src]="effectUrl"
     class="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none" />
   <resized-image
-    [imageUrl]="itemData.img"
+    [imageUrl]="getImgUrlString(itemData.img, itemData.name, itemData.isAustralium)"
     class="relative z-10"></resized-image>
   <div class="top-1 flex gap-1 absolute z-10" *ngIf="itemData">
     <p

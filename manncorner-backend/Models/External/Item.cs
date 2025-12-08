@@ -10,6 +10,7 @@ public class Item
     public string Img { get; set; }
     public bool Craftable { get; set; }
     public bool Tradable { get; set; }
+    public bool IsAustralium { get; set; }
     public string Type { get; set; }
     public int? Effect { get; set; } // optional
     public int Quality { get; set; }

@@ -6,12 +6,11 @@
     <div class="w-100 flex justify-between" >
       <div class="flex items-center w-auto">
         <span *ngIf="item.quality > -1 && item.quality !== 0">
-          ({{ getQualityString(item.quality) }})
         </span> {{ item.fullName }}
       </div>
       <div class="flex items-center w-auto">
         <img
-          src="{{ item.img }}"
+          src="{{ getImgUrlString(item.img, item.name, item.isAustralium) }}"
           alt="image of {{ item.name }}"
           class="sm:w-24 w-16"
         />

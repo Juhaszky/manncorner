@@ -13,7 +13,7 @@ export interface Item {
   quality: number;
   defindex: number;
   //econitem attributes
-  australium?: boolean;
+  isAustralium?: boolean;
   marketable?: boolean;
   commodity?: boolean;
   level?: string | number;

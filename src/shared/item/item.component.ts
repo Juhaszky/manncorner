@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { Item } from '../models/item.model';
-import { showQuantity } from '../../app/common/utils';
+import { getImgUrlString, showQuantity } from '../../app/common/utils';
 import { ContextMenuModule } from 'primeng/contextmenu';
 
 @Component({
@@ -46,6 +46,7 @@ export class ItemComponent implements OnInit {
   @Input() effectUrl!: string | null;
   showActions = false;
   showQuantityFn = showQuantity;
+  getImgUrlString = getImgUrlString;
 
   ngOnInit(): void {
     if (this.showQuantity && this.canModify) {

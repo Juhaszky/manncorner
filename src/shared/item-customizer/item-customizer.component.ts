@@ -19,10 +19,11 @@ import { ItemKillstreakerSelectorComponent } from './item-killstreaker-selector/
 import { AccordionModule } from 'primeng/accordion';
 import { HttpClient } from '@angular/common/http';
 import { Item } from '../models/item.model';
-import { getQualityString } from '../../app/common/utils';
+import { getImgUrlString, getQualityString } from '../../app/common/utils';
 import { ButtonModule } from 'primeng/button';
 import { KillstreakTier, Spell } from '../models/enums/item-customization.enum';
-import { ItemSpellsComponent } from "./item-spells/item-spells.component";
+import { ItemSpellsComponent } from './item-spells/item-spells.component';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 export interface ItemFormGroup {
   name: FormControl<string>;
@@ -30,6 +31,7 @@ export interface ItemFormGroup {
   effect: FormControl<number>;
   craftable: FormControl<boolean>;
   imgUrl: FormControl<string>;
+  isAustralium: FormControl<boolean>;
 }
 export interface KillstreakFormGroup {
   killstreak: FormControl<KillstreakTier>;
@@ -51,8 +53,9 @@ export interface SpellFormGroup {
     ItemKillstreakerSelectorComponent,
     AccordionModule,
     ButtonModule,
-    ItemSpellsComponent
-],
+    ItemSpellsComponent,
+    ToggleSwitchModule,
+  ],
   templateUrl: './item-customizer.component.html',
   styleUrl: './item-customizer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,6 +77,7 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
     effect: new FormControl(-1, { nonNullable: true }),
     craftable: new FormControl(true, { nonNullable: true }),
     imgUrl: new FormControl('', { nonNullable: true }),
+    isAustralium: new FormControl(false, { nonNullable: true }),
   });
 
   killstreakFormGroup = new FormGroup<KillstreakFormGroup>({
@@ -93,7 +97,6 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.details) {
-      this.details.name = this.details?.fullName ?? this.details?.name;
       this.itemFormGroup.patchValue({
         name: this.details.name,
         quality: this.details.quality,
@@ -111,10 +114,11 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
 
   private patchForms(details: Item): void {
     this.itemFormGroup.patchValue({
-      name: details.fullName ?? details.name,
+      name: details.name,
       quality: details.quality,
       effect: details.effect,
       imgUrl: details.img,
+      isAustralium: details.isAustralium,
     });
 
     this.killstreakFormGroup.patchValue({
@@ -125,30 +129,65 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
   }
 
   onSubmit(): void {
-    this.details.effect = this.itemFormGroup.controls['effect'].value;
-    this.details.quality = this.itemFormGroup.controls['quality'].value;
-    this.details.killstreak =
-      this.killstreakFormGroup.controls['killstreak'].value;
-    this.details.sheen = this.killstreakFormGroup.controls['sheen'].value;
-    this.details.killstreaker =
-      this.killstreakFormGroup.controls['killstreaker'].value;
-      this.details.spells = this.spellFormGroup.controls['spell'].value;
+    const baseName = this.details.name;
+
+    let fullName = baseName;
+
+    const effectId = this.itemFormGroup.controls['effect'].value;
     const selectedEffect = this.effectFormGroup.controls['effects'].value.find(
-      effectRecord =>
-        effectRecord.value === this.itemFormGroup.controls['effect'].value
+      e => e.value === effectId
     );
-    if (selectedEffect) {
-      this.details.fullName = `${selectedEffect.label} ${this.details.name}`;
-    } else {
-      this.details.fullName = this.details.name;
+
+     if (selectedEffect?.label) {
+      fullName = `${selectedEffect.label} ${fullName}`;
     }
-    if (this.killstreakFormGroup.controls['killstreak'].value !== 3 && this.killstreakFormGroup.controls['killstreaker'].value != "") {
-      this.details.killstreaker = '';
+
+    const isAustralium = this.itemFormGroup.controls['isAustralium'].value;
+    if (isAustralium) {
+      fullName = `Australium ${fullName}`;
     }
-    this.itemModified.emit(this.details);
+
+    const killstreak = this.killstreakFormGroup.controls['killstreak'].value;
+    if (killstreak !== KillstreakTier.None) {
+      fullName = `${this.returnKillstreakString(killstreak)} ${fullName}`;
+    }
+
+    const quality = this.itemFormGroup.controls['quality'].value;
+    if (quality > -1) {
+      fullName = `${this.returnQualityString(quality)} ${fullName}`;
+    }
+
+    const updatedItem: Item = {
+      ...this.details,
+      name: this.details.name,
+      fullName,
+      quality,
+      effect: effectId,
+      isAustralium,
+      killstreak,
+      sheen: this.killstreakFormGroup.controls['sheen'].value,
+      killstreaker: this.killstreakFormGroup.controls['killstreaker'].value,
+      spells: this.spellFormGroup.controls['spell'].value,
+    };
+    this.itemModified.emit(updatedItem);
   }
 
   returnQualityString(quality: number | null) {
     return getQualityString(quality ?? -1);
+  }
+  returnAustraliumString(isAustralium: boolean) {
+    return isAustralium ? 'Australium ' : '';
+  }
+  returnKillstreakString(killstreakValue: number) {
+    let killstreakStr = '';
+    if (killstreakValue === 2) {
+      killstreakStr = 'Specialized Killstreak';
+    } else if (killstreakValue === 3) {
+      killstreakStr = 'Professional Killstreak ';
+    }
+    return killstreakStr;
+  }
+  getDisplayedImageUrl(url: string, name: string, isAustralium: boolean) {
+    return getImgUrlString(url, name, isAustralium);
   }
 }

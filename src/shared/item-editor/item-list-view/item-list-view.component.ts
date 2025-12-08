@@ -3,8 +3,9 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { ItemCustomizerComponent } from '../../item-customizer/item-customizer.component';
 import { DialogModule } from 'primeng/dialog';
 import { Item } from '../../models/item.model';
-import { getQualityString } from '../../../app/common/utils';
+import { getImgUrlString, getQualityString } from '../../../app/common/utils';
 import { ItemFacade } from '../../item/item.facade';
+import { ItemSelectorFacade } from '../../item-selector/item-selector.facade';
 
 @Component({
   standalone: true,
@@ -18,9 +19,13 @@ export class ItemListViewComponent implements OnInit {
   qualityToDisplay = '';
   selectedIndex = -1;
   visible = false;
+  itemSelectorFacade = inject(ItemSelectorFacade);
   itemFacade = inject(ItemFacade);
+  getImgUrlString = getImgUrlString;
   ngOnInit(): void {
-    console.log(this.selectedItems);
+    this.itemSelectorFacade.itemsEditForTrade$.subscribe((items) => {
+      this.selectedItems = items;
+    })
   }
   removeSelectedItem(i: number) {
     this.selectedItems.splice(i, 1);
@@ -38,6 +43,7 @@ export class ItemListViewComponent implements OnInit {
   }
 
   onItemModified(item: Item) {
+    this.itemSelectorFacade.onModifyEditDefaultItem(item);
     if (this.selectedIndex !== null && this.selectedIndex >= 0) {
       this.selectedItems[this.selectedIndex] = { ...item };
     }

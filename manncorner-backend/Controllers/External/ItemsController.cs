@@ -158,6 +158,7 @@ public class ItemsController : ControllerBase
                    matchingDesc.Name_Color,
                    matchingDesc.Type,
                    matchingDesc.OriginalTypeTxt,
+                   matchingDesc.IsAustralium,
                    matchingDesc.Tags,
                    matchingDesc.Descriptions,
                    matchingDesc.Tradable,

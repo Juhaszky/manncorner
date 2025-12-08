@@ -17,6 +17,7 @@ public class ItemDescription
     public string Name_Color { get; set; }
     public string Type { get; set; }
     public string OriginalTypeTxt { get; set; }
+    public bool IsAustralium { get; set; }
     public string Market_Name { get; set; }
     public string Market_Hash_Name { get; set; }
     public List<ActionEntry> Market_Actions { get; set; }

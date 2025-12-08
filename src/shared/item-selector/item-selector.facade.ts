@@ -154,6 +154,14 @@ export class ItemSelectorFacade {
     console.log(itemsWithCustomId);
     this._itemsEditForTrade.next([...currentItems, ...itemsWithCustomId]);
   }
+  onModifyEditDefaultItem(item: Item) {
+    const currentItems = this._itemsEditForTrade.getValue();
+    const itemToModifyIdx = currentItems.findIndex((i) => i.id === item.id);
+    if (itemToModifyIdx > -1) {
+      currentItems[itemToModifyIdx] = {...item};
+      this._itemsEditForTrade.next([...currentItems])
+    }
+  }
   onAddSearchDefaultItem(items: Item[]) {
     const currentItems = this._itemsSearchForTrade.getValue();
     const itemsWithCustomId = items.map(i => {

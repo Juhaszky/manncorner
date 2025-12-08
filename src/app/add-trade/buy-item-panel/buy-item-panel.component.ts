@@ -83,7 +83,11 @@ export class BuyItemPanelComponent implements OnInit {
     this.customizeVisible = true;
     this.visible = true;
   }
-  closeOnModification() {
+  closeOnModification(item: Item) {
+    const selectedIndex = this.selectedItems.findIndex((i) => i.id === this.customizableItem.id) ;
+    if (selectedIndex !== null && selectedIndex >= 0) {
+      this.selectedItems[selectedIndex] = { ...item };
+    }
     this.visible = false;
   }
 }
