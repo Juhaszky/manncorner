@@ -97,7 +97,7 @@
       </div>
     </div>
     <div
-      *ngIf="itemFormGroup.controls['quality'].value === 11"
+      *ngIf="itemFormGroup.controls['quality'].value === 11 && itemFormGroup.controls['name'].value !== 'Golden Frying Pan'"
       [ngClass]="{
         'flex flex-col items-center flex-wrap justify-between transition-all duration-300 ease-in-out': true,
         'w-full': true,
