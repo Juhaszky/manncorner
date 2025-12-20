@@ -33,13 +33,14 @@ export class ItemListViewComponent implements OnInit {
   getQualityString(quality: number) {
     return getQualityString(quality);
   }
+
   customizeSelectedItem(i: number) {
     this.selectedIndex = i;
     this.visible = true;
     if (i >= 0 && i < this.selectedItems.length) {
-    const itemCopy = { ...this.selectedItems[i] };
-    this.selectedItems[i] = itemCopy;
-  }
+      const itemCopy = { ...this.selectedItems[i] };
+      this.selectedItems[i] = itemCopy;
+    }
   }
 
   onItemModified(item: Item) {

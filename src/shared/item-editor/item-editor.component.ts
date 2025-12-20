@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   inject,
@@ -17,10 +19,10 @@ import { HttpClient } from '@angular/common/http';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ItemSelectorFacade } from '../item-selector/item-selector.facade';
 import { Item } from '../models/item.model';
-import { take } from 'rxjs';
 @Component({
   standalone: true,
   selector: 'app-item-editor',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './item-editor.component.html',
   styleUrl: './item-editor.component.scss',
   imports: [
@@ -44,28 +46,33 @@ export class ItemEditorComponent implements OnInit, OnChanges {
   selectedItems: Item[] = [];
   filteredOptions: Item[] = [];
 
-  constructor(private itemSelectorFacade: ItemSelectorFacade) {}
+  constructor(private itemSelectorFacade: ItemSelectorFacade, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.itemSelectorFacade.itemsForTrade$
-      .pipe(take(1))
-      .subscribe(savedItems => {
-        this.selectedItems = savedItems
-          .map(savedItem =>
-            this.filteredOptions.find(
-              opt => opt.defindex === savedItem.defindex
-            )
-          )
-          .filter(item => item !== undefined) as Item[];
-      });
-    this.filteredOptions = this.options;
+    // this.itemSelectorFacade.itemsForTrade$
+    //   .pipe(take(1))
+    //   .subscribe(savedItems => {
+    //     this.selectedItems = savedItems
+    //       .map(savedItem =>
+    //         this.filteredOptions.find(
+    //           opt => opt.defindex === savedItem.defindex
+    //         )
+    //       )
+    //       .filter(item => item !== undefined) as Item[];
+    //   });
+    // this.filteredOptions = this.options;
   }
   onHandleFilter(event: { originalEvent: Event; filter: string }) {
     this.filterSearch.emit(event.filter);
   }
   ngOnChanges(changes: SimpleChanges): void {
+    if(changes['selectedItems']) {
+      console.log(changes);
+      this.cdr.markForCheck();
+    }
     if (changes['options']) {
       this.filteredOptions = this.options ?? [];
+      
     }
   }
 
