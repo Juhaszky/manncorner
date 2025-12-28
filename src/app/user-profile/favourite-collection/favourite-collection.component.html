@@ -1,0 +1,49 @@
+<div class="row mt-4">
+
+    <p-button>Set favourite</p-button>
+  <div class="flex flex-row flex-wrap gap-2">
+    <div *ngFor="let item of selectedItems; trackBy: trackByFn" class="w-24">
+      <app-item-container
+        [item]="item"
+        [canDelete]="true"
+        [canModify]="true"
+        [showQuantity]="true">
+      </app-item-container>
+    </div>
+  </div>
+</div>
+<div class="row mt-4">
+  <div class="grid-cols-6">
+    <h2 [style.color]="'white'">Your backpack:</h2>
+  </div>
+  <div class="flex flex-row-reverse p-2">
+    <app-action-bar [type]="'search-trade'"></app-action-bar>
+  </div>
+  <!-- <div class="col-card mb-3 p-1"> -->
+  <div
+    class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
+    #inventorySelector>
+    <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
+      <div
+        *ngFor="let item of baseInventoryItems; trackBy: trackByFn"
+        class="w-24">
+        <app-item-container
+          [item]="item"
+          [disabled]="isItemDisabled(item)"
+          (selectEmitter)="itemSelectorFacade.onAddFavouriteItem(item)"
+          (click)="onItemSelect(item)">
+        </app-item-container>
+      </div>
+      <div
+        *ngIf="isLoading"
+        class="flex justify-center items-center w-full mt-4">
+        <p-progress-spinner
+          ariaLabel="Loading"
+          styleClass="custom-spinner"></p-progress-spinner>
+      </div>
+    </div>
+  </div>
+  <!-- <app-inventory-items-selector [mode]="'inventory'" [filter]="filterText">
+      </app-inventory-items-selector> -->
+  <!-- </div> -->
+</div>

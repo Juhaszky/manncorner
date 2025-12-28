@@ -1,29 +1,67 @@
-<main class="dark:bg-gray-800 min-h-screen">
+<main class="dark:bg-gray-800 min-h-screen flex flex-col">
   <app-mobile-nav [isDrawerOpen]="isDrawerOpen"></app-mobile-nav>
-  <div class="container-fluid min-h-screen w-full dark:bg-gray-800">
+
+  <div class="container-fluid w-full dark:bg-gray-800 flex-1 flex flex-col">
     <navbar (toggleDrawer)="isDrawerOpen = !isDrawerOpen"></navbar>
-    <router-outlet></router-outlet>
-    <p-toast position="bottom-right" />
+
+    <div class="flex-1">
+      <router-outlet></router-outlet>
+      <p-toast position="bottom-right" />
+    </div>
+
+    <footer class="bg-white border-t border-gray-200 py-2.5 dark:bg-gray-900 dark:border-gray-700">
+  <div
+    class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
+
+    <a routerLink="/home" class="flex items-center">
+      <span
+        class="self-center text-xl font-semibold dark:text-white whitespace-nowrap">
+        Mann<span id="titleEnding">corner</span>
+      </span>
+    </a>
+
+    <div class="flex items-center">
+      <ul class="flex flex-row items-center gap-6 text-sm font-medium text-gray-700 dark:text-gray-400">
+        <li>
+          <a
+            routerLink="/about"
+            class="hover:text-purple-700 dark:hover:text-white">
+            About
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/terms"
+            class="hover:text-purple-700 dark:hover:text-white">
+            Terms
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/privacy"
+            class="hover:text-purple-700 dark:hover:text-white">
+            Privacy
+          </a>
+        </li>
+        <li class="text-xs text-gray-500 dark:text-gray-500">
+          © 2025 Manncorner
+        </li>
+      </ul>
+    </div>
   </div>
+</footer>
+
+  </div>
+
   <p-dialog
     header="Edit Profile"
     [modal]="true"
     [(visible)]="itemService.showItemDetails"
     [style]="{ width: '25rem' }"
     [baseZIndex]="10000">
-    <!--
-    TODO: make item details for mobile
-    -->
-    <!-- <span class="p-text-secondary block mb-8">Update your information.</span>
-    <div class="flex items-center gap-4 mb-4">
-      <label for="username" class="font-semibold w-24">Username</label>
-      <input pInputText id="username" class="flex-auto" autocomplete="off" />
-    </div>
-    <div class="flex items-center gap-4 mb-8">
-      <label for="email" class="font-semibold w-24">Email</label>
-      <input pInputText id="email" class="flex-auto" autocomplete="off" />
-    </div> -->
+    <!-- TODO: make item details for mobile -->
   </p-dialog>
+
   <p-contextmenu #globalContextMenu [model]="contextMenuItems" appendTo="body">
   </p-contextmenu>
 </main>

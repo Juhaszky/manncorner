@@ -18,6 +18,7 @@ import { ProfileData } from '../../shared/models/ProfileData';
 import { UserData } from '../../shared/models/userdata.model';
 import { HttpClient } from '@angular/common/http';
 import { StrangeItemHistoriesComponent } from './strange-item-histories/strange-item-histories.component';
+import { FavouriteCollectionComponent } from './favourite-collection/favourite-collection.component';
 @Component({
   selector: 'app-user-profile',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +32,8 @@ import { StrangeItemHistoriesComponent } from './strange-item-histories/strange-
     ButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    StrangeItemHistoriesComponent
+    StrangeItemHistoriesComponent,
+    FavouriteCollectionComponent
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',

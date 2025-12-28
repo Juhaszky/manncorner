@@ -48,4 +48,20 @@ public class UserService
         }
         await _context.SaveChangesAsync();
     }
+    public async Task SetFavoriteItemsAsync(Item[] items)
+    {
+        // var user = await GetUserBySteamIdAsync()
+    }
+
+    public async Task<List<string>> GetFavoritesAsync(string steamId)
+    {
+        var user = await GetUserBySteamIdAsync(steamId);
+        if (user == null)
+        {
+            throw new InvalidOperationException($"User with Steam ID '{steamId}' not found.");
+        }
+
+        // Return a copy to avoid external mutation
+        return user.FavoriteTradeIds?.ToList() ?? new List<string>();
+    }
 }

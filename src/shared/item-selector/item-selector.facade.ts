@@ -13,12 +13,14 @@ export class ItemSelectorFacade {
   private _itemsEditToTrade = new BehaviorSubject<Item[]>([]);
   private _itemsEditForTrade = new BehaviorSubject<Item[]>([]);
   private _itemsSearchToTrade = new BehaviorSubject<Item[]>([]);
+  private _itemsFavourite = new BehaviorSubject<Item[]>([]);
   private _itemsSearchForTrade = new BehaviorSubject<Item[]>([]);
   private _itemsOffer = new BehaviorSubject<Item[]>([]);
   private loadedPages = new Set<string>();
   private selectedItemIds = new Set<string>();
   private selectedEditItemIds = new Set<string>();
   private selectedSearchItemIds = new Set<string>();
+  private selectedFavouriteItemIds = new Set<string>();
   private selectedOfferItemIds = new Set<string>();
   loading = false;
   items$ = this._items.asObservable();
@@ -27,8 +29,9 @@ export class ItemSelectorFacade {
   itemsForTrade$ = this._itemsForTrade.asObservable();
   itemsEditToTrade$ = this._itemsEditToTrade.asObservable();
   itemsEditForTrade$ = this._itemsEditForTrade.asObservable();
-  itemsSearchToTrade$ = this._itemsSearchToTrade.asObservable();
   itemsSearchForTrade$ = this._itemsSearchForTrade.asObservable();
+  itemsSearchToTrade$ = this._itemsSearchToTrade.asObservable();
+  itemsFavourite$ = this._itemsFavourite.asObservable();
   itemsOfferTrade$ = this._itemsOffer.asObservable();
   private _customIdCounter = 0;
   private _customEditIdCounter = 0;
@@ -115,6 +118,28 @@ export class ItemSelectorFacade {
         };
         this._itemsSearchToTrade.next([...currentItems, itemWithCustomId]);
         this.selectedSearchItemIds.add(item.defindex.toString());
+      }
+    }
+  }
+  onAddFavouriteItem(item: Item) {
+    const currentItems = this._itemsFavourite.getValue();
+    if (currentItems.length >= 3) {
+      this.showMaxLimitMessage();
+      return;
+    } else {
+      const exists = currentItems.some(existingItem =>
+        this.deepEqual(existingItem, item)
+      );
+      console.log(exists);
+      if (!exists) {
+        const itemWithCustomId = {
+          ...item,
+          customId: ++this._customSearchIdCounter,
+        };
+        this._itemsFavourite.next([...currentItems, itemWithCustomId]);
+        this.selectedFavouriteItemIds.add(item.defindex.toString());
+        console.log(this._itemsFavourite.getValue());
+        console.log(this.selectedFavouriteItemIds);
       }
     }
   }
@@ -241,6 +266,9 @@ export class ItemSelectorFacade {
   }
   isSearchItemSelected(item: Item): boolean {
     return this.selectedSearchItemIds.has(item.defindex.toString());
+  }
+  isFavouriteItemSelected(item: Item): boolean {
+    return this.selectedFavouriteItemIds.has(item.defindex.toString());
   }
   showMaxLimitMessage() {
     this.messageService.add({

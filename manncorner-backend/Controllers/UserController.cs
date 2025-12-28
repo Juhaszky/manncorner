@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -67,6 +68,23 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest($"Error updating trade URL: {ex.Message}");
+        }
+    }
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPut]
+    [Route("{steamId}/favouriteItems")]
+    public async Task<IActionResult> SetFavouriteItems(Item[] items)
+    {
+        string userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null) return Unauthorized();
+        try
+        {
+            await _userService.SetFavoriteItemsAsync(items);
+            return Ok(new { message = "Favourite items set successfully", status = 200 });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error set favourite items: {ex.Message}");
         }
     }
 }
