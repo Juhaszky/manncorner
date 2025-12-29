@@ -6,5 +6,5 @@ public class User
     public string? Username { get; set; }
     public string? avatarPath { get; set; }
     public int XP { get; set; }
-    public List<string> FavoriteTradeIds { get; set; } = new();
+    public List<FavouriteItem> FavoriteItems { get; set; } = new();
 }

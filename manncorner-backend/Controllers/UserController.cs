@@ -73,18 +73,65 @@ public class UserController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut]
     [Route("{steamId}/favouriteItems")]
-    public async Task<IActionResult> SetFavouriteItems(Item[] items)
+    public async Task<IActionResult> SetFavouriteItems(string steamId, Item[] items)
     {
-        string userId = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null) return Unauthorized();
+        var tokenSteamId = User.FindFirst("steamId")?.Value;
+        if (string.IsNullOrEmpty(tokenSteamId))
+        {
+            return Unauthorized("Invalid token: steamId not found.");
+        }
+        if (tokenSteamId != steamId)
+        {
+            return Forbid("You are not allowed to modify another user's Favourite items.");
+        }
         try
         {
-            await _userService.SetFavoriteItemsAsync(items);
+            await _userService.SetFavoriteItemsAsync(steamId, items);
             return Ok(new { message = "Favourite items set successfully", status = 200 });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(new { error = ex.Message, status = 404 });
         }
         catch (Exception ex)
         {
-            return BadRequest($"Error set favourite items: {ex.Message}");
+            return BadRequest($"Error updating Favourite items: {ex.Message}");
+        }
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpGet]
+    [Route("{steamId}/favouriteItems")]
+    public async Task<IActionResult> GetFavouriteItems(string steamId)
+    {
+        var tokenSteamId = User.FindFirst("steamId")?.Value;
+        if (string.IsNullOrEmpty(tokenSteamId))
+        {
+            return Unauthorized("Invalid token: steamId not found.");
+        }
+
+        if (tokenSteamId != steamId)
+        {
+            return Forbid("You can only view your own favorite items.");
+        }
+
+        try
+        {
+            var favoriteItems = await _userService.GetFavoritesAsync(steamId);
+            return Ok(new
+            {
+                items = favoriteItems,
+                count = favoriteItems.Count,
+                status = 200
+            });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(new { error = ex.Message, status = 404 });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Error retrieving favorite items: {ex.Message}");
         }
     }
 }

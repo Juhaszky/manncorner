@@ -34,6 +34,9 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 import { SearchTradeService } from '../../search-trade/search-trade.service';
 import { SortService } from '../../../shared/sort.service';
 import { Button } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { ItemEditorComponent } from '../../../shared/item-editor/item-editor.component';
+import { ItemCustomizerComponent } from '../../../shared/item-customizer/item-customizer.component';
 
 @Component({
   selector: 'app-favourite-collection',
@@ -42,7 +45,10 @@ import { Button } from 'primeng/button';
     ItemContainerComponent,
     ActionBarComponent,
     ProgressSpinner,
-    Button
+    Button,
+    DialogModule,
+    ItemEditorComponent,
+    ItemCustomizerComponent
   ],
   templateUrl: './favourite-collection.component.html',
   styleUrl: './favourite-collection.component.scss',
@@ -209,4 +215,29 @@ export class FavouriteCollectionComponent implements OnInit, AfterViewInit {
         );
     });
   }
+  setFavouriteItems() {
+    this.userDataFacade.saveFavouriteItems();
+  }
+  closeOnModification(item: Item) {
+    const selectedIndex = this.selectedItems.findIndex((i) => i.id === this.customizableItem.id) ;
+    if (selectedIndex !== null && selectedIndex >= 0) {
+      this.selectedItems[selectedIndex] = { ...item };
+    }
+    this.visible = false;
+  }
+  onDialogClose() {
+    this.editorVisible = false;
+    this.visible = false;
+  }
+  handleFilterSearch(searchTerm: string) {
+    this.filterText = searchTerm;
+    this.filterSubject.next(searchTerm);
+  }
+  onCustomizeItem(item: Item) {
+    this.customizableItem = item;
+    this.customizeVisible = true;
+    this.visible = true;
+    console.log(this.visible);
+  }
+
 }

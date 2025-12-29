@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<StrangeItemStatHistory> CountersHistory { get; set; }
     public DbSet<TradeItem> Items { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<FavouriteItem> FavouriteItems { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
@@ -63,6 +64,15 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<CounterEntry>(entity =>
         {
             entity.HasNoKey();
+        });
+        modelBuilder.Entity<FavouriteItem>(entity =>
+        {
+            entity.HasOne(e => e.OwnerUser)
+              .WithMany(u => u.FavoriteItems)
+              .HasForeignKey(e => e.OwnerUserId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(e => new { e.OwnerUserId, e.Defindex });
         });
 
 
