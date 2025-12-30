@@ -223,6 +223,11 @@ export class ItemSelectorFacade {
     const newItems = currentItems.filter(i => i.id !== item.id);
     this._itemsSearchForTrade.next(newItems);
   }
+  onRemoveFavouriteItem(item: Item) {
+    const currentItems = this._itemsFavourite.getValue();
+    const newItems = currentItems.filter(i => i.id !== item.id);
+    this._itemsFavourite.next(newItems);
+  }
   onRemoveOfferItem(item: Item) {
     const currentItems = this._itemsOffer.getValue();
     const newItems = currentItems.filter(i => i.id !== item.id);

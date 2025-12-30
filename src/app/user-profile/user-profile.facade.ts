@@ -6,6 +6,7 @@ import { UserProfileService } from './user-profile.service';
 import { filter, map, switchMap } from 'rxjs';
 import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
 import { ItemSelectorFacade } from '../../shared/item-selector/item-selector.facade';
+import { Item } from '../../shared/models/item.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserProfileFacade {
@@ -37,7 +38,6 @@ export class UserProfileFacade {
               this.tradeControl.setValue(profile.tradeUrl, {
                 emitEvent: false,
               });
-
               return {
                 ...profile,
                 level,
@@ -88,16 +88,24 @@ export class UserProfileFacade {
       });
   }
 
-  saveFavouriteItems(): void {
+  saveFavouriteItems(item?: Item): void {
     this.userData$
       .pipe(
         switchMap(userData =>
           this.itemselectorFacade.itemsFavourite$.pipe(
             switchMap(items =>
-              this.userProfileService.saveFavouriteItems(
+            {
+              let filteredItems = items;
+              if (item) {
+                console.log();
+                filteredItems = items.filter((i) => i.id !== item.id);
+                this.itemselectorFacade.onRemoveFavouriteItem(item);
+              }
+              return this.userProfileService.saveFavouriteItems(
                 userData.steamid,
-                items
+                filteredItems
               )
+            }
             )
           )
         )

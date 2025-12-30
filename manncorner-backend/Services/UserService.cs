@@ -28,7 +28,7 @@ public class UserService
     }
     public async Task<User?> GetUserBySteamIdAsync(string steamId)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.SteamId == steamId);
+        return await _context.Users.Include(u => u.FavoriteItems).FirstOrDefaultAsync(u => u.SteamId == steamId);
     }
 
     public async Task SetTradeUrlAsync(string steamId, string tradeUrl)

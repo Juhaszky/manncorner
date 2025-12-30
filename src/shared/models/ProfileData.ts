@@ -1,3 +1,5 @@
+import { Item } from "./item.model";
+
 export interface ProfileData {
     level: number;
     progress: number;
@@ -7,4 +9,5 @@ export interface ProfileData {
     xp: number;
     username: string;
     avatarPath: string;
+    favoriteItems: Item[]
 }

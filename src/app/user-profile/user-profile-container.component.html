@@ -3,5 +3,6 @@
     [userData]="facade.userData$ | async "
     [chipData]="(facade.chipData$ | async) || []"
     [tradeControl]="facade.tradeControl"
-    (saveTradeUrl)="facade.saveTradeUrl()">
+    (saveTradeUrl)="facade.saveTradeUrl()"
+    (deleteFavouriteItem)="facade.saveFavouriteItems($event)">;
 </app-user-profile>

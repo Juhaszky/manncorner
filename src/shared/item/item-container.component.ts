@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { ItemComponent } from './item.component';
 import { ItemFacade } from './item.facade';
-import { TradeServiceFacade } from '../../app/add-trade/trade-service.facade';
 import { ItemSelectorFacade } from '../item-selector/item-selector.facade';
 import { Item } from '../models/item.model';
 import { ItemService } from './item.service';
@@ -32,7 +31,6 @@ export class ItemContainerComponent implements OnChanges {
   facade = inject(ItemFacade);
   itemService = inject(ItemService);
   itemSelectorFacade = inject(ItemSelectorFacade);
-  tradeFacade = inject(TradeServiceFacade);
   contextMenuService = inject(ContextMenuService);
 
   ngOnChanges(changes: SimpleChanges): void {

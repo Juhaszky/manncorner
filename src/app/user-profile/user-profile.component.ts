@@ -19,6 +19,8 @@ import { UserData } from '../../shared/models/userdata.model';
 import { HttpClient } from '@angular/common/http';
 import { StrangeItemHistoriesComponent } from './strange-item-histories/strange-item-histories.component';
 import { FavouriteCollectionComponent } from './favourite-collection/favourite-collection.component';
+import { ItemContainerComponent } from '../../shared/item/item-container.component';
+import { Item } from '../../shared/models/item.model';
 @Component({
   selector: 'app-user-profile',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +35,8 @@ import { FavouriteCollectionComponent } from './favourite-collection/favourite-c
     FormsModule,
     ReactiveFormsModule,
     StrangeItemHistoriesComponent,
-    FavouriteCollectionComponent
+    FavouriteCollectionComponent,
+    ItemContainerComponent
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
@@ -45,9 +48,13 @@ export class UserProfileComponent {
   @Input() tradeControl!: FormControl;
 
   @Output() saveTradeUrl = new EventEmitter<void>();
+  @Output() deleteFavouriteItem = new EventEmitter<Item>();
   http = inject(HttpClient);
 
   openLink(url: string): void {
     window.open(url, '_blank');
+  }
+  removeItem(item: Item) {
+    this.deleteFavouriteItem.emit(item);
   }
 }

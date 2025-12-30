@@ -4,12 +4,15 @@ import { map, Observable, pluck } from 'rxjs';
 import { ProfileData } from '../../shared/models/ProfileData';
 import { environment } from '../../environments/environment.development';
 import { Item } from '../../shared/models/item.model';
+import { UserDataService } from '../../shared/user-data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserProfileService {
   httpClient = inject(HttpClient);
+  userDataService = inject(UserDataService);
+
   saveTradeUrl(steamId: string, tradeUrl: string): Observable<string> {
     const url = `${environment.API_URL}/api/user/${steamId}/tradeurl`;
     const params = { tradeUrl };
