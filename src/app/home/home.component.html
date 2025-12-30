@@ -1,7 +1,7 @@
-<div class="container flex flex-col w-full relative h-94 mb-2" *ngIf="!loading">
+<div class="container flex flex-col w-full relative h-94 mb-2 p-2 md:p-0" >
   <p-card
     class="trade mt-3 p-3 sm:w-3/4 w-full last:mb-5 hover:cursor-pointer overflow-auto flex-grow col-main-card tf2-trade-card last:mb-2"
-    *ngFor="let trade of trades; trackBy: trackByFn"
+    *ngFor="let trade of trades$ | async; trackBy: trackByFn"
     (click)="selectTrade(trade.id)"
     (keydown)="selectTrade(trade.id)"
     tabindex="0">
@@ -58,14 +58,5 @@
       </div>
     </div>
   </p-card>
-  <div class="paginator-wrapper">
-    <p-paginator
-      [first]="first"
-      [rows]="rows"
-      [totalRecords]="allPage"
-      [showCurrentPageReport]="true"
-      (onPageChange)="onPageChange($event)">
-    </p-paginator>
-  </div>
+
 </div>
-<app-loading-spinner [isLoading]="loading"></app-loading-spinner>

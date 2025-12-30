@@ -10,9 +10,13 @@
 
 .col-main-card {
     --p-card-shadow: 0 !important;
-    margin-left: 1em;
     border-radius: 1em;
     border: 1px solid rgb(128, 128, 128, 0.5);
+}
+@media only screen and (min-width: 600px) {
+  .col-main-card {
+    margin-left: 1em;
+  }
 }
 
 .container {

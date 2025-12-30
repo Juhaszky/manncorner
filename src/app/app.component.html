@@ -8,7 +8,16 @@
       <router-outlet></router-outlet>
       <p-toast position="bottom-right" />
     </div>
-
+    <div class="paginator-wrapper" *ngIf="activatedRoute.snapshot.firstChild?.routeConfig?.path === 'home'">
+      <app-loading-spinner ></app-loading-spinner>
+      <p-paginator
+        [first]="(first$ | async) ?? 0"
+        [rows]="rows"
+        [totalRecords]="(totalRecords$ | async) ?? 0"
+        [showCurrentPageReport]="true"
+        (onPageChange)="onPageChange($event)">
+      </p-paginator>
+    </div>
     <footer class="bg-white border-t border-gray-200 py-2.5 dark:bg-gray-900 dark:border-gray-700">
   <div
     class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
@@ -50,6 +59,7 @@
     </div>
   </div>
 </footer>
+
 
   </div>
 

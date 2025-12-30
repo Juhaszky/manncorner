@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PostDatePipe } from './post-date.pipe';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TradeService } from './trade.service';
-import { catchError } from 'rxjs/operators';
 import { ItemContainerComponent } from '../../shared/item/item-container.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { TooltipModule } from 'primeng/tooltip';
@@ -16,6 +14,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { DescrpitionComponent } from '../../shared/descrpition/descrpition.component';
 import { displayableTrade } from '../../shared/models/displayableTrade.model';
 import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
+import { TradesStateService } from '../../shared/trades-state.service';
 
 
 @Component({
@@ -53,64 +52,18 @@ export class HomeComponent implements OnInit {
   tradeService = inject(TradeService);
   userService = inject(UserDataService);
   canBump = false;
+  trades$ = inject(TradesStateService).trades$;
 
   ngOnInit(): void {
+    //TODO fix page param in url
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       this.page = params['page'] ? +params['page'] : 1;
       this.first = (this.page - 1) * this.rows;
-      this.loadTrades(this.page);
     });
-  }
-
-  private loadTrades(page: number): void {
-    this.loading = true;
-    this.tradeService
-      .loadTrades(page)
-      .pipe(
-        map(trades => {
-          this.allPage = trades.totalCount;
-          return trades.trades.map(trade => {
-            const itemsForSale = trade.items.filter(i => i.isSelling === true);
-            const itemsToBuy = trade.items.filter(i => i.isSelling === false);
-            return {
-              itemsToSell: itemsForSale,
-              itemsToBuy: itemsToBuy,
-              avatarPath: trade.avatarPath,
-              id: trade.id,
-              username: trade.username,
-              createdAt: trade.createdAt,
-              bumpedAt: trade.bumpDate,
-              description: trade.description
-            };
-          });
-        }),
-        catchError(err => {
-          this.loading = false;
-          this.cdr.detectChanges();
-          console.log(err);
-          return [];
-        })
-      )
-      .subscribe(tradesTransformed => {
-        this.trades = tradesTransformed;
-        this.cdr.detectChanges();
-        this.loading = false;
-      });
   }
 
   selectTrade(tradeId: string): void {
     this.router.navigate(['/trade', tradeId]);
-  }
-  onPageChange(event: {
-    first?: number;
-    rows?: number;
-    page?: number;
-    pageCount?: number;
-  }) {
-    this.first = event.first ?? 0;
-    const rows = event.rows ?? this.rows;
-    this.page = Math.floor((event.first ?? 0) / rows) + 1;
-    this.loadTrades((event.page ?? 0) + 1);
   }
   onBump(tradeId: string, event: MouseEvent) {
     event.preventDefault();
