@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { combineLatest, first, map, take } from 'rxjs';
+import { combineLatest, first, map, switchMap, take } from 'rxjs';
 import { ItemSelectorService } from '../../shared/item-selector.service';
 import { TradeService } from '../home/trade.service';
 import { ActionBarComponent } from './action-bar/action-bar.component';
@@ -21,6 +21,7 @@ import { UserDataService } from '../../shared/user-data.service';
 import { UserProfileService } from '../user-profile/user-profile.service';
 import { MessageService } from 'primeng/api';
 import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
+import { TradesStateService } from '../../shared/trades-state.service';
 
 @Component({
   standalone: true,
@@ -45,6 +46,7 @@ export class AddTradeComponent implements OnInit {
   userFacade = inject(UserProfileFacade);
   userDataService = inject(UserDataService);
   addTradeService = inject(AddTradeService);
+  tradeStateService = inject(TradesStateService)
   messageService = inject(MessageService);
   filterText = '';
   tradeDescription = '';
@@ -92,8 +94,8 @@ export class AddTradeComponent implements OnInit {
           this.filterText = filterText;
           const filtered = filterText
             ? items.filter(i =>
-                i.fullName.toLowerCase().includes(filterText.toLowerCase())
-              )
+              i.fullName.toLowerCase().includes(filterText.toLowerCase())
+            )
             : [...items];
 
           return this.sortService.sortItems(filtered, sortCriteria);
@@ -144,14 +146,31 @@ export class AddTradeComponent implements OnInit {
           username: userData.personaname,
         };
 
-        this.tradeService.postTrade(tradePayload).subscribe({
-          next: () => {
+        this.tradeService.postTrade(tradePayload).pipe(
+          switchMap(createdTrade =>
+            this.tradeStateService.trades$.pipe(
+              take(1),
+              map(trades => ({ trades, createdTrade }))
+            )
+          )
+        ).subscribe({
+          next: ({ trades, createdTrade }) => {
             this.emptySelectedItems();
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
               detail: ErrorMessage.ADD_TRADE_SUCCESS,
             });
+            const newTrade = {
+              ...createdTrade,
+              bumpedAt: new Date(),
+              itemsToSell: itemsToTrade,
+              itemsToBuy: itemsForTrade,
+            };
+            this.tradeStateService.setTrades(
+              [newTrade, ...trades],
+              trades.length + 1
+            );
           },
           error: err => {
             this.messageService.add({
