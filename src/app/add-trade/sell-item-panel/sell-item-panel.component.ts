@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, OnInit } from '@angular/core';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -9,7 +9,7 @@ import { first } from 'rxjs';
 
 @Component({
   selector: 'app-sell-item-panel',
-  imports: [CommonModule, ItemContainerComponent, ProgressSpinnerModule],
+  imports: [ItemContainerComponent, ProgressSpinnerModule],
   templateUrl: './sell-item-panel.component.html',
   styleUrl: './sell-item-panel.component.scss',
 })

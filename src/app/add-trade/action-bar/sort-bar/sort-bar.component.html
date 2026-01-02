@@ -15,15 +15,19 @@
         (mouseenter)="qualitySubmenuVisible = true"
         (mouseleave)="qualitySubmenuVisible = false">
         Quality
-        <div class="submenu" *ngIf="qualitySubmenuVisible">
-          <div *ngFor="let option of qualityOptions" class="submenu-item">
-            <p-checkbox
-              [inputId]="option.label"
-              binary="true"
-              (onChange)="onQualityChange(option, $event)"></p-checkbox>
-            <label [for]="option.label">{{ option.label }}</label>
+        @if (qualitySubmenuVisible) {
+          <div class="submenu">
+            @for (option of qualityOptions; track option) {
+              <div class="submenu-item">
+                <p-checkbox
+                  [inputId]="option.label"
+                  binary="true"
+                (onChange)="onQualityChange(option, $event)"></p-checkbox>
+                <label [for]="option.label">{{ option.label }}</label>
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
 
       <div
@@ -31,15 +35,19 @@
         (mouseenter)="classSubmenuVisible = true"
         (mouseleave)="classSubmenuVisible = false">
         Class
-        <div class="submenu" *ngIf="classSubmenuVisible">
-          <div *ngFor="let option of classOptions" class="submenu-item">
-            <p-checkbox
-              [inputId]="option.label"
-              binary="true"
-              (onChange)="onClassChange(option, $event)"></p-checkbox>
-            <label [for]="option.label">{{ option.label }}</label>
+        @if (classSubmenuVisible) {
+          <div class="submenu">
+            @for (option of classOptions; track option) {
+              <div class="submenu-item">
+                <p-checkbox
+                  [inputId]="option.label"
+                  binary="true"
+                (onChange)="onClassChange(option, $event)"></p-checkbox>
+                <label [for]="option.label">{{ option.label }}</label>
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
     </div>
   </p-popover>

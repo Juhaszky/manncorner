@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TradeService } from '../trade.service';
-import { CommonModule } from '@angular/common';
+
 import { catchError, of, switchMap } from 'rxjs';
 import { DescrpitionComponent } from '../../../shared/descrpition/descrpition.component';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
@@ -15,16 +15,12 @@ import { AvatarModule } from 'primeng/avatar';
   standalone: true,
   selector: 'app-trade',
   imports: [
-    CommonModule,
     ItemContainerComponent,
     DescrpitionComponent,
     CommentsComponent,
     AvatarModule,
     RouterLink
-    // InventoryItemsSelectorComponent,
-    // OfferItemPanelComponent,
-    // OfferItemSelectorComponent
-  ],
+],
   templateUrl: './trade.component.html',
   styleUrl: './trade.component.scss',
 })

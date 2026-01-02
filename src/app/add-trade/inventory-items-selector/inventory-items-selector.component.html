@@ -5,17 +5,23 @@
 
   <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
 
-    <div *ngFor="let item of items; trackBy: trackByFn" class="w-24">
-      <app-item-container 
-        [item]="item"
-        [disabled]="isItemDisabled(item)"
-        (selectEmitter)="itemSelectorFacade.onAddItem(item)"
-        (click)="onItemSelect(item)">
-      </app-item-container>
-    </div>
-    <div *ngIf="items.length === 0">You have no items</div>
-    <div *ngIf="itemSelectorFacade.loading" class="flex justify-center items-center w-full mt-4">
-      <p-progress-spinner ariaLabel="Loading" styleClass="custom-spinner"></p-progress-spinner>
-    </div>
+    @for (item of items; track trackByFn($index, item)) {
+      <div class="w-24">
+        <app-item-container
+          [item]="item"
+          [disabled]="isItemDisabled(item)"
+          (selectEmitter)="itemSelectorFacade.onAddItem(item)"
+          (click)="onItemSelect(item)">
+        </app-item-container>
+      </div>
+    }
+    @if (items.length === 0) {
+      <div>You have no items</div>
+    }
+    @if (itemSelectorFacade.loading) {
+      <div class="flex justify-center items-center w-full mt-4">
+        <p-progress-spinner ariaLabel="Loading" styleClass="custom-spinner"></p-progress-spinner>
+      </div>
+    }
   </div>
 </div>

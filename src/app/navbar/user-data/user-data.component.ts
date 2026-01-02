@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { UserData } from '../../../shared/models/userdata.model';
-import { CommonModule } from '@angular/common';
+
 import { UserDataService } from '../../../shared/user-data.service';
 import { AuthService } from '../../auth.service';
 import { RouterModule } from '@angular/router';
@@ -16,7 +16,7 @@ export interface Players {
 @Component({
   standalone: true,
   selector: 'app-user-data',
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   templateUrl: './user-data.component.html',
   styleUrl: './user-data.component.scss',
 })

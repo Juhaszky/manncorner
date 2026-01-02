@@ -4,13 +4,15 @@
       <div
         class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full">
         <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
-          <div *ngFor="let item of itemsFrom" class="w-24">
-            <app-item-container 
-              [item]="item" 
-              [canDelete]="true" 
-              (removeEmitter)="itemSelectorFacade.onRemoveEditItem(item)">
-            </app-item-container>
-          </div>
+          @for (item of itemsFrom; track item) {
+            <div class="w-24">
+              <app-item-container
+                [item]="item"
+                [canDelete]="true"
+                (removeEmitter)="itemSelectorFacade.onRemoveEditItem(item)">
+              </app-item-container>
+            </div>
+          }
         </div>
       </div>
     </div>
@@ -20,106 +22,112 @@
         class="h-24 mt-4 hidden sm:block"
         src="/assets/images/arrow-right-01-512.webp"
         alt="Arrow" />
-      <img
-        class="h-24 sm:mt-4 mt-0 block sm:hidden"
-        src="/assets/images/Down-Arrow-PNG-Image.png"
-        alt="Arrow for Mobile" />
-      <div class="flex">
-        <div class="sm:block hidden">
-          <p-button (onClick)="updateTrade()"> Update Trade </p-button>
-        </div>
-      </div>
-    </div>
-    <div
-      class="col-card inventory-box flex flex-wrap flex-row items-start gap-2"
->
-      <div
-        class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20 border border-slate-700"
-        pTooltip="Add items..."
-        tooltipPosition="bottom"
-        (click)="onOpenItemEditor()"
-        tabindex="0"
-        (keydown)="onOpenItemEditor()">
-        <img src="/assets/images/8333955.png" alt="" class="w-full h-full" />
-      </div>
-      <div class="flex flex-row flex-wrap gap-2" >
-        <div *ngFor="let item of selectedItems" class="w-24">
-          <app-item-container
-            [item]="item"
-            [canDelete]="true"
-            [canModify]="true"
-            [showQuantity]="true"
-            (customizeEmitter)="onCustomizeItem(item)"
-            (removeEmitter)="onRemoveItem(item)">
-          </app-item-container>
-        </div>
-      </div>
-    </div>
-    <!-- <div class="col-card mb-3 p-1">
-        
-      <div class="inventory-box">
-        <div
-          class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full">
-          <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
-            <div *ngFor="let item of tradeData?.itemsTo" class="w-24">
-              <app-item-container [item]="item" [canDelete]="true">
-              </app-item-container>
+        <img
+          class="h-24 sm:mt-4 mt-0 block sm:hidden"
+          src="/assets/images/Down-Arrow-PNG-Image.png"
+          alt="Arrow for Mobile" />
+          <div class="flex">
+            <div class="sm:block hidden">
+              <p-button (onClick)="updateTrade()"> Update Trade </p-button>
             </div>
           </div>
         </div>
+        <div
+          class="col-card inventory-box flex flex-wrap flex-row items-start gap-2"
+          >
+          <div
+            class="item-box p-2 m-2 sm:h-24 sm:w-24 h-20 border border-slate-700"
+            pTooltip="Add items..."
+            tooltipPosition="bottom"
+            (click)="onOpenItemEditor()"
+            tabindex="0"
+            (keydown)="onOpenItemEditor()">
+            <img src="/assets/images/8333955.png" alt="" class="w-full h-full" />
+          </div>
+          <div class="flex flex-row flex-wrap gap-2" >
+            @for (item of selectedItems; track item) {
+              <div class="w-24">
+                <app-item-container
+                  [item]="item"
+                  [canDelete]="true"
+                  [canModify]="true"
+                  [showQuantity]="true"
+                  (customizeEmitter)="onCustomizeItem(item)"
+                  (removeEmitter)="onRemoveItem(item)">
+                </app-item-container>
+              </div>
+            }
+          </div>
+        </div>
+        <!-- <div class="col-card mb-3 p-1">
+
+        <div class="inventory-box">
+          <div
+            class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full">
+            <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
+              <div *ngFor="let item of tradeData?.itemsTo" class="w-24">
+                <app-item-container [item]="item" [canDelete]="true">
+                </app-item-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="flex justify-center">
+      <div class="sm:hidden">
+        <p-button (onClick)="updateTrade()"> Update Trade </p-button>
       </div>
-    </div> -->
-  </div>
-  <div class="flex justify-center">
-    <div class="sm:hidden">
-      <p-button (onClick)="updateTrade()"> Update Trade </p-button>
     </div>
-  </div>
-  <div class="row mt-4">
-    <div class="grid-cols-6">
-      <h2 [style.color]="'white'">Your backpack:</h2>
-    </div>
-    <div class="flex flex-row-reverse p-2">
-      <app-action-bar [type]="'edit-trade'"></app-action-bar>
-    </div>
-    <!-- <div class="col-card mb-3 p-1"> -->
+    <div class="row mt-4">
+      <div class="grid-cols-6">
+        <h2 [style.color]="'white'">Your backpack:</h2>
+      </div>
+      <div class="flex flex-row-reverse p-2">
+        <app-action-bar [type]="'edit-trade'"></app-action-bar>
+      </div>
+      <!-- <div class="col-card mb-3 p-1"> -->
       <div
-  class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
-  #inventorySelector>
+        class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
+        #inventorySelector>
 
-  <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
+        <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
 
-    <div *ngFor="let item of inventoryItems" class="w-24">
-      <app-item-container 
-        [item]="item"
-        [disabled]="isItemDisabled(item)"
-        (selectEmitter)="itemSelectorFacade.onAddEditItem(item)"
-        (click)="onItemSelect(item)">
-      </app-item-container>
+          @for (item of inventoryItems; track item) {
+            <div class="w-24">
+              <app-item-container
+                [item]="item"
+                [disabled]="isItemDisabled(item)"
+                (selectEmitter)="itemSelectorFacade.onAddEditItem(item)"
+                (click)="onItemSelect(item)">
+              </app-item-container>
+            </div>
+          }
+          <!-- <div *ngIf="itemSelectorFacade.loading" class="flex justify-center items-center w-full mt-4">
+          <p-progress-spinner ariaLabel="Loading" styleClass="custom-spinner"></p-progress-spinner>
+        </div> -->
+      </div>
     </div>
-    <!-- <div *ngIf="itemSelectorFacade.loading" class="flex justify-center items-center w-full mt-4">
-      <p-progress-spinner ariaLabel="Loading" styleClass="custom-spinner"></p-progress-spinner>
-    </div> -->
-  </div>
+    <!-- <app-inventory-items-selector [mode]="'inventory'" [filter]="filterText">
+  </app-inventory-items-selector> -->
+<!-- </div> -->
 </div>
-      <!-- <app-inventory-items-selector [mode]="'inventory'" [filter]="filterText">
-      </app-inventory-items-selector> -->
-    <!-- </div> -->
-  </div>
-  <descrpition [html]="tradeData?.description ?? ''" [canEdit]="true" > </descrpition>
+<descrpition [html]="tradeData?.description ?? ''" [canEdit]="true" > </descrpition>
 </div>
-<p-dialog 
+<p-dialog
   header="Customize Item"
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '80%', height: '80%' }">
 
-  <app-item-editor *ngIf="editorVisible" 
-    [options]="allItems" 
-    (filterSearch)="handleFilterSearch($event)"
-    (closeDialog)="onDialogClose()"
-    (confirmSelecion)="itemSelectorFacade.onAddEditDefaultItem($event)">
-  </app-item-editor>
+  @if (editorVisible) {
+    <app-item-editor
+      [options]="allItems"
+      (filterSearch)="handleFilterSearch($event)"
+      (closeDialog)="onDialogClose()"
+      (confirmSelecion)="itemSelectorFacade.onAddEditDefaultItem($event)">
+    </app-item-editor>
+  }
   <item-customizer
     (itemModified)="closeOnModification()"
     [details]="customizableItem">

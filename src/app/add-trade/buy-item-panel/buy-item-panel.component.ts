@@ -3,7 +3,7 @@ import { ItemSelectorFacade } from '../../../shared/item-selector/item-selector.
 import { DialogModule } from 'primeng/dialog';
 import { ItemEditorComponent } from '../../../shared/item-editor/item-editor.component';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
-import { CommonModule } from '@angular/common';
+
 import { Item } from '../../../shared/models/item.model';
 import { TooltipModule } from 'primeng/tooltip';
 import { HttpClient } from '@angular/common/http';
@@ -19,9 +19,8 @@ import { environment } from '../../../environments/environment.development';
     ItemEditorComponent,
     ItemCustomizerComponent,
     ItemContainerComponent,
-    CommonModule,
-    TooltipModule,
-  ],
+    TooltipModule
+],
   templateUrl: './buy-item-panel.component.html',
   styleUrl: './buy-item-panel.component.scss',
 })

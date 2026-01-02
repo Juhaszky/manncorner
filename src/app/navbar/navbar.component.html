@@ -10,7 +10,9 @@
 
     <div class="flex items-center lg:order-2">
       <div class="max-[1024px]:hidden cursor-pointer">
-        <app-user-data *ngIf="isLoggedIn"></app-user-data>
+        @if (isLoggedIn) {
+          <app-user-data></app-user-data>
+        }
       </div>
 
       <div class="min-[1024px]:hidden">
@@ -52,19 +54,20 @@
           </a>
         </li>
         <!-- <li>
-          <a routerLink="/contact" routerLinkActive="dark:text-white" class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">
-            Contact
-          </a>
-        </li> -->
+        <a routerLink="/contact" routerLinkActive="dark:text-white" class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">
+          Contact
+        </a>
+      </li> -->
+      <li>
+        <a
+          routerLink="/add-trade"
+          routerLinkActive="dark:text-white"
+          class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">
+          Add trade +
+        </a>
+      </li>
+      @if (!isLoggedIn) {
         <li>
-          <a
-            routerLink="/add-trade"
-            routerLinkActive="dark:text-white"
-            class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">
-            Add trade +
-          </a>
-        </li>
-        <li *ngIf="!isLoggedIn">
           <a
             href="http://localhost:5268/auth/Login"
             routerLinkActive="dark:text-white"
@@ -72,15 +75,18 @@
             <img src="/assets/steam_login_btn.png" alt="" />
           </a>
         </li>
+      }
 
-        <li *ngIf="isLoggedIn" class="flex justify-center gap-2">
+      @if (isLoggedIn) {
+        <li class="flex justify-center gap-2">
           <button
             (click)="handleLogout()"
             class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-purple-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">
             Logout
           </button>
         </li>
-      </ul>
-    </div>
+      }
+    </ul>
   </div>
+</div>
 </nav>

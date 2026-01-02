@@ -16,35 +16,39 @@
         </p-selectButton>
       </div>
     </div>
-    <div class="w-full mt-6" *ngIf="killstreakFormGroup.killstreak.value === 2">
-      <h3>Sheen</h3>
-      <p-selectButton
-        [options]="sheens"
-        [formControl]="killstreakFormGroup.sheen"
-        multiple="false"
-        ariaLabel="Color selection"
-        class="w-full flex flex-wrap"
-        [ngClass]="{ 'chip-container': true }"
-        [style.flexWrap]="'wrap'">
-        <ng-template let-sheen>
-          <span>{{ sheen }}</span>
-        </ng-template>
-      </p-selectButton>
-    </div>
-    <div class="w-full mt-6" *ngIf="killstreakFormGroup.killstreak.value === 3">
-      <h3>Killstreakers</h3>
-      <p-selectButton
-        [options]="killstreakers"
-        [formControl]="killstreakFormGroup.killstreaker"
-        multiple="false"
-        ariaLabel="Color selection"
-        class="w-full flex flex-wrap"
-        [ngClass]="{ 'chip-container': true }"
-        [style.flexWrap]="'wrap'">
-        <ng-template let-killstreaker>
-          <span>{{ killstreaker }}</span>
-        </ng-template>
-      </p-selectButton>
-    </div>
+    @if (killstreakFormGroup.killstreak.value === 2) {
+      <div class="w-full mt-6">
+        <h3>Sheen</h3>
+        <p-selectButton
+          [options]="sheens"
+          [formControl]="killstreakFormGroup.sheen"
+          multiple="false"
+          ariaLabel="Color selection"
+          class="w-full flex flex-wrap"
+          [ngClass]="{ 'chip-container': true }"
+          [style.flexWrap]="'wrap'">
+          <ng-template let-sheen>
+            <span>{{ sheen }}</span>
+          </ng-template>
+        </p-selectButton>
+      </div>
+    }
+    @if (killstreakFormGroup.killstreak.value === 3) {
+      <div class="w-full mt-6">
+        <h3>Killstreakers</h3>
+        <p-selectButton
+          [options]="killstreakers"
+          [formControl]="killstreakFormGroup.killstreaker"
+          multiple="false"
+          ariaLabel="Color selection"
+          class="w-full flex flex-wrap"
+          [ngClass]="{ 'chip-container': true }"
+          [style.flexWrap]="'wrap'">
+          <ng-template let-killstreaker>
+            <span>{{ killstreaker }}</span>
+          </ng-template>
+        </p-selectButton>
+      </div>
+    }
   </div>
 </div>

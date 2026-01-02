@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   AfterViewInit,
   Component,
@@ -35,7 +35,7 @@ import { environment } from '../../../environments/environment.development';
 @Component({
   standalone: true,
   selector: 'app-inventory-items-selector',
-  imports: [CommonModule, ItemContainerComponent, ProgressSpinnerModule],
+  imports: [ItemContainerComponent, ProgressSpinnerModule],
   templateUrl: './inventory-items-selector.component.html',
   styleUrl: './inventory-items-selector.component.scss',
 })

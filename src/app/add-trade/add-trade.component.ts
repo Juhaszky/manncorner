@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { combineLatest, first, map, switchMap, take } from 'rxjs';
@@ -27,7 +27,6 @@ import { TradesStateService } from '../../shared/trades-state.service';
   standalone: true,
   selector: 'app-dashboard',
   imports: [
-    CommonModule,
     ActionBarComponent,
     FormsModule,
     DescrpitionComponent,
@@ -35,8 +34,8 @@ import { TradesStateService } from '../../shared/trades-state.service';
     ButtonModule,
     InventoryItemsSelectorComponent,
     BuyItemPanelComponent,
-    SellItemPanelComponent,
-  ],
+    SellItemPanelComponent
+],
   providers: [HttpClient, DialogService],
   templateUrl: './add-trade.component.html',
   styleUrl: './add-trade.component.scss',

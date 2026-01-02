@@ -1,10 +1,10 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { Component, inject, Input, OnInit, PLATFORM_ID } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 
 @Component({
   selector: 'app-history-chart',
-  imports: [ChartModule, CommonModule],
+  imports: [ChartModule],
   templateUrl: './history-chart.component.html',
   styleUrl: './history-chart.component.scss',
 })

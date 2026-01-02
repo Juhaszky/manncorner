@@ -1,5 +1,6 @@
-<div
-  *ngIf="isLoading"
-  class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center z-50">
-  <p-progress-spinner ariaLabel="loading" />
-</div>
+@if (isLoading) {
+  <div
+    class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center z-50">
+    <p-progress-spinner ariaLabel="loading" />
+  </div>
+}

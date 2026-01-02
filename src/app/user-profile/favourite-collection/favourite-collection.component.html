@@ -1,15 +1,17 @@
 <div class="row mt-4">
-    <p-button (onClick)="setFavouriteItems()">Set favourite</p-button>
+  <p-button (onClick)="setFavouriteItems()">Set favourite</p-button>
   <div class="flex flex-row flex-wrap gap-2">
-    <div *ngFor="let item of selectedItems; trackBy: trackByFn" class="w-24">
-      <app-item-container
-        [item]="item"
-        [canDelete]="true"
-        [canModify]="true"
-        (customizeEmitter)="onCustomizeItem(item)"
-        [showQuantity]="true">
-      </app-item-container>
-    </div>
+    @for (item of selectedItems; track trackByFn($index, item)) {
+      <div class="w-24">
+        <app-item-container
+          [item]="item"
+          [canDelete]="true"
+          [canModify]="true"
+          (customizeEmitter)="onCustomizeItem(item)"
+          [showQuantity]="true">
+        </app-item-container>
+      </div>
+    }
   </div>
 </div>
 <div class="row mt-4">
@@ -21,41 +23,45 @@
     class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
     #inventorySelector>
     <div class="flex flex-row flex-wrap w-full justify-center gap-2 p-2">
-      <div
-        *ngFor="let item of baseInventoryItems; trackBy: trackByFn"
-        class="w-24">
-        <app-item-container
-          [item]="item"
-          [disabled]="isItemDisabled(item)"
-          (selectEmitter)="itemSelectorFacade.onAddFavouriteItem(item)"
-          (click)="onItemSelect(item)">
-        </app-item-container>
-      </div>
-      <div
-        *ngIf="isLoading"
-        class="flex justify-center items-center w-full mt-4">
-        <p-progress-spinner
-          ariaLabel="Loading"
+      @for (item of baseInventoryItems; track trackByFn($index, item)) {
+        <div
+          class="w-24">
+          <app-item-container
+            [item]="item"
+            [disabled]="isItemDisabled(item)"
+            (selectEmitter)="itemSelectorFacade.onAddFavouriteItem(item)"
+            (click)="onItemSelect(item)">
+          </app-item-container>
+        </div>
+      }
+      @if (isLoading) {
+        <div
+          class="flex justify-center items-center w-full mt-4">
+          <p-progress-spinner
+            ariaLabel="Loading"
           styleClass="custom-spinner"></p-progress-spinner>
-      </div>
+        </div>
+      }
     </div>
   </div>
   <!-- <app-inventory-items-selector [mode]="'inventory'" [filter]="filterText">
-      </app-inventory-items-selector> -->
-  <!-- </div> -->
+</app-inventory-items-selector> -->
+<!-- </div> -->
 </div>
-<p-dialog 
+<p-dialog
   header="Customize Item"
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '80%', height: '80%' }">
 
-  <app-item-editor *ngIf="editorVisible" 
-    [options]="allItems"
-    (filterSearch)="handleFilterSearch($event)"
-    (confirmSelecion)="this.itemSelectorFacade.onAddSearchDefaultItem($event)"
-    (closeDialog)="onDialogClose()">
-  </app-item-editor>
+  @if (editorVisible) {
+    <app-item-editor
+      [options]="allItems"
+      (filterSearch)="handleFilterSearch($event)"
+      (confirmSelecion)="this.itemSelectorFacade.onAddSearchDefaultItem($event)"
+      (closeDialog)="onDialogClose()">
+    </app-item-editor>
+  }
   <item-customizer
     (itemModified)="closeOnModification($event)"
     [details]="customizableItem">

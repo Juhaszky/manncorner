@@ -2,13 +2,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { UserDataComponent } from '../user-data/user-data.component';
 import { Router, RouterModule } from '@angular/router';
 import { DrawerModule } from 'primeng/drawer';
-import { CommonModule } from '@angular/common';
+
 import { AuthService } from '../../auth.service';
 
 @Component({
   standalone: true,
   selector: 'app-mobile-nav',
-  imports: [UserDataComponent, RouterModule, DrawerModule, CommonModule],
+  imports: [UserDataComponent, RouterModule, DrawerModule],
   templateUrl: './mobile-nav.component.html',
   styleUrl: './mobile-nav.component.scss',
 })

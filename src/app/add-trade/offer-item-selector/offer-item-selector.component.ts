@@ -23,7 +23,7 @@ import { ItemSelectorFacade } from '../../../shared/item-selector/item-selector.
 import { Item } from '../../../shared/models/item.model';
 import { SortService } from '../../../shared/sort.service';
 import { UserProfileFacade } from '../../user-profile/user-profile.facade';
-import { CommonModule } from '@angular/common';
+
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { OfferItemService } from './offer-item.service';
@@ -32,7 +32,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-offer-item-selector',
-  imports: [CommonModule, ItemContainerComponent, ProgressSpinner],
+  imports: [ItemContainerComponent, ProgressSpinner],
   templateUrl: './offer-item-selector.component.html',
   styleUrl: './offer-item-selector.component.scss',
 })

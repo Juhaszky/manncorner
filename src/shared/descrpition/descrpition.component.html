@@ -1,16 +1,19 @@
 <div class="row my-4 text-bold text-base antialiased">
-  <div class="grid-cols-6" *ngIf="showTitle">
-    <h2 class="text-white">Trade Description</h2>
-  </div>
-  <div class="col-card p-2 rounded-md text-slate-300">
-    <div *ngIf="canEdit; else descnoheader">
-      <p-editor
-        [(ngModel)]="html"
-        (onTextChange)="onChange($event)"
-        [style]="{ height: '320px' }" />
+  @if (showTitle) {
+    <div class="grid-cols-6">
+      <h2 class="text-white">Trade Description</h2>
     </div>
-    <ng-template #descnoheader>
-      <div class="max-w-52" [innerHTML]="safeHtml"></div>
-    </ng-template>
+  }
+  <div class="col-card p-2 rounded-md text-slate-300">
+    @if (canEdit) {
+      <div>
+        <p-editor
+          [(ngModel)]="html"
+          (onTextChange)="onChange($event)"
+          [style]="{ height: '320px' }" />
+        </div>
+      } @else {
+        <div class="max-w-52" [innerHTML]="safeHtml"></div>
+      }
+    </div>
   </div>
-</div>

@@ -7,7 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActionBarComponent } from '../../add-trade/action-bar/action-bar.component';
-import { CommonModule } from '@angular/common';
+
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
 import { Item } from '../../../shared/models/item.model';
 import { UserProfileFacade } from '../user-profile.facade';
@@ -41,7 +41,6 @@ import { ItemCustomizerComponent } from '../../../shared/item-customizer/item-cu
 @Component({
   selector: 'app-favourite-collection',
   imports: [
-    CommonModule,
     ItemContainerComponent,
     ActionBarComponent,
     ProgressSpinner,
@@ -49,7 +48,7 @@ import { ItemCustomizerComponent } from '../../../shared/item-customizer/item-cu
     DialogModule,
     ItemEditorComponent,
     ItemCustomizerComponent
-  ],
+],
   templateUrl: './favourite-collection.component.html',
   styleUrl: './favourite-collection.component.scss',
 })

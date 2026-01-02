@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ItemCustomizerComponent } from '../../item-customizer/item-customizer.component';
 import { DialogModule } from 'primeng/dialog';
@@ -10,7 +10,7 @@ import { ItemSelectorFacade } from '../../item-selector/item-selector.facade';
 @Component({
   standalone: true,
   selector: 'item-list-view',
-  imports: [CommonModule, DialogModule, ItemCustomizerComponent],
+  imports: [DialogModule, ItemCustomizerComponent],
   templateUrl: './item-list-view.component.html',
   styleUrl: './item-list-view.component.scss',
 })

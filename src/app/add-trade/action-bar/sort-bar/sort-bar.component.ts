@@ -5,12 +5,12 @@ import { MenuModule } from 'primeng/menu';
 import { SortCriteria } from '../../../../shared/models/enums/sort.enum';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { Checkbox } from 'primeng/checkbox';
-import { CommonModule } from '@angular/common';
+
 import { ItemExtrasService } from '../../../../shared/item-extras.service';
 
 @Component({
   standalone: true,
-  imports: [MenuModule, PopoverModule, Checkbox, CommonModule],
+  imports: [MenuModule, PopoverModule, Checkbox],
   selector: 'sort-bar',
   templateUrl: './sort-bar.component.html',
   styleUrl: './sort-bar.component.scss',

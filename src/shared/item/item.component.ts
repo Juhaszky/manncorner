@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { ResizedImageComponent } from '../resized-image/resized-image.component';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { Item } from '../models/item.model';
@@ -19,11 +19,10 @@ import { ContextMenuModule } from 'primeng/contextmenu';
   selector: 'app-item',
   imports: [
     ResizedImageComponent,
-    CommonModule,
     RouterModule,
     TooltipModule,
-    ContextMenuModule,
-  ],
+    ContextMenuModule
+],
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss',
 })

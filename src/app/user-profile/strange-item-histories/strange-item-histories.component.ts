@@ -8,7 +8,7 @@ import {
   StrangeItemStatWithItemDto,
 } from '../../../shared/models/strangeItemStatHistory.model';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { map } from 'rxjs';
 import { HistoryChartComponent } from './history-chart/history-chart.component';
 
@@ -18,9 +18,8 @@ import { HistoryChartComponent } from './history-chart/history-chart.component';
     SideBarComponent,
     ReactiveFormsModule,
     FormsModule,
-    CommonModule,
-    HistoryChartComponent,
-  ],
+    HistoryChartComponent
+],
   templateUrl: './strange-item-histories.component.html',
   styleUrl: './strange-item-histories.component.scss',
 })

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UserDataComponent } from './user-data/user-data.component';
 import { Router, RouterModule } from '@angular/router';
@@ -7,7 +7,7 @@ import { AuthService } from '../auth.service';
 @Component({
   selector: 'navbar',
   standalone: true,
-  imports: [CommonModule, UserDataComponent, RouterModule],
+  imports: [UserDataComponent, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })

@@ -29,7 +29,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TradeService } from '../home/trade.service';
 import { Comment } from '../../shared/models/comment.model';
 import { ItemContainerComponent } from '../../shared/item/item-container.component';
-import { CommonModule } from '@angular/common';
+
 import { ItemSelectorFacade } from '../../shared/item-selector/item-selector.facade';
 import { DialogModule } from 'primeng/dialog';
 import { ItemEditorComponent } from '../../shared/item-editor/item-editor.component';
@@ -53,11 +53,10 @@ import { ToastMessage } from '../../shared/models/enums/error-message.enum';
     InventoryItemsSelectorComponent,
     DescrpitionComponent,
     ItemContainerComponent,
-    CommonModule,
     DialogModule,
     ItemEditorComponent,
-    ItemCustomizerComponent,
-  ],
+    ItemCustomizerComponent
+],
   templateUrl: './edit-trade.component.html',
   styleUrl: './edit-trade.component.scss',
 })

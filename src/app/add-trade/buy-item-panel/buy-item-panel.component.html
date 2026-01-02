@@ -10,33 +10,41 @@
     (keydown)="onOpenItemEditor()">
     <img src="/assets/images/8333955.png" alt="" class="w-full h-full" />
   </div>
-  <div class="flex flex-row flex-wrap gap-2 " *ngIf="allItems">
-    <div *ngFor="let item of selectedItems; trackBy: trackByFn" class="w-24">
-      <app-item-container
-        [item]="item"
-        [canDelete]="true"
-        [canModify]="true"
-        [showQuantity]="true"
-        (removeEmitter)="onRemoveItem(item)"
-        (customizeEmitter)="onCustomizeItem(item)">
-      </app-item-container>
+  @if (allItems) {
+    <div class="flex flex-row flex-wrap gap-2 ">
+      @for (item of selectedItems; track trackByFn($index, item)) {
+        <div class="w-24">
+          <app-item-container
+            [item]="item"
+            [canDelete]="true"
+            [canModify]="true"
+            [showQuantity]="true"
+            (removeEmitter)="onRemoveItem(item)"
+            (customizeEmitter)="onCustomizeItem(item)">
+          </app-item-container>
+        </div>
+      }
     </div>
-  </div>
+  }
 </div>
-<p-dialog 
+<p-dialog
   header="Customize Item"
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '80%', height: '80%' }">
 
-  <app-item-editor *ngIf="editorVisible" 
-    [options]="allItems"
-    (filterSearch)="handleFilterSearch($event)" 
-    (closeDialog)="onDialogClose()"
-    (confirmSelecion)="this.itemSelectorFacade.onAddDefaultItem($event)">
-  </app-item-editor>
-  <item-customizer *ngIf="customizableItem"
-    (itemModified)="closeOnModification($event)"
-    [details]="customizableItem">
-  </item-customizer>
+  @if (editorVisible) {
+    <app-item-editor
+      [options]="allItems"
+      (filterSearch)="handleFilterSearch($event)"
+      (closeDialog)="onDialogClose()"
+      (confirmSelecion)="this.itemSelectorFacade.onAddDefaultItem($event)">
+    </app-item-editor>
+  }
+  @if (customizableItem) {
+    <item-customizer
+      (itemModified)="closeOnModification($event)"
+      [details]="customizableItem">
+    </item-customizer>
+  }
 </p-dialog>

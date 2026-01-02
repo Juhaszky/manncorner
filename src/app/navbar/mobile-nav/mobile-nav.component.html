@@ -13,84 +13,96 @@
         <span
           class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
           >Mann<span id="titleEnding">corner</span></span
-        >
-      </a>
-    </div>
-  </ng-template>
-
-  <!-- Navigation Links -->
-  <ul class="flex flex-col mt-4 font-medium">
-    <li *ngIf="isLoggedIn">
-      <div>
-        <app-user-data></app-user-data>
+          >
+        </a>
       </div>
-    </li>
-    <li>
-      <a
-        routerLink="/home"
-        routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
-        class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
-        (click)="isDrawerOpen = false"
-        >Home</a
-      >
-    </li>
-    <li *ngIf="isLoggedIn">
-      <a
-        routerLink="/search"
-        routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
-        class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
-        (click)="isDrawerOpen = false"
-        >Search</a
-      >
-    </li>
-    <li *ngIf="isLoggedIn">
-      <a
-        routerLink="/dashboard"
-        routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
-        class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
-        (click)="isDrawerOpen = false"
-        >Dashboard</a
-      >
-    </li>
-    <!-- <li>
-      <a
-        routerLink="/contact"
-        routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
-        class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
-        >Contact</a
-      >
-    </li> -->
-    <li *ngIf="isLoggedIn">
-      <a
-        routerLink="add-trade"
-        routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
-        class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
-        (click)="isDrawerOpen = false"
-        >Add trade +</a
-      >
-    </li>
-    <li *ngIf="!isLoggedIn">
-      <a
-        href="http://localhost:5268/auth/Login"
-        routerLinkActive="dark:text-white"
-        class="flex justify-center block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700">
-        <img src="/assets/steam_login_btn.png" alt="" />
-      </a>
-    </li>
-    <li *ngIf="isLoggedIn">
-      <button
-        (click)="handleLogout()"
-        class="w-full block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700">
-        Logout
-      </button>
-    </li>
-  </ul>
+    </ng-template>
 
-  <!-- Drawer Footer -->
-  <!-- <ng-template #footer>
-    <div class="flex items-center gap-2">
-      <button pButton label="Account" icon="pi pi-user" class="w-full" outlined></button>
-      <button pButton label="Logout" icon="pi pi-sign-out" class="w-full" severity="danger" text></button>
-    </div>
-  </ng-template> -->
-</p-drawer>
+    <!-- Navigation Links -->
+    <ul class="flex flex-col mt-4 font-medium">
+      @if (isLoggedIn) {
+        <li>
+          <div>
+            <app-user-data></app-user-data>
+          </div>
+        </li>
+      }
+      <li>
+        <a
+          routerLink="/home"
+          routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
+          class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
+          (click)="isDrawerOpen = false"
+          >Home</a
+          >
+        </li>
+        @if (isLoggedIn) {
+          <li>
+            <a
+              routerLink="/search"
+              routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
+              class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
+              (click)="isDrawerOpen = false"
+              >Search</a
+              >
+            </li>
+          }
+          @if (isLoggedIn) {
+            <li>
+              <a
+                routerLink="/dashboard"
+                routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
+                class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
+                (click)="isDrawerOpen = false"
+                >Dashboard</a
+                >
+              </li>
+            }
+            <!-- <li>
+            <a
+              routerLink="/contact"
+              routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
+              class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
+              >Contact</a
+              >
+            </li> -->
+            @if (isLoggedIn) {
+              <li>
+                <a
+                  routerLink="add-trade"
+                  routerLinkActive="active-route dark:text-white dark:hover:bg-green-700"
+                  class="block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700"
+                  (click)="isDrawerOpen = false"
+                  >Add trade +</a
+                  >
+                </li>
+              }
+              @if (!isLoggedIn) {
+                <li>
+                  <a
+                    href="http://localhost:5268/auth/Login"
+                    routerLinkActive="dark:text-white"
+                    class="flex justify-center block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700">
+                    <img src="/assets/steam_login_btn.png" alt="" />
+                  </a>
+                </li>
+              }
+              @if (isLoggedIn) {
+                <li>
+                  <button
+                    (click)="handleLogout()"
+                    class="w-full block py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:border-gray-700">
+                    Logout
+                  </button>
+                </li>
+              }
+            </ul>
+
+            <!-- Drawer Footer -->
+            <!-- <ng-template #footer>
+            <div class="flex items-center gap-2">
+              <button pButton label="Account" icon="pi pi-user" class="w-full" outlined></button>
+              <button pButton label="Logout" icon="pi pi-sign-out" class="w-full" severity="danger" text></button>
+            </div>
+          </ng-template> -->
+        </p-drawer>

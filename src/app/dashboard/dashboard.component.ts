@@ -3,7 +3,7 @@ import { TradeService } from '../home/trade.service';
 import { catchError, map, take } from 'rxjs';
 import { Item } from '../../shared/models/item.model';
 import { CardModule } from 'primeng/card';
-import { CommonModule } from '@angular/common';
+
 import { ItemContainerComponent } from '../../shared/item/item-container.component';
 import { ItemSelectorFacade } from '../../shared/item-selector/item-selector.facade';
 import { UserDataService } from '../../shared/user-data.service';
@@ -22,7 +22,6 @@ import { Tooltip } from 'primeng/tooltip';
   selector: 'app-dashboard',
   imports: [
     CardModule,
-    CommonModule,
     ItemContainerComponent,
     ToggleButtonModule,
     FormsModule,
@@ -30,8 +29,8 @@ import { Tooltip } from 'primeng/tooltip';
     DialogModule,
     ButtonModule,
     LoadingSpinnerComponent,
-    Tooltip,
-  ],
+    Tooltip
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })

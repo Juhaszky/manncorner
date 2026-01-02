@@ -11,7 +11,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { ItemListViewComponent } from './item-list-view/item-list-view.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
@@ -28,12 +28,11 @@ import { Item } from '../models/item.model';
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    CommonModule,
     ItemListViewComponent,
     AutoCompleteModule,
     ButtonModule,
-    MultiSelectModule,
-  ],
+    MultiSelectModule
+],
 })
 export class ItemEditorComponent implements OnInit, OnChanges {
   http = inject(HttpClient);

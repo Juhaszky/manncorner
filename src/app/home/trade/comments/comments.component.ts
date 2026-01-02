@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { TabsModule } from 'primeng/tabs';
 import { CommentComponent } from './comment/comment.component';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { ItemContainerComponent } from '../../../../shared/item/item-container.component';
 import { ActionBarComponent } from '../../../add-trade/action-bar/action-bar.component';
 import { OfferItemSelectorComponent } from '../../../add-trade/offer-item-selector/offer-item-selector.component';
@@ -19,11 +19,10 @@ import { OfferItemSelectorComponent } from '../../../add-trade/offer-item-select
     TabsModule,
     CommentComponent,
     FormsModule,
-    CommonModule,
     ItemContainerComponent,
     ActionBarComponent,
-    OfferItemSelectorComponent,
-  ],
+    OfferItemSelectorComponent
+],
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss'],
 })

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   AfterViewInit,
   Component,
@@ -52,12 +52,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ActionBarComponent,
     DescrpitionComponent,
     ItemContainerComponent,
-    CommonModule,
     DialogModule,
     ItemEditorComponent,
     ItemCustomizerComponent,
     ProgressSpinnerModule
-  ],
+],
   templateUrl: './search-trade.component.html',
   styleUrl: './search-trade.component.scss',
 })

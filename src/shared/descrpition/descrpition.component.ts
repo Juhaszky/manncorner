@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -8,7 +8,7 @@ import { EditorModule } from 'primeng/editor';
 @Component({
   standalone: true,
   selector: 'descrpition',
-  imports: [FormsModule, CommonModule, EditorModule, CardModule],
+  imports: [FormsModule, EditorModule, CardModule],
   templateUrl: './descrpition.component.html',
   styleUrl: './descrpition.component.scss',
 })

@@ -12,11 +12,11 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ListboxModule } from 'primeng/listbox';
 import { StrangeItemStatWithItemDto } from '../../../../shared/models/strangeItemStatHistory.model';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-side-bar',
-  imports: [ListboxModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [ListboxModule, FormsModule, ReactiveFormsModule],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.scss',
 })
