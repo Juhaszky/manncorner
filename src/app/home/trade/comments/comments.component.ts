@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ItemContainerComponent } from '../../../../shared/item/item-container.component';
 import { ActionBarComponent } from '../../../add-trade/action-bar/action-bar.component';
 import { OfferItemSelectorComponent } from '../../../add-trade/offer-item-selector/offer-item-selector.component';
+import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'app-comments',
@@ -21,7 +22,8 @@ import { OfferItemSelectorComponent } from '../../../add-trade/offer-item-select
     FormsModule,
     ItemContainerComponent,
     ActionBarComponent,
-    OfferItemSelectorComponent
+    OfferItemSelectorComponent,
+    CdkDragPlaceholder
 ],
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss'],
@@ -31,6 +33,7 @@ export class CommentsComponent implements OnInit {
   @Input() tradeId!: string;
   @Input() comments: Comment[] = [];
   commentData = '';
+  showTab = false;
   selectedItems: Item[] = [];
 
   constructor(
@@ -41,11 +44,13 @@ export class CommentsComponent implements OnInit {
   get rootComments(): Comment[] {
     return this.comments.filter(c => !c.parentCommentId);
   }
-
   ngOnInit() {
     this.itemSelectorFacade.itemsOfferTrade$.subscribe(items => {
       this.selectedItems = items;
     });
+  }
+  handleTabChange(indx: unknown) {
+    if (indx == 1) this.showTab = true;
   }
 
   handleCommentSubmit({ text, parentId }: { text: string; parentId?: number }) {

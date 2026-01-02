@@ -1,62 +1,71 @@
-<p-tabs value="0" class="rounded-xl ">
+<p-tabs
+  (valueChange)="handleTabChange($event)"
+  value="0"
+  class="rounded-xl">
   <p-tablist class="bg-slate-700">
-    <p-tab value="0" header="Comments"> Comments ({{comments.length}})</p-tab>
-    <p-tab value="1" header="Offers">Items ({{selectedItems.length}})</p-tab>
+    <p-tab value="0" header="Comments"> Comments ({{ comments.length }})</p-tab>
+    <p-tab value="1" header="Offers">Items ({{ selectedItems.length }})</p-tab>
   </p-tablist>
 
   <p-tabpanel value="0">
-    <div class="comments flex flex-col gap-2 row w-full bg-slate-800 rounded-lg p-4 text-white border border-slate-700">
+    <div
+      class="comments flex flex-col gap-2 row w-full bg-slate-800 rounded-lg p-4 text-white border border-slate-700">
       <textarea
         [(ngModel)]="commentData"
         rows="4"
         placeholder="Write your thoughts here..."
-        class="w-full p-2.5 rounded-lg border border-slate-600 bg-slate-900 text-white placeholder-slate-400 resize-vertical"
-      ></textarea>
+        class="w-full p-2.5 rounded-lg border border-slate-600 bg-slate-900 text-white placeholder-slate-400 resize-vertical"></textarea>
       <p-button
         class="mb-2"
-        (onClick)="handleCommentSubmit({text: commentData})"
+        (onClick)="handleCommentSubmit({ text: commentData })"
         [disabled]="!commentData.trim()"
-        label="Make offer"
-      ></p-button>
+        label="Make offer"></p-button>
     </div>
 
     @for (comment of rootComments; track comment) {
       <div>
         <app-comment
           [comment]="comment"
-          (replyEmitter)="handleCommentSubmit({text: $event.replyText, parentId: $event.parentCommentId})">
+          (replyEmitter)="
+            handleCommentSubmit({
+              text: $event.replyText,
+              parentId: $event.parentCommentId,
+            })
+          ">
         </app-comment>
       </div>
     }
   </p-tabpanel>
 
   <p-tabpanel value="1">
-    <div class="bg-slate-800 rounded-lg p-4 text-white border border-slate-700">
-      <div class="row mt-4">
-        <div class="flex flex-row flex-wrap gap-2 p-2" >
-          @for (item of selectedItems; track item) {
-            <div class="w-24">
-              <app-item-container
-                [item]="item"
-                [canDelete]="true"
-                (removeEmitter)="itemSelectorFacade.onRemoveOfferItem(item)">
-              </app-item-container>
-            </div>
-          }
+    @defer (when showTab) {
+      <div
+        class="bg-slate-800 rounded-lg p-4 text-white border border-slate-700">
+        <div class="row mt-4">
+          <div class="flex flex-row flex-wrap gap-2 p-2">
+            @for (item of selectedItems; track item) {
+              <div class="w-24">
+                <app-item-container
+                  [item]="item"
+                  [canDelete]="false"
+                  (removeEmitter)="itemSelectorFacade.onRemoveOfferItem(item)">
+                </app-item-container>
+              </div>
+            }
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="grid-cols-6">
+            <h2 [style.color]="'white'">Your backpack:</h2>
+          </div>
+          <div class="flex flex-row-reverse p-2">
+            <app-action-bar [type]="'offer-item'"></app-action-bar>
+          </div>
+          <div class="col-card mb-3 p-1">
+            <app-offer-item-selector [mode]="'offer'"></app-offer-item-selector>
+          </div>
         </div>
       </div>
-      <div class="row mt-4">
-        <div class="grid-cols-6">
-          <h2 [style.color]="'white'">Your backpack:</h2>
-        </div>
-        <div class="flex flex-row-reverse p-2">
-          <app-action-bar [type]="'offer-item'"></app-action-bar>
-        </div>
-        <div class="col-card mb-3 p-1">
-          <app-offer-item-selector [mode]="'offer'"></app-offer-item-selector>
-        </div>
-      </div>
-    </div>
+    }
   </p-tabpanel>
 </p-tabs>
-
