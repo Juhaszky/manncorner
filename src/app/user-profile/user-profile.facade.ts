@@ -3,10 +3,11 @@ import { FormControl, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { UserDataService } from '../../shared/user-data.service';
 import { UserProfileService } from './user-profile.service';
-import { BehaviorSubject, filter, map, switchMap } from 'rxjs';
-import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
+import { BehaviorSubject, filter, map, switchMap, take } from 'rxjs';
+import { ToastMessage } from '../../shared/models/enums/error-message.enum';
 import { ItemSelectorFacade } from '../../shared/item-selector/item-selector.facade';
 import { Item } from '../../shared/models/item.model';
+import { ProfileData } from '../../shared/models/ProfileData';
 
 @Injectable({ providedIn: 'root' })
 export class UserProfileFacade {
@@ -21,7 +22,8 @@ export class UserProfileFacade {
     nonNullable: true,
     validators: [Validators.required],
   });
-
+  private profileSubject = new BehaviorSubject<ProfileData | null>(null);
+  profileData$ = this.profileSubject.asObservable();
   userData$ = this.userDataService.userData$.pipe(filter(data => !!data));
 
   chipData$ = this.userData$.pipe(
@@ -35,32 +37,12 @@ export class UserProfileFacade {
     this._profileFavouriteItems.next(items);
   }
 
-  profileData$ = this.userData$.pipe(
-    switchMap(data =>
-      this.userProfileService.getProfileData(data.steamid).pipe(
-        map((profile) => {
-          const { level, progress } = this.calculateProgress(profile.xp);
-          this.tradeControl.setValue(profile.tradeUrl, {
-            emitEvent: false,
-          });
-          this.setProfileFavouriteItems(profile.favoriteItems);
-          return {
-            ...profile,
-            level,
-            progress,
-            favoriteItems: profile.favoriteItems,
-          };
-        })
-      )
-    )
-  );
-
   constructor(
     private userDataService: UserDataService,
     private userProfileService: UserProfileService,
     private itemselectorFacade: ItemSelectorFacade,
     private messageService: MessageService
-  ) { }
+  ) {}
 
   saveTradeUrl(): void {
     this.userData$
@@ -69,7 +51,9 @@ export class UserProfileFacade {
           this.userProfileService
             .saveTradeUrl(data.steamid, this.tradeControl.value)
             .pipe(
-              switchMap(() => this.userProfileService.getProfileData(data.steamid))
+              switchMap(() =>
+                this.userProfileService.getProfileData(data.steamid)
+              )
             )
         )
       )
@@ -79,59 +63,54 @@ export class UserProfileFacade {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: ErrorMessage.PROFILE_CHANGE_TRADE_URL_SUCCESS,
+            detail: ToastMessage.PROFILE_CHANGE_TRADE_URL_SUCCESS,
           });
         },
         error: () => {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: ErrorMessage.PROFILE_CHANGE_TRADE_URL_FAIL,
+            detail: ToastMessage.PROFILE_CHANGE_TRADE_URL_FAIL,
           });
         },
       });
   }
 
+  loadProfile(steamId: string): void {
+    this.userProfileService.getProfileData(steamId).subscribe({
+      next: profile => {
+        const { level, progress } = this.calculateProgress(profile.xp);
+        this.profileSubject.next({ ...profile, level, progress });
+        this.tradeControl.setValue(profile.tradeUrl, { emitEvent: false });
+      },
+    });
+  }
   saveFavouriteItems(item?: Item): void {
-    this.userData$
-      .pipe(
-        switchMap(userData =>
-          this.itemselectorFacade.itemsFavourite$.pipe(
-            switchMap(items => {
-              let filteredItems = items;
-              if (item) {
-                console.log();
-                filteredItems = items.filter((i) => i.id !== item.id);
-                this.itemselectorFacade.onRemoveFavouriteItem(item);
-              }
-              this.setProfileFavouriteItems(filteredItems);
-              return this.userProfileService.saveFavouriteItems(
-                userData.steamid,
-                filteredItems
-              )
-            }
-            )
-          )
-        )
-      )
-      .subscribe({
-        next: res => {
-          console.log(res);
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: ErrorMessage.PROFILE_CHANGE_TRADE_URL_SUCCESS,
+    this.userData$.pipe(take(1)).subscribe(userData => {
+      this.itemselectorFacade.itemsFavourite$.pipe(take(1)).subscribe(items => {
+        const toSave = item ? items.filter(i => i.id !== item.id) : items;
+
+        this.userProfileService
+          .saveFavouriteItems(userData.steamid, toSave)
+          .subscribe({
+            complete: () => {
+              this.itemselectorFacade.emptyFavouriteItems();
+
+              this.loadProfile(userData.steamid);
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: ToastMessage.PROFILE_CHANGE_FAVOURITE_ITEMS_SUCCESS,
+              });
+            },
+            error: err =>
+              this.messageService.add({
+                severity: 'error',
+                detail: ToastMessage.PROFILE_CHANGE_TRADE_URL_FAIL,
+              }),
           });
-          //TODO need to remove selected favouriteItems
-        },
-        error: () => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: ErrorMessage.PROFILE_CHANGE_TRADE_URL_FAIL,
-          });
-        },
       });
+    });
   }
 
   private generateChips(steamId: string) {

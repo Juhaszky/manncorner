@@ -41,7 +41,7 @@ import { MessageService } from 'primeng/api';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
 import { EditTradeService } from './edit-trade.service';
-import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
+import { ToastMessage } from '../../shared/models/enums/error-message.enum';
 
 @Component({
   selector: 'app-edit-trade',
@@ -136,7 +136,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
           return this.http
             .get<
               Item[]
-            >(`${environment.API_URL}/items/search?searchString=${filterText}&userId=${userData.steamId}`)
+            >(`${environment.API_URL}/items/search?searchString=${filterText}&userId=${userData?.steamId}`)
             .pipe(
               catchError(() => of([])),
               map(items => this.sortService.sortItems(items, sortCriteria))
@@ -241,7 +241,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
           return this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: ErrorMessage.EACH_CATEGORY,
+            detail: ToastMessage.EACH_CATEGORY,
           });
         }
         const items: Item[] = [
@@ -271,7 +271,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
-              detail: ErrorMessage.EDIT_TRADE_SUCCESS,
+              detail: ToastMessage.EDIT_TRADE_SUCCESS,
             });
             this.router.navigate(['/dashboard']);
           },
@@ -280,7 +280,7 @@ export class EditTradeComponent implements OnInit, AfterViewInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: ErrorMessage.EDIT_TRADE_FAIL,
+              detail: ToastMessage.EDIT_TRADE_FAIL,
             });
           },
         });

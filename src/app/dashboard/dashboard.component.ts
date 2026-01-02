@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
+import { ToastMessage } from '../../shared/models/enums/error-message.enum';
 import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 import { Tooltip } from 'primeng/tooltip';
 
@@ -116,13 +116,13 @@ export class DashboardComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: ErrorMessage.REMOVE_TRADE_SUCCESS,
+          detail: ToastMessage.REMOVE_TRADE_SUCCESS,
         });
       } else {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: ErrorMessage.REMOVE_TRADE_FAIL,
+          detail: ToastMessage.REMOVE_TRADE_FAIL,
         });
       }
     });
@@ -137,13 +137,13 @@ export class DashboardComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
-            detail: ErrorMessage.BUMP_TRADE_SUCCESS,
+            detail: ToastMessage.BUMP_TRADE_SUCCESS,
           });
         } else {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: ErrorMessage.BUMP_TRADE_FAIL,
+            detail: ToastMessage.BUMP_TRADE_FAIL,
           });
         }
       });
@@ -192,13 +192,13 @@ export class DashboardComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: ErrorMessage.CHANGE_STATUS_SUCCESS,
+          detail: ToastMessage.CHANGE_STATUS_SUCCESS,
         });
       } else {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: ErrorMessage.CHANGE_STATUS_FAIL,
+          detail: ToastMessage.CHANGE_STATUS_FAIL,
         });
       }
     });

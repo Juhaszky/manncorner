@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ItemContainerComponent } from '../../../shared/item/item-container.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Item } from '../../../shared/models/item.model';

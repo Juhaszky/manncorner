@@ -10,7 +10,7 @@ import {
 } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MessageService } from 'primeng/api';
-import { ErrorMessage } from '../shared/models/enums/error-message.enum';
+import { ToastMessage } from '../shared/models/enums/error-message.enum';
 
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 let isRefreshing = false;
@@ -34,7 +34,7 @@ export function refreshTokenInterceptor(
           messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: ErrorMessage.UNAUTHORIZED,
+            detail: ToastMessage.UNAUTHORIZED,
           });
         }
 

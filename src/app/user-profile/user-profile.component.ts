@@ -36,7 +36,7 @@ import { Item } from '../../shared/models/item.model';
     ReactiveFormsModule,
     StrangeItemHistoriesComponent,
     FavouriteCollectionComponent,
-    ItemContainerComponent
+    ItemContainerComponent,
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
@@ -45,7 +45,7 @@ export class UserProfileComponent {
   @Input() profileData!: ProfileData | null;
   @Input() favouriteItems!: Item[] | null;
   @Input() userData!: UserData | null;
-  @Input() chipData: { label: string, link: string }[] = [];
+  @Input() chipData: { label: string; link: string }[] = [];
   @Input() tradeControl!: FormControl;
 
   @Output() saveTradeUrl = new EventEmitter<void>();

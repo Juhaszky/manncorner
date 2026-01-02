@@ -48,7 +48,7 @@ public class UserService
         }
         await _context.SaveChangesAsync();
     }
-    public async Task SetFavoriteItemsAsync(string steamId, Item[] items)
+    public async Task<FavouriteItem[]> SetFavoriteItemsAsync(string steamId, Item[] items)
     {
         var user = await GetUserBySteamIdAsync(steamId);
         if (user == null)
@@ -56,7 +56,7 @@ public class UserService
             throw new InvalidOperationException($"User with Steam ID '{steamId}' not found.");
         }
         user.FavoriteItems.Clear();
-
+        var addedFavorites = new List<FavouriteItem>();
         foreach (var item in items)
         {
             var favoriteItem = new FavouriteItem
@@ -89,9 +89,11 @@ public class UserService
                 OwnerUser = user
             };
             user.FavoriteItems.Add(favoriteItem);
+            addedFavorites.Add(favoriteItem);
         }
 
         await _context.SaveChangesAsync();
+        return addedFavorites.ToArray(); 
     }
 
     public async Task<List<FavouriteItem>> GetFavoritesAsync(string steamId)

@@ -20,7 +20,7 @@ import { SellItemPanelComponent } from './sell-item-panel/sell-item-panel.compon
 import { UserDataService } from '../../shared/user-data.service';
 import { UserProfileService } from '../user-profile/user-profile.service';
 import { MessageService } from 'primeng/api';
-import { ErrorMessage } from '../../shared/models/enums/error-message.enum';
+import { ToastMessage } from '../../shared/models/enums/error-message.enum';
 import { TradesStateService } from '../../shared/trades-state.service';
 
 @Component({
@@ -124,7 +124,7 @@ export class AddTradeComponent implements OnInit {
           return this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: ErrorMessage.EACH_CATEGORY,
+            detail: ToastMessage.EACH_CATEGORY,
           });
         }
         const items: Item[] = [
@@ -159,7 +159,7 @@ export class AddTradeComponent implements OnInit {
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
-              detail: ErrorMessage.ADD_TRADE_SUCCESS,
+              detail: ToastMessage.ADD_TRADE_SUCCESS,
             });
             const newTrade = {
               ...createdTrade,
@@ -176,7 +176,7 @@ export class AddTradeComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: ErrorMessage.ADD_TRADE_FAIL,
+              detail: ToastMessage.ADD_TRADE_FAIL,
             });
           },
         });

@@ -86,8 +86,8 @@ public class UserController : ControllerBase
         }
         try
         {
-            await _userService.SetFavoriteItemsAsync(steamId, items);
-            return Ok(new { message = "Favourite items set successfully", status = 200 });
+            var savedItems = await _userService.SetFavoriteItemsAsync(steamId, items);
+            return Ok(items);
         }
         catch (InvalidOperationException ex)
         {

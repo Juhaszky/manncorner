@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { ErrorMessage } from '../shared/models/enums/error-message.enum';
+import { ToastMessage } from '../shared/models/enums/error-message.enum';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -12,14 +12,15 @@ export class GlobalErrorHandler implements ErrorHandler {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: ErrorMessage.UNAUTHORIZED,
+          detail: ToastMessage.UNAUTHORIZED,
         });
       }
     } else {
+      console.error(error);
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: ErrorMessage.UNKNOWN,
+          detail: ToastMessage.UNKNOWN,
         });
     }
   }

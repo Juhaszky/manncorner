@@ -1,4 +1,4 @@
-export enum ErrorMessage {
+export enum ToastMessage {
     UNAUTHORIZED = "Unauthorized. Please log in first.",
     UNKNOWN = "Unknown error occured. Please contact the site.",
     ADD_TRADE_SUCCESS = "Trade posted successfully.",
@@ -14,5 +14,7 @@ export enum ErrorMessage {
     CHANGE_STATUS_SUCCESS = "Trade status changed.",
     CHANGE_STATUS_FAIL = "Trade status was not changed, something went wrong.",
     PROFILE_CHANGE_TRADE_URL_SUCCESS = "Your trade url has been updated.",
-    PROFILE_CHANGE_TRADE_URL_FAIL = "Your trade url has not been updated, something went wrong."
+    PROFILE_CHANGE_TRADE_URL_FAIL = "Your trade url has not been updated, something went wrong.",
+    PROFILE_CHANGE_FAVOURITE_ITEMS_SUCCESS = "Your favourite items has been updated.",
+    PROFILE_CHANGE_FAVOURITE_ITEMS_FAIL = "Your favourite items has not been updated, something went wrong."
 }

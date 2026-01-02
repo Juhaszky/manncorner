@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } fr
 import { AuthService } from './auth.service';
 import { first, map, tap } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import { ErrorMessage } from '../shared/models/enums/error-message.enum';
+import { ToastMessage } from '../shared/models/enums/error-message.enum';
 
 export const authGuardGuard: CanActivateFn = (
   next: ActivatedRouteSnapshot,
@@ -21,7 +21,7 @@ export const authGuardGuard: CanActivateFn = (
         messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: ErrorMessage.UNAUTHORIZED,
+          detail: ToastMessage.UNAUTHORIZED,
         });
       }
     }),
