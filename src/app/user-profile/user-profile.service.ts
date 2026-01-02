@@ -22,7 +22,7 @@ export class UserProfileService {
       responseType: 'text',
     });
   }
-  getTradeUrl(steamId: string) {
+  getProfileData(steamId: string) {
     const url = `${environment.API_URL}/api/User/${steamId}`;
     return this.httpClient.get<ProfileData>(url);
   }

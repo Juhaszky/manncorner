@@ -240,6 +240,10 @@ export class ItemSelectorFacade {
     this.selectedItemIds.delete(item.id);
     this._itemsForTrade.next(newItems);
   }
+  emptyFavouriteItems() {
+    this.selectedFavouriteItemIds.clear();
+    this._itemsFavourite.next([]);
+  }
   emptyTradeItems() {
     this.selectedItemIds.clear();
     this._itemsForTrade.next([]);

@@ -1,5 +1,6 @@
 <app-user-profile 
-    [profileData]="facade.profileData$ | async" 
+    [profileData]="facade.profileData$ | async"
+    [favouriteItems]="facade.profileFavouriteItems$ | async"
     [userData]="facade.userData$ | async "
     [chipData]="(facade.chipData$ | async) || []"
     [tradeControl]="facade.tradeControl"

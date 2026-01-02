@@ -43,6 +43,7 @@ import { Item } from '../../shared/models/item.model';
 })
 export class UserProfileComponent {
   @Input() profileData!: ProfileData | null;
+  @Input() favouriteItems!: Item[] | null;
   @Input() userData!: UserData | null;
   @Input() chipData: { label: string, link: string }[] = [];
   @Input() tradeControl!: FormControl;
