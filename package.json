@@ -34,7 +34,7 @@
     "ngx-editor": "^19.0.0-beta.1",
     "oidc-provider": "^8.4.5",
     "primeicons": "^7.0.0",
-    "primeng": "^19.0.9",
+    "primeng": "^20.4.0",
     "quill": "^2.0.3",
     "rxjs": "~7.8.0",
     "tf2-item-format": "^5.9.27",
