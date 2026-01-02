@@ -18,14 +18,15 @@ export class TradesStateService {
   loading$ = this.loadingSubject.asObservable();
   totalRecords$ = this.totalRecordsSubject.asObservable();
   first$ = this.firstSubject.asObservable();
+  
+  router = inject(Router);
 
   setPage(page: number, updateUrl = true): void {
     this.pageSubject.next(page);
     this.firstSubject.next((page - 1) * 10);
 
     if (updateUrl) {
-      const router = inject(Router);
-      router.navigate(['/home'], {
+      this.router.navigate(['/home'], {
         queryParams: { page },
         queryParamsHandling: 'merge',
       });
