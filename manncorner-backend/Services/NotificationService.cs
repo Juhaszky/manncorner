@@ -13,20 +13,24 @@ public class NotificationService : INotificationService
     }
     public async Task SendTradeCommentNotificationAsync(string targetSteamId, Comment comment)
     {
+        var user = await _context.Users.FindAsync(comment.UserId);
+        var isReply = comment.ParentCommentId != null;
+
         var notification = new Notification
         {
             TargetUserId = comment.UserId,
             TargetSteamId = targetSteamId,
-            Type = "TradeComment",
-            Title = "New comment on your trade",
-            Message = $"@{comment.UserId} commented on your {comment.TradeId}",
+            Type = isReply ? "CommentReply" : "TradeComment",
+            Title = isReply ? "New reply on your comment" : "New comment on your trade",
+            Message = $"{user.Username} {(isReply ? "replied to your comment" : "commented on your trade")}",
             DataJson = JsonSerializer.Serialize(new { tradeId = comment.TradeId })
         };
+
         _context.Notifications.Add(notification);
         await _context.SaveChangesAsync();
 
         await _hubContext.Clients.Group($"user_{targetSteamId}")
-          .SendAsync("ReceiveNotification", notification);
+            .SendAsync("ReceiveNotification", notification);
     }
     public async Task<List<NotificationDto>> GetUnreadAsync(string steamId)
     {
@@ -38,6 +42,7 @@ public class NotificationService : INotificationService
           {
               Id = n.Id,
               Title = n.Title,
+              DataJson = n.DataJson,
               Message = n.Message,
               IsRead = n.IsRead,
               CreatedAt = n.CreatedAt

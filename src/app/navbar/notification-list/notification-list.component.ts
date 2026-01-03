@@ -1,6 +1,6 @@
 import { Popover, PopoverModule } from "primeng/popover";
 import { Notification, NotificationService } from "../../notification.service";
-import { Component, ViewChild } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { ButtonModule } from "primeng/button";
@@ -14,7 +14,7 @@ import { FormsModule } from "@angular/forms";
   styleUrl: './notification-list.component.scss',
 })
 export class NotificationListComponent {
-  @ViewChild('panel') panel!: Popover;
+  @Input() popOverEl!: Popover;
   
   readonly notifications$ = this.notificationService.notifications$;
   readonly unreadCount$ = this.notificationService.unreadCount$;
@@ -24,8 +24,11 @@ export class NotificationListComponent {
     private router: Router
   ) {}
 
-  openPanel(event: any) {
-    this.panel.show(event);
+  openPanel(event: Event) {
+    this.popOverEl.show(event);
+  }
+  onClosePanel() {
+    this.popOverEl.hide();
   }
   onNotificationClick(notif: Notification) {
     this.notificationService.markAsRead(notif.id);
@@ -43,7 +46,7 @@ export class NotificationListComponent {
   }
 
   clearAll() {
-    //this.notificationService.clearAll();
+    this.notificationService.markAsReadAll();
   }
 
   trackById(index: number, notif: Notification): number {

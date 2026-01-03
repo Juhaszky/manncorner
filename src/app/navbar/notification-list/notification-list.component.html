@@ -4,15 +4,15 @@
     <p-button
       icon="pi pi-times"
       size="small"
-      (onClick)="panel.hide()"></p-button>
+      (onClick)="onClosePanel()"></p-button>
   </div>
 
   <div class="max-h-96 overflow-auto p-2">
-    @for (notif of notifications$ | async; track trackById) {
+    @for (notif of notifications$ | async; track notif.id) {
       <div
         class="notif-item p-3 border-b cursor-pointer hover:bg-slate-800 transition-all rounded"
         [class.unread]="!notif.isRead"
-        (click)="onNotificationClick(notif); panel.hide()">
+        (click)="onNotificationClick(notif); popOverEl.hide()">
         <div class="font-semibold mb-1">{{ notif.title }}</div>
         <div class="text-sm mb-1 line-clamp-2">{{ notif.message }}</div>
         <div class="text-xs text-slate-500">
@@ -26,14 +26,16 @@
       </div>
     }
   </div>
+  @if ((notifications$ | async)?.length ?? 0 > 0) {
 
-  <div class="border-t p-2">
-    <p-button
+    <div class="border-t p-2">
+      <p-button
       label="Clear All"
       size="small"
       severity="secondary"
       class="w-full"
-      (onClick)="clearAll(); panel.hide()">
+      (onClick)="clearAll(); popOverEl.hide()">
     </p-button>
   </div>
+}
 </div>

@@ -10,7 +10,7 @@ export interface Notification {
   title: string;
   message: string;
   isRead: boolean;
-  dataJson: any;
+  dataJson: string;
   createdAt: string;
 }
 
@@ -26,9 +26,10 @@ export class NotificationService {
   constructor(
     private http: HttpClient,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   async connect(steamId: string): Promise<void> {
+    if (this.hubConnection?.state === 'Connected') return;
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${environment.API_URL}/notificationHub`, {
         withCredentials: true,
@@ -56,13 +57,25 @@ export class NotificationService {
   }
 
   markAsRead(id: number): void {
-    this.http.delete(`/api/notifications/${id}`).subscribe({
+    this.http.delete(`${environment.API_URL}/api/notifications/${id}`).subscribe({
       complete: () => {
         const current = this.notifications$.value;
         this.notifications$.next(
           current.map(n => (n.id === id ? { ...n, isRead: true } : n))
         );
         this.unreadCount$.next(Math.max(0, this.unreadCount$.value - 1));
+      },
+    });
+  }
+  markAsReadAll(): void {
+    this.http.delete(`${environment.API_URL}/api/Notifications/clear-all`).subscribe({
+      complete: () => {
+        const current = this.notifications$.value;
+        this.notifications$.next(
+          current.map(n => ({ ...n, isRead: true }))
+        );
+        this.unreadCount$.next(Math.max(0, this.unreadCount$.value - 1));
+        this.notifications$.next([]);
       },
     });
   }

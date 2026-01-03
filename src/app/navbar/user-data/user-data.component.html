@@ -30,6 +30,6 @@
 
   <p-popover #panel [appendTo]="'body'" >
 
-    <app-notification-list></app-notification-list>
+    <app-notification-list [popOverEl]="panel"></app-notification-list>
   </p-popover>
 }

@@ -13,6 +13,8 @@ export enum ToastMessage {
     MAX_LIMIT_EACH_CATEGORY = "You reached the max limit of the selected category.",
     CHANGE_STATUS_SUCCESS = "Trade status changed.",
     CHANGE_STATUS_FAIL = "Trade status was not changed, something went wrong.",
+    CHANGE_NOTIF_SUCCESS = "Trade notification status changed.",
+    CHANGE_NOTIF_FAIL = "Trade notification status was not changed, something went wrong.",
     PROFILE_CHANGE_TRADE_URL_SUCCESS = "Your trade url has been updated.",
     PROFILE_CHANGE_TRADE_URL_FAIL = "Your trade url has not been updated, something went wrong.",
     PROFILE_CHANGE_FAVOURITE_ITEMS_SUCCESS = "Your favourite items has been updated.",

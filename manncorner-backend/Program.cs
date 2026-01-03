@@ -133,6 +133,7 @@ builder.Services.AddScoped<ItemService>();
 builder.Services.AddScoped<ITradeService, TradeService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<ICommentService ,CommentService>();
+builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<StrangeItemStatHistoryService>();
 builder.Services.AddScoped<InventoryFacadeService>();
 builder.Services.AddSingleton<ILoggerService, LoggerService>();

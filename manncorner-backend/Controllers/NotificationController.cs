@@ -26,6 +26,7 @@ public class NotificationsController : ControllerBase
   }
 
   [HttpGet]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public async Task<ActionResult<List<NotificationDto>>> GetAll(int? page = 1, int pageSize = 20)
   {
     var steamId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -36,6 +37,7 @@ public class NotificationsController : ControllerBase
   }
 
   [HttpDelete("{id}")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public async Task<IActionResult> MarkAsRead(int id)
   {
     var steamId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -46,6 +48,7 @@ public class NotificationsController : ControllerBase
   }
 
   [HttpDelete("clear-all")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public async Task<IActionResult> ClearAll()
   {
     var steamId = User.FindFirstValue(ClaimTypes.NameIdentifier);
