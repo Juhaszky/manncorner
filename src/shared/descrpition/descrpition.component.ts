@@ -23,6 +23,7 @@ export class DescrpitionComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
+    if (this.description == "") this.showTitle = false;
     this.updateHtmlContent();
   }
 

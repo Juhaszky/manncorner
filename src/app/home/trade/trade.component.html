@@ -1,32 +1,46 @@
 @if (tradeData) {
-  <div class="flex min-h-screen w-full text-gray-700">
-    <div class="trade mt-3 p-3 w-full last:mb-5">
-      <div class="trade-details">
-        <div class="flex flex-row justify-between">
-          <p class="flex items-center gap-2 w-50 p-0 m-0">
-            <p-avatar [image]="tradeData.avatarPath" shape="circle" />
-            <span class="user-name-text" [routerLink]="['/user-profile', tradeData.userId]">{{ tradeData.username }}</span> wants to
-            trade...
-            <!-- <span matTooltip="{{ tradeData.postDate | date }}">{{
-            tradeData.postDate | postDate
-          }}</span> -->
+<div class="flex flex-col min-h-screen w-full text-gray-700">
+@if (tradeData.status !== 'open') {
+  <div class="w-full bg-gradient-to-r from-slate-100 via-slate-50 to-slate-100 border-b border-slate-200/50 px-6 py-5 md:py-6 shadow-sm backdrop-blur-sm">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 max-w-7xl mx-auto">
+      <div class="flex items-start gap-3 flex-1">
+        <div class="flex-shrink-0 p-2.5 bg-slate-200/60 backdrop-blur-sm rounded-xl border border-slate-300/50 shadow-sm">
+          <i class="pi pi-lock-fill text-lg md:text-xl text-slate-600 block leading-none"></i>
+        </div>
+        <div class="min-w-0">
+          <h2 class="text-lg md:text-xl lg:text-2xl font-semibold text-slate-900 mb-1 leading-tight">
+            Trade Inactive
+          </h2>
+          <p class="text-sm md:text-base text-slate-600 leading-relaxed max-w-prose">
+            No longer accepting offers or comments.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+  <div class="trade mt-3 p-3 w-full last:mb-5">
+    <div class="trade-details">
+      <div class="flex flex-row justify-between">
+        <p class="flex items-center gap-2 w-50 p-0 m-0">
+          <p-avatar [image]="tradeData.avatarPath" shape="circle" />
+          <span class="user-name-text" [routerLink]="['/user-profile', tradeData.userId]">{{ tradeData.username
+            }}</span> wants to
+          trade...
         </p>
-        <p
-          class="w-50 text-end p-0 m-0 sm:text-sm text-xs font-black text-gray-700"
-          >
+        <p class="w-50 text-end p-0 m-0 sm:text-sm text-xs font-black text-gray-700">
           {{ tradeData.id }}
         </p>
       </div>
     </div>
     <div class="flex flex-wrap sm:flex-row flex-col w-full">
-      <div
-        class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
-        #inventorySelector>
+      <div class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full" #inventorySelector>
         <div class="flex flex-row flex-wrap w-full gap-2 p-2">
           @for (item of tradeData.itemsFrom; track item) {
-            <div class="w-24">
-              <app-item-container [item]="item"> </app-item-container>
-            </div>
+          <div class="w-24">
+            <app-item-container [item]="item"> </app-item-container>
+          </div>
           }
         </div>
       </div>
@@ -35,31 +49,21 @@
       >
       <app-item-container *ngFor="let item of tradeData.itemsFrom" [item]="item"></app-item-container>
     </div> -->
-    <div class="arrow flex sm:items-center justify-center">
-      <img
-        class="h-24 hidden sm:block"
-        src="/assets/images/arrow-right-01-512.webp"
-        alt="Arrow"
-        />
+      <div class="arrow flex sm:items-center justify-center">
+        <img class="h-24 hidden sm:block" src="/assets/images/arrow-right-01-512.webp" alt="Arrow" />
         <!-- Visible only on mobile -->
-        <img
-          class="h-24 block sm:hidden"
-          src="/assets/images/Down-Arrow-PNG-Image.png"
-          alt="Arrow for Mobile"
-          />
-        </div>
-        <div
-          class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full"
-          #inventorySelector>
-          <div class="flex flex-row flex-wrap w-full gap-2 p-2">
-            @for (item of tradeData.itemsTo; track item) {
-              <div class="w-24">
-                <app-item-container [item]="item" [showQuantity]="true"> </app-item-container>
-              </div>
-            }
+        <img class="h-24 block sm:hidden" src="/assets/images/Down-Arrow-PNG-Image.png" alt="Arrow for Mobile" />
+      </div>
+      <div class="col-card inventory-box flex flex-wrap flex-row relative w-full h-full" #inventorySelector>
+        <div class="flex flex-row flex-wrap w-full gap-2 p-2">
+          @for (item of tradeData.itemsTo; track item) {
+          <div class="w-24">
+            <app-item-container [item]="item" [showQuantity]="true"> </app-item-container>
           </div>
+          }
         </div>
-        <!-- <div
+      </div>
+      <!-- <div
         class="items flex flex-1 flex-wrap sm:w-1/3 w-full overflow-hidden border-2 border-slate-700"
         >
         <app-item-container *ngFor="let item of tradeData.itemsTo" [item]="item"></app-item-container>
@@ -68,7 +72,9 @@
     <descrpition [canEdit]="false" [html]="description"></descrpition>
     <!-- <app-offer-item-panel></app-offer-item-panel> -->
     <!-- <app-offer-item-selector></app-offer-item-selector> -->
+    @if (tradeData.status === 'open') {
     <app-comments [tradeId]="tradeData.id" [comments]="tradeData.comments"></app-comments>
+    }
   </div>
 </div>
 }
