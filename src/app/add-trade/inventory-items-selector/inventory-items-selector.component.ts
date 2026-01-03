@@ -159,6 +159,6 @@ export class InventoryItemsSelectorComponent implements AfterViewInit, OnInit {
     // this.itemSelectorFacade.onOfferItem(item);
   }
   trackByFn(index: number, item: Item) {
-    return item?.defindex || index;
+    return item.defindex ? `${item?.defindex}_${index}` : index;
   }
 }

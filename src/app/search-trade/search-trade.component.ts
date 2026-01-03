@@ -270,7 +270,7 @@ export class SearchTradeComponent implements OnInit, AfterViewInit {
   }
 
   trackByFn(index: number, item: Item) {
-    return item?.defindex || index;
+    return item.defindex ? `${item?.defindex}_${index}` : index;
   }
   onRemoveItem(item: Item) {
     this.itemSelectorFacade.onRemoveEditItem(item);
