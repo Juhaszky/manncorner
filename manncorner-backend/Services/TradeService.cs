@@ -18,6 +18,7 @@ public class TradeService : ITradeService
     {
         trade.CreatedAt = DateTime.UtcNow;
         trade.Deleted = false;
+        trade.Follow = true;
         trade.BumpDate = trade.CreatedAt;
         _logger.LogInformation("User {UserId} added trade {TradeId} with {ItemCount} items", trade.UserId, trade.Id, trade.Items.Count);
         _db.Trades.Add(trade);
@@ -114,6 +115,28 @@ public class TradeService : ITradeService
         }
 
         trade.Status = trade.Status == "open" ? "closed" : "open";
+        await _db.SaveChangesAsync();
+
+        return new TradeStatusResult
+        {
+            Status = 200,
+            Trade = trade
+        };
+    }
+    public async Task<TradeStatusResult> ChangeTradeFollowFlagAsync(int tradeId)
+    {
+        var trade = await _db.Trades.FirstOrDefaultAsync(t => t.Id == tradeId);
+
+        if (trade == null)
+        {
+            return new TradeStatusResult
+            {
+                Status = 404,
+                Error = "Trade not found"
+            };
+        }
+
+        trade.Follow = !trade.Follow;
         await _db.SaveChangesAsync();
 
         return new TradeStatusResult

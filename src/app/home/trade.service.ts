@@ -12,7 +12,7 @@ import { TradeDeleteResult } from '../../shared/models/Responses/tradeDeleteResu
   providedIn: 'root',
 })
 export class TradeService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   loadTrades(page: number): Observable<TradeResult> {
     const url = `${environment.API_URL}/api/Trade?page=${page}`;
@@ -62,6 +62,14 @@ export class TradeService {
       `${environment.API_URL}/api/Trade/delete`,
       {
         body: { tradeId },
+      }
+    );
+  }
+  changeTradeFollowFlag(tradeId: string): Observable<TradeStatusResult> {
+    return this.http.post<TradeStatusResult>(
+      `${environment.API_URL}/api/Trade/changeFollowFlag`,
+      {
+        tradeId,
       }
     );
   }

@@ -104,6 +104,18 @@ public class TradeController : ControllerBase
         return Ok(result);
     }
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("changeFollowFlag")]
+    public async Task<ActionResult> ChangeTradeFollowFlag([FromBody] TradeIdRequest request)
+    {
+        var result = await _tradeService.ChangeTradeFollowFlagAsync(request.TradeId);
+        if (result.Status == 404)
+        {
+            return NotFound(result);
+        }
+
+        return Ok(result);
+    }
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete("delete")]
     public async Task<ActionResult> DeleteTradeStatus([FromBody] TradeIdRequest request)
     {

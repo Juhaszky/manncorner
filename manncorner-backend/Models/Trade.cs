@@ -8,6 +8,7 @@ public class Trade
     public DateTime BumpDate { get; set; }
     public string Status { get; set; }
     public Boolean Deleted { get; set; }
+    public Boolean Follow {get; set; }
     //public User? User { get; set; }
     public string Username { get; set; }
     public ICollection<TradeItem> Items { get; set; }

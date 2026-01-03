@@ -8,8 +8,9 @@ export interface Trade {
     bumpDate: Date;
     createdAt: Date;
     items: Item[];
-    status: string;
+    status: "closed" | "open";
     deleted: boolean;
+    follow: boolean;
     username: string;
     userId: string;
     comments: Comment[]

@@ -25,7 +25,12 @@ public class CommentService : ICommentService
         };
         _context.Add(comment);
         await _context.SaveChangesAsync();
-        await _notificationService.SendTradeCommentNotificationAsync(user?.SteamId, comment);
+        var trade = await _context.Trades.FindAsync(tradeId);
+        if (trade.Follow)
+        {
+
+            await _notificationService.SendTradeCommentNotificationAsync(user?.SteamId, comment);
+        }
         return comment;
     }
 }

@@ -17,6 +17,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToastMessage } from '../../shared/models/enums/error-message.enum';
 import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 import { Tooltip } from 'primeng/tooltip';
+import { TradeStatusResult } from '../../shared/models/Responses/tradeStatusResult.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,7 +31,7 @@ import { Tooltip } from 'primeng/tooltip';
     ButtonModule,
     LoadingSpinnerComponent,
     Tooltip
-],
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -47,6 +48,7 @@ export class DashboardComponent implements OnInit {
     status: string;
     username: string;
     createdAt: Date;
+    follow: boolean;
     bumpedAt: Date;
   }[] = [];
   checked = false;
@@ -81,6 +83,7 @@ export class DashboardComponent implements OnInit {
               status: trade.status,
               username: trade.username,
               createdAt: trade.createdAt,
+              follow: trade.follow,
               bumpedAt: trade.bumpDate,
             };
           });
@@ -106,6 +109,27 @@ export class DashboardComponent implements OnInit {
   }
   handleTradeEditing(tradeId: string) {
     this.router.navigate(['/trade', tradeId, 'edit']);
+  }
+  handleFollowFlagChange(tradeId: string, event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.tradeService.changeTradeFollowFlag(tradeId).subscribe(res => {
+      if (res.status === 200) {
+
+        this.updateTradeList(res);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: ToastMessage.CHANGE_NOTIF_SUCCESS,
+        });
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: ToastMessage.CHANGE_NOTIF_FAIL,
+        });
+      }
+    });
   }
   handleTradeDelete() {
     this.showConfirmDelete = false;
@@ -160,6 +184,7 @@ export class DashboardComponent implements OnInit {
     status: string;
     username: string;
     createdAt: Date;
+    follow: boolean;
     bumpedAt: Date;
   }): boolean {
     return trade.status === 'open';
@@ -182,12 +207,7 @@ export class DashboardComponent implements OnInit {
   changeStatus(tradeId: string) {
     this.tradeService.changeTradeStatus(tradeId).subscribe(res => {
       if (res.status === 200) {
-        const trades = this.trades;
-        const modifiedTradeIdx = trades.findIndex(t => t.id === tradeId);
-        if (modifiedTradeIdx > -1) {
-          const modifiedTrade = trades[modifiedTradeIdx];
-          modifiedTrade.status = res.trade.status;
-        }
+        this.updateTradeList(res);
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
@@ -201,5 +221,21 @@ export class DashboardComponent implements OnInit {
         });
       }
     });
+  }
+
+  private updateTradeList(tradeStatusResult: TradeStatusResult) {
+    const index = this.trades.findIndex(t => t.id === tradeStatusResult.trade.id);
+    if (index > -1) {
+      const updatedTrade = {
+        ...this.trades[index],
+        status: tradeStatusResult.trade.status,
+        follow: tradeStatusResult.trade.follow
+      };
+      this.trades = [
+        ...this.trades.slice(0, index),
+        updatedTrade,
+        ...this.trades.slice(index + 1)
+      ];
+    }
   }
 }
