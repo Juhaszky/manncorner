@@ -1,0 +1,39 @@
+<div class="notification-panel">
+  <div class="p-3 border-b flex justify-between items-center">
+    <span class="font-bold text-lg">Notifications</span>
+    <p-button
+      icon="pi pi-times"
+      size="small"
+      (onClick)="panel.hide()"></p-button>
+  </div>
+
+  <div class="max-h-96 overflow-auto p-2">
+    @for (notif of notifications$ | async; track trackById) {
+      <div
+        class="notif-item p-3 border-b cursor-pointer hover:bg-slate-800 transition-all rounded"
+        [class.unread]="!notif.isRead"
+        (click)="onNotificationClick(notif); panel.hide()">
+        <div class="font-semibold mb-1">{{ notif.title }}</div>
+        <div class="text-sm mb-1 line-clamp-2">{{ notif.message }}</div>
+        <div class="text-xs text-slate-500">
+          {{ notif.createdAt | date: 'short' }}
+        </div>
+      </div>
+    } @empty {
+      <div class="p-8 text-center text-slate-500">
+        <i class="pi pi-bell text-3xl mb-2 block"></i>
+        No notifications
+      </div>
+    }
+  </div>
+
+  <div class="border-t p-2">
+    <p-button
+      label="Clear All"
+      size="small"
+      severity="secondary"
+      class="w-full"
+      (onClick)="clearAll(); panel.hide()">
+    </p-button>
+  </div>
+</div>

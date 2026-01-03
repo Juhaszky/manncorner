@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 public class CommentService : ICommentService
 {
     private readonly AppDbContext _context;
+    private readonly INotificationService _notificationService;
 
-    public CommentService(AppDbContext db)
+    public CommentService(AppDbContext db, INotificationService notificationService)
     {
         _context = db;
+        _notificationService = notificationService;
     }
     public async Task<Comment> MakeComment(int tradeId, string commentData, string userId, int? parentId, ICollection<CommentOfferItem>? itemsOffer)
     {
@@ -23,6 +25,7 @@ public class CommentService : ICommentService
         };
         _context.Add(comment);
         await _context.SaveChangesAsync();
+        await _notificationService.SendTradeCommentNotificationAsync(user?.SteamId, comment);
         return comment;
     }
 }

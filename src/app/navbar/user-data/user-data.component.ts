@@ -1,12 +1,17 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, take, tap, throwError } from 'rxjs';
 import { UserData } from '../../../shared/models/userdata.model';
 
 import { UserDataService } from '../../../shared/user-data.service';
 import { AuthService } from '../../auth.service';
 import { RouterModule } from '@angular/router';
 import { environment } from '../../../environments/environment.development';
+import { NotificationService } from '../../notification.service';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { CommonModule } from '@angular/common';
+import { NotificationListComponent } from '../notification-list/notification-list.component';
+import { PopoverModule } from 'primeng/popover';
 export interface Response {
   response: Players;
 }
@@ -16,7 +21,7 @@ export interface Players {
 @Component({
   standalone: true,
   selector: 'app-user-data',
-  imports: [RouterModule],
+  imports: [RouterModule, OverlayBadgeModule, CommonModule, NotificationListComponent, PopoverModule],
   templateUrl: './user-data.component.html',
   styleUrl: './user-data.component.scss',
 })
@@ -24,10 +29,14 @@ export class UserDataComponent implements OnInit {
   http = inject(HttpClient);
   authService = inject(AuthService);
   userDataService = inject(UserDataService);
+  notificationService = inject(NotificationService);
 
   userData!: UserData;
   menus = ['tradeUrl', 'contact'];
-
+  showList = false;
+  openListView() {
+    this.showList = !this.showList;
+  }
   ngOnInit(): void {
     this.userDataService.userData$
       .pipe(
@@ -72,6 +81,8 @@ export class UserDataComponent implements OnInit {
       .subscribe(data => {
         this.userDataService.setUsername(data.personaname);
         this.userDataService.setUserId(data.steamid);
+        this.notificationService.connect(data.steamid);
+        this.notificationService.loadUnread();
         this.userDataService.setUserData(data);
       });
   }

@@ -103,6 +103,14 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddCors(options =>
 {
+  options.AddPolicy("SignalR", policy =>
+  {
+    policy.WithOrigins("http://localhost:4200")
+      .AllowAnyMethod()
+      .AllowAnyHeader()
+      .AllowCredentials()
+      .SetIsOriginAllowed(_ => true);
+  });
   options.AddPolicy("AllowAll", policy =>
   {
     policy
@@ -115,6 +123,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
+
 builder.Services.AddScoped<ExpService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
@@ -122,11 +131,14 @@ builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<SteamApiService>();
 builder.Services.AddScoped<ItemService>();
 builder.Services.AddScoped<ITradeService, TradeService>();
-builder.Services.AddScoped<CommentService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<ICommentService ,CommentService>();
 builder.Services.AddScoped<StrangeItemStatHistoryService>();
 builder.Services.AddScoped<InventoryFacadeService>();
 builder.Services.AddSingleton<ILoggerService, LoggerService>();
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
@@ -136,10 +148,12 @@ if (app.Environment.IsDevelopment())
   app.UseSwagger();
   app.UseSwaggerUI();
 }
-app.UseCors("AllowAll");
+app.UseCors("SignalR"); 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<NotificationHub>("/notificationHub").AllowAnonymous();
 app.MapControllers();
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 
