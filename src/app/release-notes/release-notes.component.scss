@@ -1,0 +1,12 @@
+.release-title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  background-clip: text;
+  display: inline-block;
+}
+
+#titleEnding {
+    color: #26A69A;
+}

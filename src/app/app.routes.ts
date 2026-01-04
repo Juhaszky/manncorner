@@ -50,6 +50,11 @@ export const routes: Routes = [
     canActivate: [authGuardGuard],
   },
   {
+    path: 'release-notes',
+    loadComponent: () =>
+      import('./release-notes/release-notes.component').then(m => m.ReleaseNotesComponent),
+  },
+  {
     path: '**',
     redirectTo: '/home',
   },
