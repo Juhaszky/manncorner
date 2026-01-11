@@ -19,7 +19,7 @@ import { ItemKillstreakerSelectorComponent } from './item-killstreaker-selector/
 import { AccordionModule } from 'primeng/accordion';
 import { HttpClient } from '@angular/common/http';
 import { Item } from '../models/item.model';
-import { getImgUrlString, getQualityString } from '../../app/common/utils';
+import { getImgUrlString, getKillstreakString, getQualityString } from '../../app/common/utils';
 import { ButtonModule } from 'primeng/button';
 import { KillstreakTier, Spell } from '../models/enums/item-customization.enum';
 import { ItemSpellsComponent } from './item-spells/item-spells.component';
@@ -179,13 +179,7 @@ export class ItemCustomizerComponent implements OnInit, OnChanges {
     return isAustralium ? 'Australium ' : '';
   }
   returnKillstreakString(killstreakValue: number) {
-    let killstreakStr = '';
-    if (killstreakValue === 2) {
-      killstreakStr = 'Specialized Killstreak';
-    } else if (killstreakValue === 3) {
-      killstreakStr = 'Professional Killstreak ';
-    }
-    return killstreakStr;
+    return getKillstreakString(killstreakValue);
   }
   getDisplayedImageUrl(url: string, name: string, isAustralium: boolean) {
     return getImgUrlString(url, name, isAustralium);

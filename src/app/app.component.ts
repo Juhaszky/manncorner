@@ -32,6 +32,7 @@ import { displayableTrade } from '../shared/models/displayableTrade.model';
 import { TradeService } from './home/trade.service';
 import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner.component';
 import { TradesStateService } from '../shared/trades-state.service';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -46,8 +47,9 @@ import { TradesStateService } from '../shared/trades-state.service';
     DialogModule,
     ContextMenuModule,
     Paginator,
-    LoadingSpinnerComponent,
+    LoadingSpinnerComponent
   ],
+  providers: [DynamicDialogConfig],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

@@ -57,6 +57,15 @@ export function getQualityString(quality: number): string {
 export function getImgUrlString(url: string, name: string, isAustralium = false): string {
   return isAustralium ? australiumImageMap.get(name) ?? url : url
 }
+export function getKillstreakString(killstreakValue: number) {
+    let killstreakStr = '';
+    if (killstreakValue === 2) {
+      killstreakStr = 'Specialized Killstreak';
+    } else if (killstreakValue === 3) {
+      killstreakStr = 'Professional Killstreak ';
+    }
+    return killstreakStr;
+}
 
 
 export function parseStockItemToItem(stockItem: StockTF2Item): Item {

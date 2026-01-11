@@ -47,7 +47,8 @@
               <div class="w-24">
                 <app-item-container
                   [item]="item"
-                  [canDelete]="false"
+                  [canDelete]="true"
+                  [showDialog]="false"
                   (removeEmitter)="itemSelectorFacade.onRemoveOfferItem(item)">
                 </app-item-container>
               </div>

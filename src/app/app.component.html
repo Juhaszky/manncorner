@@ -65,15 +65,6 @@
 
   </div>
 
-  <p-dialog
-    header="Edit Profile"
-    [modal]="true"
-    [(visible)]="itemService.showItemDetails"
-    [style]="{ width: '25rem' }"
-    [baseZIndex]="10000">
-    <!-- TODO: make item details for mobile -->
-  </p-dialog>
-
   <p-contextmenu #globalContextMenu [model]="contextMenuItems" appendTo="body">
   </p-contextmenu>
 </main>

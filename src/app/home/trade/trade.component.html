@@ -39,7 +39,7 @@
         <div class="flex flex-row flex-wrap w-full gap-2 p-2">
           @for (item of tradeData.itemsFrom; track item) {
           <div class="w-24">
-            <app-item-container [item]="item"> </app-item-container>
+            <app-item-container [item]="item" [showDialog]="true"> </app-item-container>
           </div>
           }
         </div>
@@ -58,7 +58,7 @@
         <div class="flex flex-row flex-wrap w-full gap-2 p-2">
           @for (item of tradeData.itemsTo; track item) {
           <div class="w-24">
-            <app-item-container [item]="item" [showQuantity]="true"> </app-item-container>
+            <app-item-container [item]="item" [showQuantity]="true" [showDialog]="true"> </app-item-container>
           </div>
           }
         </div>

@@ -35,6 +35,7 @@ export class ItemComponent implements OnInit {
   @Output() selectEmitter = new EventEmitter<Item>();
   @Output() touchEmitter = new EventEmitter<Item>();
   @Output() backpacktfEmitter: EventEmitter<Item> = new EventEmitter<Item>();
+  @Output() backpacktfHistoryEmitter: EventEmitter<Item> = new EventEmitter<Item>();
   @Output() contextMenuEmitter: EventEmitter<{ item: Item, event: MouseEvent }> = new EventEmitter<{ item: Item, event: MouseEvent }>();
 
   @Input() disabled = false;

@@ -33,6 +33,10 @@ export class ItemFacade {
 
   checkItemExtras(item: Item) {}
 
+  openBackpackTfHistory(item: Item) {
+    window.open(`https://backpack.tf/item/${item.id}`, '_blank');
+  }
+
   openBackpackTfLink(item: Item) {
     const baseUrl = 'https://backpack.tf/stats/';
     let urlParams = '';

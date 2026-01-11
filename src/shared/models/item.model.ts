@@ -1,6 +1,7 @@
 export interface Item {
   name: string;
   fullName: string;
+  commentId?: number;
   id: string;
   img: string;
   craftable: boolean;
