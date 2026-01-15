@@ -136,12 +136,28 @@ builder.Services.AddScoped<ICommentService ,CommentService>();
 builder.Services.AddScoped<CommentService>();
 builder.Services.AddScoped<StrangeItemStatHistoryService>();
 builder.Services.AddScoped<InventoryFacadeService>();
+builder.Services.AddScoped<IFeatureService, FeatureService>();
+//builder.Services.AddScoped<FeatureService>();
 builder.Services.AddSingleton<ILoggerService, LoggerService>();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        await FeatureSeeder.SeedAsync(context); 
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
